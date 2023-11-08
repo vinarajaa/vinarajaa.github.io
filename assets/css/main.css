@@ -240,11 +240,10 @@ input, select, textarea {
 		white-space: nowrap;
 		border-right: 2px solid red;
 		width: 0;
-		animation: typing;
+		animation: typing, blinking .5s infinite;
 		animation-duration:  1.5s;
 		animation-timing-function:  steps(30, end);
 		animation-fill-mode:  forwards;
-		animation:  blinking 1s infinite;
 	}
 	  
 
