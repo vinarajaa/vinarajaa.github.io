@@ -235,32 +235,24 @@ input, select, textarea {
 		text-align: right;
 	}
 	.typed {
-		outline:2px solid red;
 		font-family: monospace;
-		color:#0005;
-		font-weight: 700;
-		font-size:35px;
-		background:linear-gradient(-90deg, #00DFFC 5px, var(--c,red) 0) 10px 0;
+		color:#0000;
+		background:
+		  linear-gradient(-90deg,rgb(67, 70, 135) 5px,#0000 0) 10px 0,
+		  linear-gradient(rgb(67, 70, 135) 0 0) 0 0;
 		background-size:calc(var(--n)*1ch) 200%;
+		-webkit-background-clip:padding-box,text;
+		background-clip:padding-box,text;
 		background-repeat:no-repeat;
-		animation:t calc(var(--n)*.3s) linear infinite alternate;
+		animation: 
+		  b .7s infinite steps(1),   
+		  t calc(var(--n)*.3s) steps(var(--n)) forwards;
 	  }
 	  @keyframes t{
 		from {background-size:0 200%}
 	  }
 	  @keyframes b{
-		50% {background-position:0 -100%}
-	  }
-	  .transparent {
-		--c:#0000;
-	  }
-	  .move {
-		animation: 
-		 b .7s infinite linear,   
-		 t calc(var(--n)*.3s) linear infinite alternate;
-	  }
-	  .step {
-		animation-timing-function:steps(1), steps(var(--n))
+		50% {background-position:0 -100%,0 0}
 	  }
 	/* .typed {
 		overflow: hidden;
@@ -278,7 +270,7 @@ input, select, textarea {
 	/* @keyframes typing {
 		from { width: 0 }
 		to { width: 100% } */
-	}
+	/* } */
 	/* @keyframes blinking {
 		0% {border-right-color: transparent}
 		50% {border-right-color: black}
