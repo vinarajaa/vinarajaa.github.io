@@ -237,12 +237,9 @@ input, select, textarea {
 	.typed {
 		overflow: hidden;
 		white-space: nowrap;
-		width: 0;
 		border-right: 2px solid red;
-		animation: typing;
-		animation-duration: 2.5s;
-		animation-timing-function: steps(0, end);
-		animation-fill-mode: forwards;
+		width: 0;
+		animation: typing 1.5s steps(30, end) forwards, blinking 1s infinite;
 	  }
 	  
 
@@ -250,6 +247,11 @@ input, select, textarea {
 	@keyframes typing {
 		from { width: 0 }
 		to { width: 100% }
+	}
+	@keyframes blinking {
+		0% {border-right-color: transparent}
+		50% {border-right-color: black}
+		100% {border-right-color: transparent}
 	}
 	@-moz-keyframes spinner-show {
 		0% {
