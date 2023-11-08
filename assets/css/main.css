@@ -234,22 +234,22 @@ input, select, textarea {
 	.align-right {
 		text-align: right;
 	}
-	.typed-out{
+	.typed {
 		overflow: hidden;
-		border-right: .15em solid orange;
 		white-space: nowrap;
-		animation: 
-		  typing 1s forwards;
-		font-size: 1.6rem;
 		width: 0;
+		animation: typing;
+		animation-duration: 1.5s;
+		animation-timing-function: steps(30, end);
+		animation-fill-mode: forwards;
 	  }
+	  
+
+/* Loader */
 	@keyframes typing {
 		from { width: 0 }
 		to { width: 100% }
 	}
-
-/* Loader */
-
 	@-moz-keyframes spinner-show {
 		0% {
 			opacity: 0;
@@ -691,6 +691,11 @@ input, select, textarea {
 			}
 
 		}
+	.container-typing{
+		display: inline-block;
+		font-family: "arial";
+		font-size: 24px;
+	}
 
 /* Row */
 
