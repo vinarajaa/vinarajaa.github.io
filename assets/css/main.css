@@ -149,24 +149,7 @@ input, select, textarea {
 			color: inherit;
 			border: 0;
 		}
-	hspecial{
-		color: rgb(111 100 170);
-		font-size: 2em;
-		line-height: 1.5em;
-		letter-spacing: -0.025em;
-		font-weight: normal;
-		font-family:monospace;
-		
-		
-	}
-	subhead {
-		color: rgb(187 181 218);
-		font-size: 1em;
-		line-height: 1.5em;
-		letter-spacing: -0.025em;
-		font-weight: normal;
-		font-family:monospace;
-	}
+
 	h2 {
 		color: rgb(124 111 197);
 		font-size: 2em;
@@ -192,14 +175,21 @@ input, select, textarea {
 	}
 
 	h6 {
-		font-size: 0.7em;
+		color: rgb(111 100 170);
+		font-size: 2em;
 		line-height: 1.5em;
+		letter-spacing: -0.025em;
+		font-weight: normal;
+		font-family:monospace;
 	}
 
 	sub {
-		font-size: 0.8em;
-		position: relative;
-		top: 0.5em;
+		color: rgb(187 181 218);
+		font-size: 1em;
+		line-height: 1.5em;
+		letter-spacing: -0.025em;
+		font-weight: normal;
+		font-family:monospace;
 	}
 
 	sup {
