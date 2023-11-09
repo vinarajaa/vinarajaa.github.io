@@ -148,9 +148,11 @@ input, select, textarea {
 		}
 
 	h2 {
+		color: rgb(67, 8, 67);
 		font-size: 2em;
 		line-height: 1.5em;
 		letter-spacing: -0.025em;
+		font-weight: bold;
 	}
 
 	h3 {
