@@ -238,6 +238,7 @@ input, select, textarea {
 		overflow: hidden;
 		white-space: nowrap;
 		width: 0;
+		border-right: 2px solid red;
 		animation: typing;
 		animation-duration: 1.5s;
 		animation-timing-function: steps(10, end);
@@ -246,7 +247,7 @@ input, select, textarea {
 /* Loader */
 	@keyframes typing {
 		from { width: 0 }
-		to { width: 100% } */
+		to { width: 100% } 
 	}
 	/* @keyframes blinking {
 		0% {border-right-color: transparent}
