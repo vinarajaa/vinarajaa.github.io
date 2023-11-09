@@ -132,6 +132,8 @@ input, select, textarea {
 	p {
 		color: white;
 		margin: 0 0 2em 0;
+		font-family:monospace;
+		
 
 	}
 
@@ -146,9 +148,19 @@ input, select, textarea {
 			color: inherit;
 			border: 0;
 		}
+	hspecial{
+		color: rgb(111 100 170);
+		font-size: 2em;
+		line-height: 1.5em;
+		letter-spacing: -0.025em;
+		font-weight: normal;
+		font-family:monospace;
+		
+		
+	}
 
 	h2 {
-		color: rgb(67, 8, 67);
+		color: rgb(47 15 215);
 		font-size: 2em;
 		line-height: 1.5em;
 		letter-spacing: -0.025em;
@@ -242,7 +254,7 @@ input, select, textarea {
 		overflow: hidden;
 		white-space: nowrap;
 		width: 0;
-		border-right: 2px solid red;
+		border-right: 2px solid #0023ff;
 		animation: typing;
 		animation-duration: 1.5s;
 		animation-timing-function: steps(10, end);
@@ -2924,7 +2936,7 @@ input, select, textarea {
 		input[type="reset"].primary,
 		input[type="button"].primary,
 		.button.primary {
-			background-color: #430843;
+			background-color: #6f64aa;
 			box-shadow: none;
 			color: #ffffff !important;
 		}
