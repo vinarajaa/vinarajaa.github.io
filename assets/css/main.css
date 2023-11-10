@@ -2227,7 +2227,7 @@ input, select, textarea {
 	}
 
 		header.major:after {
-			background: #ff0000;
+			background: #dac8ff;
 			content: '';
 			display: inline-block;
 			height: 0.2em;
@@ -3937,7 +3937,7 @@ input, select, textarea {
 				width: 100%;
 				z-index: 10001;
 				background: #272833;
-				box-shadow: 0 0.125em 0.125em 0 rgb(233 21 21 / 97%);
+				box-shadow: 0 3px 5px #19161d;
 			}
 
 				#titleBar .title {
@@ -3979,8 +3979,8 @@ input, select, textarea {
 					}
 
 					#titleBar .toggle:before {
-						background: #ffdb00;
-						color: rgb(255 0 0 / 50%);
+						background: #261f4a;
+						color: rgb(187 181 218);
 						content: '\f0c9';
 						display: block;
 						font-size: 18px;
@@ -3991,6 +3991,7 @@ input, select, textarea {
 						text-align: center;
 						top: 0;
 						width: 54px;
+						box-shadow: 0 3px 5px #19161d
 					}
 
 			#navPanel {
