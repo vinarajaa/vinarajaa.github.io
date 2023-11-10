@@ -3412,8 +3412,8 @@ input, select, textarea {
 	}
 
 	#header {
-		background: rgba(39, 40, 51, 0.965);
-		box-shadow: 0 0 0.25em 0 rgb(255 0 0);
+		background: rgb(0 16 195 / 97%);
+		box-shadow: 0 0 4px 0 rgb(162 21 21);
 		cursor: default;
 		height: 3.5em;
 		left: 0;
@@ -3431,12 +3431,20 @@ input, select, textarea {
 			margin: 0;
 			position: absolute;
 			top: 0;
+			font-weight: bold;
 		}
 
 		#header nav {
 			position: absolute;
 			right: 1em;
 			top: 0;
+		}
+		#header sub {
+			text-transform: uppercase;
+			margin-left: 2em;
+			font-weight:normal;
+			letter-spacing:.25em
+			
 		}
 
 			#header nav ul {
@@ -3481,7 +3489,7 @@ input, select, textarea {
 
 	body.landing #header {
 		background: transparent;
-		box-shadow: none;
+		box-shadow: 0 3px 5px #19161d;
 		position: absolute;
 	}
 
