@@ -3415,8 +3415,8 @@ input, select, textarea {
 	}
 
 	#header {
-		background: rgb(0 16 195 / 97%);
-		box-shadow: 0 0 4px 0 rgb(162 21 21);
+		background: transparent;
+		box-shadow: 0 0 4px 0 #19161d;
 		cursor: default;
 		height: 3.5em;
 		left: 0;
