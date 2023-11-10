@@ -175,8 +175,8 @@ input, select, textarea {
 	}
 
 	h6 {
-		color: rgb(111 100 170);
-		font-size: 2em;
+		color: rgb(187 181 218);
+		font-size: 1em;
 		line-height: 1.5em;
 		letter-spacing: -0.025em;
 		font-weight: normal;
@@ -184,8 +184,8 @@ input, select, textarea {
 	}
 
 	sub {
-		color: rgb(187 181 218);
-		font-size: 1em;
+		color: rgb(111 100 170);
+		font-size: 2em;
 		line-height: 1.5em;
 		letter-spacing: -0.025em;
 		font-weight: normal;
@@ -264,6 +264,7 @@ input, select, textarea {
 	@keyframes typing {
 		from { width: 0 }
 		to { width: 100% } 
+		animation-iteration-count: infinite; 
 	}
 	/* @keyframes blinking {
 		0% {border-right-color: transparent}
