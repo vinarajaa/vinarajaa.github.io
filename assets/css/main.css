@@ -3857,7 +3857,7 @@ input, select, textarea {
 		/* Spotlight */
 
 			.spotlight {
-				box-shadow: 0 0.125em 0.5em 0 rgb(255 0 0 / 88%);
+				box-shadow: 0 3px 5px #19161d;
 			}
 
 				.spotlight .image.main {
