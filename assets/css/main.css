@@ -170,8 +170,13 @@ input, select, textarea {
 	}
 
 	h5 {
-		font-size: 0.9em;
-		line-height: 1.5em;
+		color: rgb(111 100 170);
+		font-size:3em;
+
+		letter-spacing: -0.025em;
+		font-weight: normal;
+		font-family: monospace;
+		
 	}
 
 	h6 {
@@ -184,12 +189,9 @@ input, select, textarea {
 	}
 
 	sub {
-		color: rgb(111 100 170);
-		font-size: 2em;
+		font-size: 0.9em;
 		line-height: 1.5em;
-		letter-spacing: -0.025em;
-		font-weight: normal;
-		font-family: monospace;
+		
 	}
 
 	sup {
@@ -254,7 +256,7 @@ input, select, textarea {
 		overflow: hidden;
 		white-space: nowrap;
 		width: 0;
-		border-right: 2px solid #0023ff;
+		border-right: 2px solid #4c589fa6;
 		animation: typing;
 		animation-duration: 1.5s;
 		animation-timing-function: steps(10, end);
