@@ -700,7 +700,7 @@ input, select, textarea {
 			width: 100%;
 		}
 		.container.welcome{
-			padding-top: 3px;
+			padding-top: 15px;
 			width: 981px;
 		    height: auto;
 			align-items:center;
