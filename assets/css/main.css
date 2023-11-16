@@ -3518,7 +3518,7 @@ input, select, textarea {
 		/* background-image: url("../../images/banner.jpg"); */
 		/* background-position: center center; */
 		/* background-size: cover; */
-		box-shadow: -3px 13em 0.5em 0 #66254a;
+		box-shadow: 2px 1em 20em 19px #673AB7;
 		min-height: 100vh;
 		position: relative;
 		text-align: center;
