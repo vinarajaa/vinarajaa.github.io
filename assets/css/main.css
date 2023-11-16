@@ -103,7 +103,7 @@ input, select, textarea {
 		font-size: 1pt;
 		font-weight: bold;
 		line-height: 1.75em;
-		text-shadow: 0px 5px 4px #ffabc98a;
+		text-shadow: 1px 8px 9px #ff005b8a;
 		text-transform: uppercase;
 	}
 
@@ -182,13 +182,13 @@ input, select, textarea {
 	}
 
 	h6 {
-		color: rgb(46 28 214);
-		font-size: xx-large;
-		line-height: normal;
+		color: rgb(243 159 90);
+		/* font-size: xx-large; */
+		/* line-height: normal; */
 		letter-spacing: 0.25em;
-		font-weight: lighter;
-		font-family: sans-serif;
-		text-shadow: 2px 1px 4px #1922fb;
+		font-weight: bold;
+		font-family: monospace;
+		text-shadow: 2px 2px 9px #000000;
 	}
 
 	sub {
@@ -258,7 +258,7 @@ input, select, textarea {
 		overflow: hidden;
 		white-space: nowrap;
 		width: 0;
-		border-right: 2px solid #4c589fa6;
+		border-right: 2px solid #ff00ae;
 		animation: typing;
 		animation-duration: 1.5s;
 		animation-timing-function: steps(10, end);
@@ -4174,8 +4174,4 @@ input, select, textarea {
 						padding: 0;
 					}
 
-	}
-	@font-face {
-		font-family: "custom";
-		src: url(assets/webfonts/Geo-Regular.ttf) format("ttf");
 	}
