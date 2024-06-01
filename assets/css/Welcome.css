@@ -1,0 +1,26 @@
+@charset "utf-8";
+	.NormalCharacterStyle
+{
+	font-family : Georgia;
+	font-weight : bold;
+	font-size : 12px;
+	color : #000000;
+	color : rgb(0, 0, 0);
+}
+.st0
+{
+}
+.NormalCharacterStyle2
+{
+	font-family : Georgia;
+	font-weight : bold;
+	font-size : 160px;
+	letter-spacing : 19.2px;
+}
+.NormalCharacterStyle1
+{
+	font-family : Myriad Pro;
+	font-size : 12px;
+	color : #000000;
+	color : rgb(0, 0, 0);
+}
