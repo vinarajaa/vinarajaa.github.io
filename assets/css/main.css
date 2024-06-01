@@ -247,6 +247,10 @@ td,
 th {
 	padding: 0
 }
+logoimg{
+    max-width: 45px;
+    size: 40px;
+}
 .container{
     display:center;
     align-self: center;
@@ -261,6 +265,8 @@ th {
       typing 2s forwards;
     font-size: 1.6rem;
     width: 0;
+    text-align: center;
+    color: orange;
 }
   @keyframes typing {
     from { width: 0 }
