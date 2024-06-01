@@ -251,6 +251,7 @@ th {
     display:center;
     align-self: center;
     align-items: center;
+    text-align: center;
 }
 .typed-out{
     overflow: hidden;
