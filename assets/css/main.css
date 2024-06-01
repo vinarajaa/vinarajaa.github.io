@@ -248,7 +248,7 @@ th {
 	padding: 0
 }
 .container{
-    display: inline-block;
+    display:center;
 }
 .typed-out{
     overflow: hidden;
