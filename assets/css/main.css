@@ -249,13 +249,14 @@ th {
 }
 .container{
     display:center;
+    align-self: center;
 }
 .typed-out{
     overflow: hidden;
     border-right: .15em solid orange;
     white-space: nowrap;
     animation: 
-      typing 4s forwards;
+      typing 2s forwards;
     font-size: 1.6rem;
     width: 0;
 }
