@@ -250,6 +250,7 @@ th {
 .container{
     display:center;
     align-self: center;
+    align-items: center;
 }
 .typed-out{
     overflow: hidden;
