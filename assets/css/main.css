@@ -267,9 +267,10 @@ logoimg{
     width: 0;
     text-align: center;
     color: orange;
+    text-transform: uppercase;
 }
   @keyframes typing {
-    from { width: 0 }
+    from { width: 50% }
     to { width: 100% }
   }
 ::-moz-selection {
@@ -519,7 +520,6 @@ body {
 }
 
 .header--logo {
-    max-width: 40px;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: -ms-flexbox;
@@ -529,7 +529,7 @@ body {
 	-ms-flex-align: center;
 	align-items: center;
 	text-decoration: none;
-	color: #fff
+	color: #503add
 }
 
 .header--logo p {
