@@ -255,24 +255,31 @@ bodytyping{
     align-items: center;
   }
 .container{
-    display:center;
-    align-self: center;
-    align-items: center;
-    text-align: center;
+    display:inline-block;
 }
-.typed-out{
+/* .typed-out{
     overflow: hidden;
     border-right: .15em solid orange;
     white-space: nowrap;
-    animation: 
-      typing 2s forwards;
+    animation: typing 2s forwards;
     font-size: 1.6rem;
     width: 0;
     text-align: center;
     align-items: center;
     color: orange;
     text-transform: uppercase;
-}
+} */
+.typed-out{
+    overflow: hidden;
+    border-right: .15em solid orange;
+    white-space: nowrap;
+    animation: 
+      typing 1s forwards;
+    font-size: 1.6rem;
+    width: 0;
+    color: orange;
+    text-transform: uppercase;
+  }
   @keyframes typing {
     from { width: 50% }
     to { width: 100% }
