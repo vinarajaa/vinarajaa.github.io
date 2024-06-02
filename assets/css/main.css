@@ -254,7 +254,7 @@ logoimg{
 bodytyping{
     background: navajowhite;
     background-size: cover;
-    font-family: 'Trebuchet MS', sans-serif; 
+    /* font-family: 'Trebuchet MS', sans-serif;  */
   }
 .container{
     display:center;
