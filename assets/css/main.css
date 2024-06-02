@@ -280,6 +280,7 @@ bodytyping{
     width: 0;
     color: orange;
     text-transform: uppercase;
+    margin: auto;
   }
   @keyframes typing {
     from { width: 0% }
