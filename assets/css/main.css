@@ -254,10 +254,10 @@ logoimg{
 bodytyping{
     align-items: center;
   }
-.container{
+/* .container{
     display:inline-block;
-    text-align: center;
-}
+    text-align: center; */
+/* } */
 /* .typed-out{
     overflow: hidden;
     border-right: .15em solid orange;
