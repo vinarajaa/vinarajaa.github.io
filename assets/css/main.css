@@ -252,9 +252,7 @@ logoimg{
     size: 40px;
 }
 bodytyping{
-    background: navajowhite;
-    background-size: cover;
-    /* font-family: 'Trebuchet MS', sans-serif;  */
+    align-items: center;
   }
 .container{
     display:center;
