@@ -251,6 +251,11 @@ logoimg{
     max-width: 45px;
     size: 40px;
 }
+bodytyping{
+    background: navajowhite;
+    background-size: cover;
+    font-family: 'Trebuchet MS', sans-serif; 
+  }
 .container{
     display:center;
     align-self: center;
@@ -266,6 +271,7 @@ logoimg{
     font-size: 1.6rem;
     width: 0;
     text-align: center;
+    align-items: center;
     color: orange;
     text-transform: uppercase;
 }
