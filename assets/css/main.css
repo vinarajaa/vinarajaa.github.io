@@ -256,6 +256,7 @@ bodytyping{
   }
 .container{
     display:inline-block;
+    text-align: center;
 }
 /* .typed-out{
     overflow: hidden;
@@ -274,15 +275,15 @@ bodytyping{
     border-right: .15em solid orange;
     white-space: nowrap;
     animation: 
-      typing 1s forwards;
+      typing 4s forwards;
     font-size: 1.6rem;
     width: 0;
     color: orange;
     text-transform: uppercase;
   }
   @keyframes typing {
-    from { width: 50% }
-    to { width: 100% }
+    from { width: 0% }
+    to { width: 35% }
   }
 ::-moz-selection {
 	background: #FFF498
