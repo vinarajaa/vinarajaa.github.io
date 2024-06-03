@@ -270,6 +270,11 @@ bodytyping{
     color: orange;
     text-transform: uppercase;
 } */
+hCustom {
+    color: #810880;
+    -webkit-text-fill-color: #4406bf; /* Will override color (regardless of order) */
+    -webkit-text-stroke: 3px #810880;
+  }
 .typed-out{
     overflow: hidden;
     border-right: .15em solid orange;
