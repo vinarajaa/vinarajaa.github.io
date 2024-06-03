@@ -270,14 +270,32 @@ bodytyping{
     color: orange;
     text-transform: uppercase;
 } */
-hCustom {
+hCustom-1 {
     margin: 0 0 20px 0;
-	font-size: 30px;
+	font-size: 60px;
 	text-align: center;
     color: #810880;
     -webkit-text-fill-color: #4406bf; /* Will override color (regardless of order) */
-    -webkit-text-stroke: 3px #810880;
+    -webkit-text-stroke: 2px #810880;
   }
+hCustom-2 {
+    margin: 0 0 20px 0;
+	font-size: 60px;
+	text-align: center;
+    color: #e53606;
+    -webkit-text-fill-color: #ae064d; /* Will override color (regardless of order) */
+    -webkit-text-stroke: 2px #e53606;
+  }
+
+hCustom-3 {
+    margin: 0 0 20px 0;
+	font-size: 60px;
+	text-align: center;
+    color: #ffbe00;
+    -webkit-text-fill-color: #ef670a; /* Will override color (regardless of order) */
+    -webkit-text-stroke: 2px #ffbe00;
+  }
+  
 .typed-out{
     overflow: hidden;
     border-right: .15em solid orange;
