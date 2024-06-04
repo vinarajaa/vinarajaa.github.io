@@ -128,7 +128,7 @@ sub {
 }
 
 img {
-	border: 0
+	border: 0;
 }
 
 svg:not(:root) {
@@ -405,10 +405,10 @@ body {
 .l-main-content {
 	position: relative;
 	width: 100%;
-	height: 100%;
+	height: 89%;
 	margin: 0;
 	padding: 0;
-	list-style: none
+	list-style: none;
 }
 
 .l-section {
@@ -509,7 +509,7 @@ body {
 	opacity: 0;
 	visibility: hidden;
 	-webkit-transition: opacity .4s ease-in-out, visibility 0s .4s;
-	transition: opacity .4s ease-in-out, visibility 0s .4s
+	transition: opacity .4s ease-in-out, visibility 0s .4s;
 }
 
 .section--is-active {
@@ -517,7 +517,8 @@ body {
 	visibility: visible;
 	z-index: 1;
 	-webkit-transition: opacity .4s ease-in-out .4s;
-	transition: opacity .4s ease-in-out .4s
+	transition: opacity .4s ease-in-out .4s;
+	align-items: center;
 }
 
 .section--next {
@@ -1218,19 +1219,21 @@ body {
 
 .about--banner {
 	position: relative;
-	height: 475px
+	height: 275px;
 }
 
 .about--banner::before {
 	content: "";
 	position: absolute;
-	top: 20px;
+	top: 50px;
 	left: 200px;
 	-webkit-transform: rotate(-25deg);
 	transform: rotate(-25deg);
-	border: 5px solid #0f33ff;
+	border: 5px solid #810880;
 	border-right-color: transparent;
-	border-bottom-color: transparent
+	border-bottom-color: transparent;
+	align-items: center;
+	align-content: center;
 }
 
 .about--banner::after {
@@ -1242,7 +1245,8 @@ body {
 	transform: rotate(45deg);
 	width: 10px;
 	height: 10px;
-	background-color: #0f33ff
+	background-color: #ae064d;
+	align-content: center;
 }
 
 .about--banner h2 {
@@ -1281,7 +1285,7 @@ body {
 	color: #fff;
 	font-weight: 700;
 	text-transform: uppercase;
-	background-color: transparent
+	background-color: transparent;
 }
 
 .about--banner a:hover svg {
@@ -1308,14 +1312,15 @@ body {
 	display: -webkit-flex;
 	display: -ms-flexbox;
 	display: flex;
-	max-width: 600px;
+	width: 600px;
 	-webkit-box-pack: justify;
 	-webkit-justify-content: space-between;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
 	margin: 0;
 	padding: 0;
-	list-style: none
+	list-style: none;
+	align-items: center;
 }
 
 .about--options>a {
@@ -1324,7 +1329,7 @@ body {
 	height: 75px;
 	text-decoration: none;
 	color: #fff;
-	border: 10px solid #0f33ff;
+	border: 10px solid #af1f63;
 	background-position: center;
 	background-size: cover;
 	background-repeat: no-repeat
