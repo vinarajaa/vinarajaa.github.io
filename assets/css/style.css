@@ -144,19 +144,46 @@ nav ul li a:hover {
 }
 
 .glow-on-hover {
-    border: 2px  white ;
-    display: inline-block;
-    padding: 12px 24px;
-    font-size: 18px;
-    color: #ffffff;  /* White text */
-    background: #000000;  /* Black background */
-    border: none;
-    border-radius: 10px;
-    text-decoration: none;
-    text-align: center;
-    position: relative;
-    transition: all 0.3s ease-in-out;
-    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 60px; /* Start as a circle */
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
+}
+
+/* On Hover, Expand to Reveal Text */
+.glow-on-hover:hover {
+    width: 180px; /* Expands on hover */
+    border-radius: 10px; /* Change from circle to rounded rectangle */
+}
+
+/* Icon */
+.glow-on-hover i {
+    font-size: 24px;
+    color: #64ffda;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Button Text - Initially Hidden */
+.glow-on-hover .btn-text {
+    opacity: 0;
+    color: #64ffda;
+    white-space: nowrap;
+    transition: opacity 0.3s ease-in-out;
+    font-size: 16px;
+}
+
+/* Hover Effects */
+.glow-on-hover:hover i {
+    transform: translateX(-10px); /* Move icon left */
+}
+
+.glow-on-hover:hover .btn-text {
+    opacity: 1; /* Reveal text */
 }
 
 /* Glow effect */
