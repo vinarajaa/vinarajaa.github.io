@@ -76,7 +76,7 @@ nav ul li a:hover {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 18px;
-    color: #0a192f;
+    color: white;
     background: rgb(252,176,69);
     background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 10%, rgba(253,29,29,0.8799894957983193) 29%, rgba(172,48,130,1) 41%, rgba(131,58,180,0.9332107843137255) 56%, rgba(99,49,164,1) 65%, rgba(58,67,180,1) 76%, rgba(253,29,229,1) 100%);
     border-radius: 5px;
