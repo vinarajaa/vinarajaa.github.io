@@ -125,7 +125,8 @@ nav ul li a:hover {
     transform: translateX(-50%);
     display: flex;
     gap: 60px; /* Space between buttons */
-    z-index: 1; /* Keep buttons above the line */
+    z-index: 1;
+    border:2px  white ; /* Keep buttons above the line */
 }
 
 /* Gradient Line Behind Buttons */
