@@ -3,7 +3,7 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
+    font-family: 'Fira Code', monospace; /* Change to your preferred monospace font */
 }
 
 body {
@@ -82,7 +82,7 @@ nav ul li a:hover {
     padding: 12px 24px;
     font-size: 18px;
     color: #ffffff;  /* White text */
-    background: #111;  /* Black background */
+    background: #000000;  /* Black background */
     border: none;
     border-radius: 10px;
     text-decoration: none;
@@ -120,7 +120,7 @@ nav ul li a:hover {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #111;
+    background: #000000;
     left: 0;
     top: 0;
     z-index: -1;
