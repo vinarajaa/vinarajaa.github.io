@@ -20,6 +20,7 @@ document.getElementById("contact-form").addEventListener("submit", function(even
     emailjs.send("service_o7204i9", "template_ltjguff", {
         from_name: name,
         from_email: email,
+        reply_to: email,
         subject: subject,
         message: message
     })
