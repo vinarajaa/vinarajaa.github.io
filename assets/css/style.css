@@ -58,7 +58,8 @@ body {
 .welcome-svg {
     height: 150px;
     object-fit: cover;
-    margin-bottom: 20px; /* Space between image and text */
+    margin-bottom: 20px; 
+    margin-top: 8%;/* Space between image and text */
 }
 /* Navigation */
 nav {
@@ -93,7 +94,7 @@ nav ul li a:hover {
     height: 100vh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     padding: 50px;
 }
