@@ -124,7 +124,7 @@ nav ul li a:hover {
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 20px; /* Space between buttons */
+    gap: 60px; /* Space between buttons */
     z-index: 1; /* Keep buttons above the line */
 }
 
@@ -132,12 +132,11 @@ nav ul li a:hover {
 .hero-buttons::before {
     content: "";
     position: absolute;
-    bottom: -10px; /* Position line slightly below buttons */
-    left: 0;
-    width: 100%;
+    bottom: 20px; /* Position line slightly below buttons */
+    left: -25%;
+    width: 150%;
     height: 4px; /* Thickness of the line */
-    background: linear-gradient(90deg, #64ffda, #00ffd5, #ff00c8); /* Gradient colors */
-    border-radius: 2px;
+    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     z-index: -1; /* Place behind the buttons */
     opacity: 0.7; /* Slight transparency */
 }
