@@ -202,7 +202,7 @@ nav ul li a:hover {
     background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     position: absolute;
     background-size: 400%;
-    z-index: -1;
+    z-index: -10;
     filter: blur(5px);
     width: calc(100% + 10px);
     height: calc(100% + 10px);
