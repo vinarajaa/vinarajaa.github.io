@@ -1839,7 +1839,7 @@ body {
 	outline: 30px solid #0f33ff
 }
 
-.outer-nav {
+/* .outer-nav {
 	position: absolute;
 	top: 50%;
 	left: 55%;
@@ -1854,12 +1854,12 @@ body {
 	visibility: hidden;
 	-webkit-transition: visibility 0s .2s;
 	transition: visibility 0s .2s;
-	/* color: magenta; */
+	color: magenta;
 }
 
 .outer-nav.is-vis {
 	visibility: visible;
-	/* color: magenta; */
+	color: magenta;
 }
 
 .outer-nav--return {
@@ -1949,4 +1949,4 @@ body {
 .outer-nav li.is-vis:nth-child(5) {
 	-webkit-transition-delay: .16s;
 	transition-delay: .16s
-}
+} */
