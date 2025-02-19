@@ -130,7 +130,7 @@ class Canvas {
 	}
 
 	animate() {
-		this.particleMaterial.uniforms.uTime.value += 0.05;
+		this.particleMaterial.uniforms.uTime.value += 0.02;
 		requestAnimationFrame(this.animate);
 		this.render();
 	}
