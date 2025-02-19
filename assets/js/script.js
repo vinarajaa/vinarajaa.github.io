@@ -6,12 +6,17 @@ document.addEventListener("DOMContentLoaded", function () {
         loop: true
     });
 
-    particlesJS("particles-js", {
-        particles: {
-            number: { value: 100 },
-            size: { value: 3 },
-            move: { speed: 1 },
-            line_linked: { enable: true, color: "#64ffda" }
-        }
-    });
+    // Ensure Particles.js is loaded before calling it
+    if (typeof particlesJS !== "undefined") {
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 100 },
+                size: { value: 3 },
+                move: { speed: 1 },
+                line_linked: { enable: true, color: "#64ffda" }
+            }
+        });
+    } else {
+        console.error("Particles.js failed to load.");
+    }
 });
