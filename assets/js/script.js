@@ -26,11 +26,12 @@ const particleVertex = `
 `;
 
 const particleFragment = `
-	void main() {
-		gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
-	}
-`;
+    varying vec3 vColor;
 
+    void main() {
+        gl_FragColor = vec4(vColor, 1.0);  // Use the color attribute
+    }
+`;
 function lerp(start, end, amount) {
 	return (1 - amount) * start + amount * end;
 };
@@ -88,8 +89,8 @@ class Canvas {
 	}
 
 	initParticles() {
-    const gap = 0.3;
-    const amountX = 200;
+    const gap = 0.5;
+    const amountX = 100;
     const amountY = 200;
     const particleNum = amountX * amountY;
 		const particlePositions = new Float32Array(particleNum * 3);
