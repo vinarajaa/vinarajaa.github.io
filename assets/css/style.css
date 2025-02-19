@@ -12,6 +12,49 @@ body {
     color: #ffffff;
     text-align: center;
 }
+/* Glowing Blurry Navbar */
+.glow-navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    padding: 15px 30px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle initial shadow */
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+
+/* Glow effect on hover */
+.glow-navbar:hover {
+    box-shadow: 0 0 20px #64ffda, 0 0 40px #64ffda, 0 0 60px #64ffda;
+}
+
+/* Nav Links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffffff;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Link Hover Effect */
+.nav-links li a:hover {
+    color: #64ffda;
+}
 .welcome-svg {
     height: 150px;
     object-fit: cover;
