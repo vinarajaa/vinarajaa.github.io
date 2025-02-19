@@ -147,25 +147,24 @@ nav ul li a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 10px;
     width: 60px; /* Start as a circle */
     height: 60px;
     border-radius: 50%;
-    overflow: visible; /* Allow glow */
+    overflow: hidden; /* Clip content within button */
     position: relative;
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
     cursor: pointer;
-    z-index: 2; /* Above the gradient line */
-    border: 2px solid white; /* Circle border */
-    background: #000; /* Background inside button */
+    z-index: 2;
+    border: 2px solid white;
+    background: #000;
 }
 
 /* On Hover, Expand to Reveal Text */
 .glow-on-hover:hover {
     width: 180px; /* Expand */
-    border-radius: 10px; /* Rounded rectangle */
-    justify-content: flex-start; /* Align content to the left */
-    padding-left: 15px; /* Add spacing on hover */
+    border-radius: 10px;
+    justify-content: flex-start; /* Align icon and text */
+    padding-left: 15px; /* Add space for the icon */
 }
 
 /* Icon */
@@ -173,6 +172,7 @@ nav ul li a:hover {
     font-size: 24px;
     color: #64ffda;
     transition: transform 0.3s ease-in-out;
+    flex-shrink: 0; /* Prevent icon from shrinking */
 }
 
 /* Button Text - Initially Hidden */
@@ -182,13 +182,10 @@ nav ul li a:hover {
     white-space: nowrap;
     transition: opacity 0.3s ease-in-out;
     font-size: 16px;
+    margin-left: 10px;
 }
 
 /* Hover Effects */
-.glow-on-hover:hover i {
-    transform: none; /* Keep icon in place */
-}
-
 .glow-on-hover:hover .btn-text {
     opacity: 1; /* Reveal text */
 }

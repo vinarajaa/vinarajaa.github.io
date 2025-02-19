@@ -19,4 +19,4 @@ document.addEventListener("DOMContentLoaded", function () {
         scaleMobile: 1.00,
         color:  0x0// Adjust this color as needed
     });
-});s
+});
