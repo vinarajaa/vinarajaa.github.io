@@ -162,7 +162,7 @@ nav ul li a:hover {
 
 /* On Hover, Expand to Reveal Text */
 .glow-on-hover:hover {
-    width: 180px; /* Expand */
+    width: 120px; /* Expand */
     border-radius: 10px;
     justify-content: center; /* Center text */
 }
