@@ -151,7 +151,7 @@ nav ul li a:hover {
     width: 60px; /* Start as a circle */
     height: 60px;
     border-radius: 50%;
-    overflow: hidden;
+    overflow: visible;
     position: relative;
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
     cursor: pointer;
