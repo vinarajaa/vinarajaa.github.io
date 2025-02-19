@@ -74,19 +74,44 @@ nav ul li a:hover {
 .btn {
     display: inline-block;
     margin-top: 20px;
-    padding: 10px 20px;
+    padding: 12px 24px;
     font-size: 18px;
-    color: white;
-    background: rgb(252,176,69);
-    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 10%, rgba(253,29,29,0.8799894957983193) 29%, rgba(172,48,130,1) 41%, rgba(131,58,180,0.9332107843137255) 56%, rgba(99,49,164,1) 65%, rgba(58,67,180,1) 76%, rgba(253,29,229,1) 100%);
+    color: #ffffff;  /* White text */
+    background: #000000;  /* Black background */
+    border: none;
     border-radius: 5px;
     text-decoration: none;
-    transition: 0.3s;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
 }
 
+/* Gradient Shadow Effect */
+.btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    z-index: -1;
+    filter: blur(10px);  /* Blurred shadow effect */
+    opacity: 0.8;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
 .btn:hover {
-    background: rgb(252,176,69);
-    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    color: #ffffff;
+    transform: translateY(-3px); /* Lift effect */
+}
+
+.btn:hover::after {
+    filter: blur(20px);  /* Increase glow on hover */
+    opacity: 1;
 }
   #c {
     position: fixed;  /* Ensures it stays in place while scrolling */
