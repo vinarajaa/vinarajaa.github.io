@@ -83,12 +83,12 @@ nav ul li a:hover {
 .btn:hover {
     background: #52e0c5;
 }
-#tube-canvas {
+#background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
     z-index: -1; /* Keeps it behind content */
-    background: #0a192f; /* Ensures a smooth fallback */
+    background: #0a192f; /* Dark techy fallback */
 }
