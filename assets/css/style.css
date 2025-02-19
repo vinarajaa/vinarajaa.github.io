@@ -3,7 +3,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: 'Courier New', Courier, monospace;}
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 400;
+}
 
 body {
     
@@ -56,17 +58,20 @@ nav ul li a:hover {
 .hero h1 {
     font-size: 50px;
     color: #64ffda;
+    font-weight: 600;
 }
 
 .hero h2 {
     font-size: 30px;
     margin-top: 10px;
+    font-weight: 500;
 }
 
 .hero p {
     margin-top: 10px;
     font-size: 18px;
     opacity: 0.8;
+    font-weight: 400;
 }
 
 .hero-buttons {
