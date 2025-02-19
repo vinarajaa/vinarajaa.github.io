@@ -101,7 +101,7 @@ nav ul li a:hover {
 
 .hero h1 {
     font-size: 50px;
-    color: #64ffda;
+    color: #ffffff;
     font-weight: 600;
 }
 
@@ -117,6 +117,32 @@ nav ul li a:hover {
     opacity: 0.8;
     font-weight: 400;
 }
+/* Hero Buttons Container */
+.hero-buttons {
+    display: flex;
+    gap: 40px; /* Space between buttons */
+    justify-content: center;
+    align-items: center;
+    position: fixed; /* Stick to bottom */
+    bottom: 40px; /* Adjust as needed */
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 2; /* Above background and gradient */
+}
+
+/* Gradient Line Behind Buttons */
+.hero-buttons::before {
+    content: "";
+    position: absolute;
+    bottom: 50%; /* Center line vertically */
+    left: -10%;
+    width: 120%;
+    height: 4px; /* Thickness of the line */
+    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    z-index: -1; /* Behind the buttons */
+    opacity: 0.7;
+}
+
 /* Glowing Button with Hover Expansion */
 .glow-on-hover {
     display: flex;
@@ -126,18 +152,19 @@ nav ul li a:hover {
     width: 60px; /* Start as a circle */
     height: 60px;
     border-radius: 50%;
-    overflow: visible; /* Allow glow to be visible */
+    overflow: visible; /* Allow glow */
     position: relative;
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
     cursor: pointer;
-    z-index: 2; /* Ensure button stays above background */
-    border: 2px solid white; /* Keep circle border */
+    z-index: 2; /* Above the gradient line */
+    border: 2px solid white; /* Circle border */
+    background: #000; /* Background inside button */
 }
 
 /* On Hover, Expand to Reveal Text */
 .glow-on-hover:hover {
-    width: 180px; /* Expands on hover */
-    border-radius: 10px; /* Change from circle to rounded rectangle */
+    width: 180px; /* Expand */
+    border-radius: 10px; /* Rounded rectangle */
 }
 
 /* Icon */
@@ -168,14 +195,14 @@ nav ul li a:hover {
 /* Glow effect */
 .glow-on-hover:before {
     content: '';
-    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     position: absolute;
     top: -5px;
     left: -5px;
     background-size: 400%;
     z-index: -1;
     filter: blur(5px);
-    width: calc(100% + 10px); /* Slightly larger for glow */
+    width: calc(100% + 10px);
     height: calc(100% + 10px);
     animation: glowing 20s linear infinite;
     opacity: 0;
@@ -195,7 +222,7 @@ nav ul li a:hover {
     background: #000000;
     left: 0;
     top: 0;
-    z-index: -2; /* Behind glow */
+    z-index: -2;
     border-radius: inherit;
 }
 
@@ -203,31 +230,4 @@ nav ul li a:hover {
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
-}
-
-/* Hero Buttons Container */
-.hero-buttons {
-    position: absolute;
-    bottom: 40px; /* Position at the bottom */
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 60px; /* Space between buttons */
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    z-index: 1; /* Ensure buttons above background */
-}
-
-/* Gradient Line Behind Buttons */
-.hero-buttons::before {
-    content: "";
-    position: absolute;
-    bottom: 20px; /* Center line vertically */
-    left: -25%;
-    width: 150%;
-    height: 4px; /* Thickness of the line */
-    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
-    z-index: -3; /* Place behind the buttons */
-    opacity: 0.7;
 }
