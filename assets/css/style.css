@@ -142,6 +142,8 @@ nav ul li a:hover {
     z-index: -1; /* Behind the buttons */
     opacity: 0.7;
 }
+
+
 /* Glowing Button with Hover Expansion */
 .glow-on-hover {
     display: flex;
@@ -150,7 +152,7 @@ nav ul li a:hover {
     width: 60px; /* Start as a circle */
     height: 60px;
     border-radius: 50%;
-    overflow: hidden; /* Clip content within button */
+    overflow: hidden;
     position: relative;
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
     cursor: pointer;
@@ -164,7 +166,7 @@ nav ul li a:hover {
     width: 180px; /* Expand */
     border-radius: 10px;
     justify-content: flex-start; /* Align icon and text */
-    padding-left: 15px; /* Add space for the icon */
+    padding-left: 15px;
 }
 
 /* Icon */
@@ -173,6 +175,7 @@ nav ul li a:hover {
     color: #64ffda;
     transition: transform 0.3s ease-in-out;
     flex-shrink: 0; /* Prevent icon from shrinking */
+    z-index: 3; /* Ensure icon is above backgrounds */
 }
 
 /* Button Text - Initially Hidden */
@@ -183,6 +186,7 @@ nav ul li a:hover {
     transition: opacity 0.3s ease-in-out;
     font-size: 16px;
     margin-left: 10px;
+    z-index: 3; /* Ensure text is above backgrounds */
 }
 
 /* Hover Effects */
