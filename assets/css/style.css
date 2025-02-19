@@ -83,12 +83,70 @@ nav ul li a:hover {
 .btn:hover {
     background: #52e0c5;
 }
-#background {
+/* #background {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: -1; /* Keeps it behind content */
-    background: #0a192f; /* Dark techy fallback */
-}
+    z-index: -1; /* Keeps it behind content 
+    background: #0a192f; /* Dark techy fallback 
+ */
+ body {
+    color: #fff; 
+    background-color: #000;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.8rem;
+  }
+  
+  .cover-container {
+    max-width: 42em;
+  }
+  
+  .masthead {
+    margin-bottom: 2rem;
+  }
+  
+  .masthead-brand {
+    margin-bottom: 0;
+  }
+  
+  .nav-masthead .nav-link {
+    padding: 0.25rem 0;
+    color: #fff;
+    background-color: transparent;
+    border-bottom: 0.25rem solid transparent;
+  }
+  
+  .nav-masthead .nav-link:hover,
+  .nav-masthead .nav-link:focus {
+    border-bottom-color: rgba(255, 255, 255, 0.25);
+  }
+  
+  .nav-masthead .nav-link+.nav-link {
+    margin-left: 1rem;
+  }
+  
+  main {
+    display: none;
+  }
+  
+  @media (min-width: 48em) {
+    .masthead-brand {
+      float: left;
+    }
+    .nav-masthead {
+      float: right;
+    }
+    main {
+      display: block;
+    }
+  }
+  
+  #background {
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+  }
+  

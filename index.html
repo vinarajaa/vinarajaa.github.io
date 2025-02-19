@@ -11,7 +11,51 @@
     <script src="https://cdn.jsdelivr.net/npm/simplex-noise@2.4.0/simplex-noise.min.js"></script>   
 </head>
 <body>
-    <canvas id="background"></canvas>
+    <div id="page">
+        <div class="cover-container d-flex h-100 p-3 mx-auto flex-column">
+          <header class="masthead">
+            <div>
+              <h3 class="masthead-brand">Strange Tubes</h3>
+              <nav class="nav nav-masthead justify-content-center">
+                <a class="nav-link" href="https://codepen.io/collection/AGZywR" target="_blank">ThreeJS Collection</a>
+              </nav>
+            </div>
+          </header>
+          <main role="main">
+            <form style="width: 80%; margin: 0 auto;">
+              <div class="form-row">
+                <div class="form-group col-sm-6">
+                  <label for="noiseInput" class="form-label">Noise Coef</label>
+                  <input type="range" min="1" max="100" class="custom-range" id="noiseInput">
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="heightInput" class="form-label">Height Coef</label>
+                  <input type="range" min="1" max="100" class="custom-range" id="heightInput">
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="timeInput" class="form-label">Time Coef</label>
+                  <input type="range" min="1" max="100" class="custom-range" id="timeInput">
+                </div>
+                <div class="form-group col-sm-6">
+                  <label for="tubeRadiusInput" class="form-label">Tube Radius</label>
+                  <input type="range" min="1" max="100" class="custom-range" id="tubeRadiusInput">
+                </div>
+              </div>
+              <div class="form-group col-md-12">
+                <div class="custom-control custom-switch">
+                  <input type="checkbox" class="custom-control-input" id="pRadiusInput" checked>
+                  <label class="custom-control-label" for="pRadiusInput">Progressive radius</label>
+                </div>
+              </div>
+              <div class="form-group col-md-12">
+                <a href="#" id="trigger" class="btn btn-sm btn-secondary">Random Colors</a>
+              </div>
+            </form>
+          </main>
+        </div>
+      </div>
+    
+      <canvas id="background"></canvas>
     <header>
         <nav>
             <ul>
