@@ -6,8 +6,13 @@
     font-family: 'Poppins', sans-serif;
 }
 
-body {
-    margin: 0;
-    overflow: hidden;
-    z-index: -100;
-  }
+
+  #c {
+    position: fixed;  /* Ensures it stays in place while scrolling */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    z-index: -1;  /* Moves the canvas behind all other content */
+    background: #0a192f; /* Fallback background */
+}
