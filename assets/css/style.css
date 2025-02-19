@@ -135,8 +135,8 @@ nav ul li a:hover {
     content: "";
     position: absolute;
     bottom: 50%; /* Center line vertically */
-    left: -10%;
-    width: 120%;
+    /* left: -10%; */
+    width: 180%;
     height: 4px; /* Thickness of the line */
     background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     z-index: -1; /* Behind the buttons */
@@ -170,7 +170,7 @@ nav ul li a:hover {
 /* Icon - Visible Initially */
 .glow-on-hover i {
     font-size: 24px;
-    color: #64ffda;
+    color: #ffffff;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     opacity: 1;
 }
