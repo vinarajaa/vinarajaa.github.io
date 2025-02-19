@@ -162,7 +162,7 @@ nav ul li a:hover {
 /* Glow effect */
 .glow-on-hover:before {
     content: '';
-    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
+    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     position: absolute;
     top: -2px;
     left: -2px;
