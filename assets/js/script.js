@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color: 0x1a0120 // Adjust this color as needed
+        color:  0x0// Adjust this color as needed
     });
 });
 const particleVertex = `
