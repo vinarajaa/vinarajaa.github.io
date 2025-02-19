@@ -143,7 +143,6 @@ nav ul li a:hover {
     opacity: 0.7;
 }
 
-
 /* Glowing Button with Hover Expansion */
 .glow-on-hover {
     display: flex;
@@ -165,17 +164,21 @@ nav ul li a:hover {
 .glow-on-hover:hover {
     width: 180px; /* Expand */
     border-radius: 10px;
-    justify-content: flex-start; /* Align icon and text */
-    padding-left: 15px;
+    justify-content: center; /* Center text */
 }
 
-/* Icon */
+/* Icon - Visible Initially */
 .glow-on-hover i {
     font-size: 24px;
     color: #64ffda;
-    transition: transform 0.3s ease-in-out;
-    flex-shrink: 0; /* Prevent icon from shrinking */
-    z-index: 3; /* Ensure icon is above backgrounds */
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    opacity: 1;
+}
+
+/* Hide Icon on Hover */
+.glow-on-hover:hover i {
+    opacity: 0;
+    transform: scale(0.8); /* Slight shrink effect */
 }
 
 /* Button Text - Initially Hidden */
@@ -185,13 +188,12 @@ nav ul li a:hover {
     white-space: nowrap;
     transition: opacity 0.3s ease-in-out;
     font-size: 16px;
-    margin-left: 10px;
-    z-index: 3; /* Ensure text is above backgrounds */
+    position: absolute; /* Stack text over icon */
 }
 
-/* Hover Effects */
+/* Show Text on Hover */
 .glow-on-hover:hover .btn-text {
-    opacity: 1; /* Reveal text */
+    opacity: 1;
 }
 
 /* Glow effect */
