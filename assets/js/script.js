@@ -1,8 +1,10 @@
 document.addEventListener("DOMContentLoaded", function () {
     let typed = new Typed("#typed-text", {
         strings: ["My name is Vina Raja", "I am a Software Engineeer", "I am an aspiring AI Engineer","I love to paint", "I love to code", "I love to learn new things"],
-        typeSpeed: 50,
+        typeSpeed: 40,
         backSpeed: 30,
+        startDelay: 500,     // Small delay before typing starts
+        backDelay: 2000, 
         loop: true
     });
 
