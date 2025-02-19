@@ -143,6 +143,7 @@ nav ul li a:hover {
 }
 
 .glow-on-hover {
+    border: 2px  white ;
     display: inline-block;
     padding: 12px 24px;
     font-size: 18px;
