@@ -21,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 });
 
-const canvas = document.getElementById("tile-canvas");
+const canvas = document.getElementById("tube-canvas");
 const ctx = canvas.getContext("2d");
 
 canvas.width = window.innerWidth;
@@ -30,38 +30,39 @@ canvas.height = window.innerHeight;
 window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
-    drawTiles();
 });
 
-const tileSize = 50;
-const tiles = [];
+const tubes = [];
+const tubeCount = 20;
 
-for (let y = 0; y < canvas.height; y += tileSize) {
-    for (let x = 0; x < canvas.width; x += tileSize) {
-        tiles.push({ x, y, color: getRandomColor() });
-    }
+for (let i = 0; i < tubeCount; i++) {
+    tubes.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        speedX: (Math.random() - 0.5) * 2,
+        speedY: (Math.random() - 0.5) * 2,
+        radius: Math.random() * 80 + 40
+    });
 }
 
-function getRandomColor() {
-    const colors = ["#64ffda", "#06beb6", "#1a2a6c", "#b21f1f"];
-    return colors[Math.floor(Math.random() * colors.length)];
-}
-
-function drawTiles() {
+function drawTubes() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    tiles.forEach(tile => {
-        ctx.fillStyle = tile.color;
-        ctx.fillRect(tile.x, tile.y, tileSize, tileSize);
+    
+    tubes.forEach(tube => {
+        ctx.beginPath();
+        ctx.arc(tube.x, tube.y, tube.radius, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(100, 255, 218, 0.5)`;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        
+        tube.x += tube.speedX;
+        tube.y += tube.speedY;
+
+        if (tube.x < 0 || tube.x > canvas.width) tube.speedX *= -1;
+        if (tube.y < 0 || tube.y > canvas.height) tube.speedY *= -1;
     });
+
+    requestAnimationFrame(drawTubes);
 }
 
-function animateTiles() {
-    tiles.forEach(tile => {
-        tile.color = getRandomColor();
-    });
-    drawTiles();
-    setTimeout(animateTiles, 1000); // Change color every second
-}
-
-drawTiles();
-animateTiles();
+drawTubes();
