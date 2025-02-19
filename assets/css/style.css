@@ -130,6 +130,6 @@ nav ul li a:hover {
     left: 0;
     width: 100%;
     height: 100vh;
-    z-index: -1;  /* Moves the background behind all content */
+    z-index: -10;  /* Moves the background behind all content */
     background: #0a192f; /* Fallback color */
 }
