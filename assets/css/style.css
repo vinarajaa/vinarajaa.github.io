@@ -148,8 +148,8 @@ nav ul li a:hover {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 60px; /* Start as a circle */
-    height: 60px;
+    width: 40px; /* Start as a circle */
+    height: 40px;
     border-radius: 50%;
     overflow: visible;
     position: relative;
@@ -169,7 +169,7 @@ nav ul li a:hover {
 
 /* Icon - Visible Initially */
 .glow-on-hover i {
-    font-size: 24px;
+    font-size: 15px;
     color: #ffffff;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
     opacity: 1;
@@ -206,8 +206,8 @@ nav ul li a:hover {
     background-size: 400%;
     z-index: -1;
     filter: blur(5px);
-    width: calc(100% + 10px);
-    height: calc(100% + 10px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
     animation: glowing 20s linear infinite;
     opacity: 0;
     transition: opacity .3s ease-in-out;
