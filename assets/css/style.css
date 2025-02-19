@@ -6,14 +6,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-/* Global Styles */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
-
 body {
     
     color: #ffffff;
@@ -25,12 +17,10 @@ nav {
     display: flex;
     justify-content: center;
     padding: 15px 0;
-    background: rgba(10, 25, 47, 0.8);
     position: fixed;
     width: 100%;
     top: 0;
     backdrop-filter: blur(10px);
-    z-index: 10;
 }
 
 nav ul {
