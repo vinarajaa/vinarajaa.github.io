@@ -1,0 +1,200 @@
+/* ---------------------------------------Basic buttons CSS-------------------------------------------------- */
+.btn {
+    display: inline-block;
+    margin-top: 20px;
+    padding: 12px 24px;
+    font-size: 18px;
+    color: #ffffff;  /* White text */
+    background: #000000;  /* Black background */
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-weight: bold;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Gradient Shadow Effect */
+.btn::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 5px;
+    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    z-index: -1;
+    filter: blur(2.5em);
+    opacity: 0.8;
+    inset: -.625em;
+
+    transition: all 0.3s ease-in-out;
+}
+
+/* Hover Effect */
+.btn:hover {
+    color: #ffffff;
+    transform: translateY(-3px); /* Lift effect */
+}
+
+.btn:hover::after {
+    filter: blur(20px);  /* Increase glow on hover */
+    opacity: 1;
+}
+/* ---------------------------------------Glowing buttons basic CSS-------------------------------------------------- */
+.hero-buttons {
+    position: absolute;
+    bottom: 40px; /* Position at the bottom */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 60px; /* Space between buttons */
+    z-index: 1;
+    border:2px  white ; /* Keep buttons above the line */
+}
+
+/* Gradient Line Behind Buttons */
+.hero-buttons::before {
+    content: "";
+    position: absolute;
+    bottom: 20px; /* Position line slightly below buttons */
+    left: -25%;
+    width: 150%;
+    height: 4px; /* Thickness of the line */
+    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    z-index: -1; /* Place behind the buttons */
+    opacity: 0.7; /* Slight transparency */
+}
+/* .glow-on-hover {
+    border: 2px  white ;
+    display: inline-block;
+    padding: 12px 24px;
+    font-size: 18px;
+    color: #ffffff;  
+    background: #000000;  
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    text-align: center;
+    position: relative;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+} */
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    background-size: 400%;
+    z-index: -1;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    /* border-radius: 10px; */
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+.glow-on-hover:after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border: 2px white;
+    background: #000000;
+    left: 0;
+    top: 0;
+    z-index: -1;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+} */
+
+/* Glowing Blurry Navbar */
+.glow-navbar {
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    padding: 15px 30px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
+    backdrop-filter: blur(10px); /* Blur effect */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle initial shadow */
+    display: flex;
+    justify-content: center;
+    transition: all 0.3s ease-in-out;
+    z-index: 1000;
+}
+/* ---------------------------------------Navigation Bar CSS-------------------------------------------------- */
+/* Glow effect on hover */
+.glow-navbar:hover {
+    box-shadow: 0 0 20px #64ffda, 0 0 40px #64ffda, 0 0 60px #64ffda;
+}
+
+/* Nav Links */
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 40px;
+}
+
+.nav-links li a {
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 500;
+    color: #ffffff;
+    position: relative;
+    transition: color 0.3s ease-in-out;
+}
+
+/* Link Hover Effect */
+.nav-links li a:hover {
+    color: #64ffda;
+}
+.welcome-svg {
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px; 
+    margin-top: 8%;/* Space between image and text */
+}
+/* Navigation */
+nav {
+    display: flex;
+    justify-content: center;
+    padding: 15px 0;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    backdrop-filter: blur(10px);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+}
+
+nav ul li a {
+    color: #64ffda;
+    text-decoration: none;
+    font-size: 18px;
+    transition: 0.3s;
+}
+
+nav ul li a:hover {
+    color: #f8f8f8;
+}

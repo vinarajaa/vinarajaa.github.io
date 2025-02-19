@@ -6,90 +6,14 @@
     font-family: 'Courier New', Courier, monospace;
     font-weight: 400;
 }
-
+/* ---------------------------------------Body CSS-------------------------------------------------- */
 body {
     
     color: #ffffff;
     text-align: center;
 }
-/* Glowing Blurry Navbar */
-.glow-navbar {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    padding: 15px 30px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, 0.1); /* Semi-transparent background */
-    backdrop-filter: blur(10px); /* Blur effect */
-    box-shadow: 0 0 20px rgba(0, 0, 0, 0.2); /* Subtle initial shadow */
-    display: flex;
-    justify-content: center;
-    transition: all 0.3s ease-in-out;
-    z-index: 1000;
-}
 
-/* Glow effect on hover */
-.glow-navbar:hover {
-    box-shadow: 0 0 20px #64ffda, 0 0 40px #64ffda, 0 0 60px #64ffda;
-}
-
-/* Nav Links */
-.nav-links {
-    list-style: none;
-    display: flex;
-    gap: 40px;
-}
-
-.nav-links li a {
-    text-decoration: none;
-    font-size: 18px;
-    font-weight: 500;
-    color: #ffffff;
-    position: relative;
-    transition: color 0.3s ease-in-out;
-}
-
-/* Link Hover Effect */
-.nav-links li a:hover {
-    color: #64ffda;
-}
-.welcome-svg {
-    height: 150px;
-    object-fit: cover;
-    margin-bottom: 20px; 
-    margin-top: 8%;/* Space between image and text */
-}
-/* Navigation */
-nav {
-    display: flex;
-    justify-content: center;
-    padding: 15px 0;
-    position: fixed;
-    width: 100%;
-    top: 0;
-    backdrop-filter: blur(10px);
-}
-
-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-nav ul li a {
-    color: #64ffda;
-    text-decoration: none;
-    font-size: 18px;
-    transition: 0.3s;
-}
-
-nav ul li a:hover {
-    color: #f8f8f8;
-}
-
-/* Hero Section */
+/* ---------------------------------------Center Section CSS-------------------------------------------------- */
 .hero {
     height: 100vh;
     display: flex;
@@ -117,7 +41,7 @@ nav ul li a:hover {
     opacity: 0.8;
     font-weight: 400;
 }
-/* Hero Buttons Container */
+/* ---------------------------------------Navigation Buttons Glowing CSS-------------------------------------------------- */
 .hero-buttons {
     display: flex;
     gap: 40px; /* Space between buttons */
@@ -232,4 +156,99 @@ nav ul li a:hover {
     0% { background-position: 0 0; }
     50% { background-position: 400% 0; }
     100% { background-position: 0 0; }
+}
+
+/* ---------------------------------------Contact Page CSS-------------------------------------------------- */
+/* Contact Section */
+.contact-section {
+    max-width: 600px;
+    margin: 100px auto;
+    padding: 20px;
+    text-align: center;
+    color: #ffffff;
+}
+
+.contact-section h1 {
+    font-size: 36px;
+    margin-bottom: 20px;
+    color: #64ffda;
+}
+
+/* Form */
+#contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Group */
+.form-group {
+    display: flex;
+    align-items: center;
+    border: 2px solid #64ffda;
+    border-radius: 5px;
+    padding: 10px;
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.form-group i {
+    margin-right: 10px;
+    color: #64ffda;
+}
+
+.form-group input,
+.form-group textarea {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: #ffffff;
+    font-size: 16px;
+}
+
+textarea {
+    resize: none;
+}
+
+/* Submit Button */
+.glow-on-hover {
+    width: 200px;
+    margin: 0 auto;
+    padding: 12px;
+    border: none;
+    outline: none;
+    color: #fff;
+    background: #000;
+    cursor: pointer;
+    position: relative;
+    z-index: 0;
+    border-radius: 10px;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Glow Effect */
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    z-index: -1;
+    filter: blur(5px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    border-radius: inherit;
+}
+
+.glow-on-hover:hover:before {
+    opacity: 1;
+}
+
+/* Form Status */
+#form-status {
+    margin-top: 15px;
+    font-size: 16px;
+    color: #64ffda;
 }
