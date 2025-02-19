@@ -1,17 +1,24 @@
-/* ---------------------------------------Contact Page CSS-------------------------------------------------- */
+/* General Page Styling */
+body {
+    background-color: #000; /* Black background */
+    color: #ffffff; /* White text */
+    font-family: 'Courier New', Courier, monospace; /* Match index.html font */
+    margin: 0;
+    padding: 0;
+}
+
 /* Contact Section */
 .contact-section {
     max-width: 600px;
     margin: 100px auto;
     padding: 20px;
     text-align: center;
-    color: #ffffff;
 }
 
 .contact-section h1 {
     font-size: 36px;
     margin-bottom: 20px;
-    color: #64ffda;
+    color: #64ffda; /* Accent color */
 }
 
 /* Form */
@@ -25,25 +32,27 @@
 .form-group {
     display: flex;
     align-items: center;
-    border: 2px solid #64ffda;
+    border: 2px solid #ffffff; /* White border */
     border-radius: 5px;
     padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
+    background: #ffffff; /* White background inside */
 }
 
 .form-group i {
     margin-right: 10px;
-    color: #64ffda;
+    color: #64ffda; /* Icon color */
 }
 
+/* Input and Textarea Styling */
 .form-group input,
 .form-group textarea {
     flex: 1;
     background: transparent;
     border: none;
     outline: none;
-    color: #ffffff;
+    color: #000000; /* Black text inside fields */
     font-size: 16px;
+    font-family: inherit;
 }
 
 textarea {
@@ -86,7 +95,7 @@ textarea {
     opacity: 1;
 }
 
-/* Form Status */
+/* Form Status Message */
 #form-status {
     margin-top: 15px;
     font-size: 16px;
