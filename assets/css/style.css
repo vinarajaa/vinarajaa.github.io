@@ -71,59 +71,66 @@ nav ul li a:hover {
 }
 
 /* Button */
-.btn {
-    display: inline-block;
-    margin-top: 20px;
-    padding: 12px 24px;
-    font-size: 18px;
-    color: #ffffff;  /* White text */
-    background: #000000;  /* Black background */
+
+.glow-on-hover {
+    width: 220px;
+    height: 50px;
     border: none;
-    border-radius: 5px;
-    text-decoration: none;
-    font-weight: bold;
+    outline: none;
+    color: #fff;
+    background: #111;
+    cursor: pointer;
     position: relative;
-    overflow: hidden;
-    transition: all 0.3s ease-in-out;
+    z-index: 0;
+    border-radius: 10px;
 }
 
-/* Gradient Shadow Effect */
-.btn::after {
-    content: "";
+.glow-on-hover:before {
+    content: '';
+    background: linear-gradient(45deg, #ff0000, #ff7300, #fffb00, #48ff00, #00ffd5, #002bff, #7a00ff, #ff00c8, #ff0000);
     position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border-radius: 5px;
-    background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
+    top: -2px;
+    left:-2px;
+    background-size: 400%;
     z-index: -1;
-    filter: blur(2.5em);
-    opacity: 0.8;
-    inset: -.625em;
-
-    transition: all 0.3s ease-in-out;
+    filter: blur(5px);
+    width: calc(100% + 4px);
+    height: calc(100% + 4px);
+    animation: glowing 20s linear infinite;
+    opacity: 0;
+    transition: opacity .3s ease-in-out;
+    border-radius: 10px;
 }
 
-/* Hover Effect */
-.btn:hover {
-    color: #ffffff;
-    transform: translateY(-3px); /* Lift effect */
+.glow-on-hover:active {
+    color: #000
 }
 
-.btn:hover::after {
-    filter: blur(20px);  /* Increase glow on hover */
+.glow-on-hover:active:after {
+    background: transparent;
+}
+
+.glow-on-hover:hover:before {
     opacity: 1;
 }
-  /* #c {
-    position: fixed;  /* Ensures it stays in place while scrolling 
-    top: 0;
-    left: 0;
+
+.glow-on-hover:after {
+    z-index: -1;
+    content: '';
+    position: absolute;
     width: 100%;
-    height: 100vh;
-    z-index: -1;  /* Moves the canvas behind all other content 
-    background: #0a192f; /* Fallback background 
-} */
+    height: 100%;
+    background: #111;
+    left: 0;
+    top: 0;
+    border-radius: 10px;
+}
+
+@keyframes glowing {
+    0% { background-position: 0 0; }
+    50% { background-position: 400% 0; }
+    100% { background-position: 0 0; }
+}
 #vanta-bg {
     position: fixed;
     top: 0;
