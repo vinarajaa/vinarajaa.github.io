@@ -207,8 +207,12 @@ nav ul li a:hover {
 
 /* Hero Buttons Container */
 .hero-buttons {
+    position: absolute;
+    bottom: 40px; /* Position at the bottom */
+    left: 50%;
+    transform: translateX(-50%);
     display: flex;
-    gap: 40px; /* Space between buttons */
+    gap: 60px; /* Space between buttons */
     justify-content: center;
     align-items: center;
     position: relative;
@@ -219,9 +223,9 @@ nav ul li a:hover {
 .hero-buttons::before {
     content: "";
     position: absolute;
-    bottom: 50%; /* Center line vertically */
-    left: 0;
-    width: 100%;
+    bottom: 20px; /* Center line vertically */
+    left: -25%;
+    width: 150%;
     height: 4px; /* Thickness of the line */
     background: linear-gradient(90deg, rgba(252,176,69,0.9304096638655462) 7%, rgba(253,29,29,0.8799894957983193) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.9332107843137255) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     z-index: -3; /* Place behind the buttons */
