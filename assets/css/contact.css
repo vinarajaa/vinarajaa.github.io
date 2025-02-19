@@ -61,13 +61,13 @@ textarea {
 
 
 /* Glowing Button with Hover Expansion */
-.glow-on-hover {
+.glow-on-hover-contact {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px; /* Start as a circle */
+    width: 120px; /* Start as a circle */
     height: 40px;
-    border-radius: 50%;
+    border-radius: 10px;
     overflow: visible;
     position: relative;
     transition: width 0.3s ease-in-out, border-radius 0.3s ease-in-out;
@@ -75,17 +75,21 @@ textarea {
     z-index: 2;
     border: 2px solid white;
     background: #000;
+    color: white;
+    font-family: monospace;
+    font-size: smaller;
 }
 
 /* On Hover, Expand to Reveal Text */
-.glow-on-hover:hover {
+.glow-on-hover-contact:hover {
     width: 120px; /* Expand */
     border-radius: 10px;
     justify-content: center; /* Center text */
+    color: white;
 }
 
 /* Icon - Visible Initially */
-.glow-on-hover i {
+.glow-on-hover-contact i {
     font-size: 15px;
     color: #ffffff;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
@@ -93,13 +97,13 @@ textarea {
 }
 
 /* Hide Icon on Hover */
-.glow-on-hover:hover i {
+.glow-on-hover-contact:hover i {
     opacity: 0;
     transform: scale(0.8); /* Slight shrink effect */
 }
 
 /* Button Text - Initially Hidden */
-.glow-on-hover .btn-text {
+.glow-on-hover-contact .btn-text {
     opacity: 0;
     color: #ffffff;
     white-space: nowrap;
@@ -109,12 +113,12 @@ textarea {
 }
 
 /* Show Text on Hover */
-.glow-on-hover:hover .btn-text {
+.glow-on-hover-contact .btn-text {
     opacity: 1;
 }
 
 /* Glow effect */
-.glow-on-hover:before {
+.glow-on-hover-contact:before {
     content: '';
     background: linear-gradient(90deg, rgba(252,176,69,0.93) 7%, rgba(253,29,29,0.88) 22%, rgba(172,48,130,1) 37%, rgba(131,58,180,0.93) 51%, rgba(99,49,164,1) 62%, rgba(58,67,180,1) 74%, rgba(253,29,229,1) 84%);
     position: absolute;
@@ -129,11 +133,11 @@ textarea {
     border-radius: inherit;
 }
 
-.glow-on-hover:hover:before {
+.glow-on-hover-contact:hover:before {
     opacity: 1;
 }
 
-.glow-on-hover:after {
+.glow-on-hover-contact:after {
     content: '';
     position: absolute;
     width: 100%;
