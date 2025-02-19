@@ -661,56 +661,56 @@ body {
 	}
 }
 
+/* Sidebar Navigation */
 .side-nav {
-	position: relative;
-	display: -webkit-box;
-	display: -webkit-flex;
-	display: -ms-flexbox;
-	display: flex;
-	width: 100px;
-	height: 70%;
-	max-height: 750px;
-	-webkit-box-orient: vertical;
-	-webkit-box-direction: normal;
-	-webkit-flex-direction: column;
-	-ms-flex-direction: column;
-	flex-direction: column;
-	-webkit-justify-content: space-around;
-	-ms-flex-pack: distribute;
-	justify-content: space-around;
-	margin: 0;
+	list-style: none;
 	padding: 0;
-	list-style-position: inside;
-	z-index: 10;
-}
-
-.side-nav>li {
+	margin: 0;
+  }
+  
+  .side-nav li {
 	position: relative;
-	top: -5px;
-	color: #ff6800;
-	font-size: 6px;
-	cursor: pointer
-}
-
-.side-nav>li span {
+	padding: 10px 20px;
+	cursor: pointer;
+	font-size: 18px;
+	transition: all 0.3s ease;
+	display: flex;
+	align-items: center;
+  }
+  
+  /* Styling the numbers */
+  .side-nav li::before {
+	content: attr(data-number); /* Gets number dynamically */
+	position: absolute;
+	left: -25px; /* Adjust position if needed */
+	color: #ffa500;
+	font-size: 18px;
+	font-weight: bold;
+	transition: color 0.3s ease;
+  }
+  
+  /* Ensure text is hidden initially */
+  .side-nav li span {
 	position: relative;
-	top: 3px;
 	left: 10px;
 	color: #fff;
 	font-size: 14px;
 	font-weight: 300;
 	opacity: 0;
-	visibility: hidden
-}
-
-.side-nav>li::before {
-	position: absolute;
-	top: 3px;
-	left: 10px;
-	color: #ffa500;
-	font-size: 14px;
-	font-weight: 300
-}
+	visibility: hidden;
+	transition: opacity 0.3s ease, visibility 0.3s ease;
+  }
+  
+  /* Hover Effect - Show text */
+  .side-nav li:hover span {
+	opacity: 1;
+	visibility: visible;
+  }
+  
+  /* Hover Effect - Change number color */
+  .side-nav li:hover::before {
+	color: #fff; /* Change number color on hover */
+  }
 
 .side-nav li:nth-child(1)::before {
 	content: "01"
@@ -1951,42 +1951,3 @@ body {
 	transition-delay: .16s
 } */
 /* Sidebar Navigation */
-.side-nav {
-	list-style: none;
-	padding: 0;
-	margin: 0;
-  }
-  
-  .side-nav li {
-	position: relative;
-	padding: 10px 20px;
-	cursor: pointer;
-	font-size: 18px;
-	transition: all 0.3s ease;
-	display: flex;
-	align-items: center;
-  }
-  
-  /* Styling the numbers */
-  .menu-number {
-	font-weight: bold;
-	font-size: 18px;
-	opacity: 1;
-	transition: opacity 0.3s ease;
-	margin-right: 10px;
-  }
-  
-  /* Initially hide the text */
-  .menu-text {
-	font-size: 18px;
-	opacity: 0;
-	transform: translateX(-10px);
-	transition: opacity 0.3s ease, transform 0.3s ease;
-	white-space: nowrap;
-  }
-  
-  /* On hover, show the text */
-  .side-nav li:hover .menu-text {
-	opacity: 1;
-	transform: translateX(0);
-  }
