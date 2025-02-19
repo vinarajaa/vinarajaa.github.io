@@ -1,6 +1,6 @@
 // Initialize EmailJS
 (function() {
-    emailjs.init("vina.k.raja@gmail.com"); // Replace with your EmailJS User ID
+    emailjs.init("atlYg7uADZLkw_giM"); // Replace with your EmailJS User ID
 })();
 
 document.getElementById("contact-form").addEventListener("submit", function(event) {
