@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", function () {
     let typed = new Typed("#typed-text", {
-        strings: ["My name is Vina Raja", "I am a Software Engineeer", "I am an aspiring AI Engineer","I love painting 🎨", "I love coding 👨‍💻", "I love learning new things📚", "Glad you're here!"],
+        strings: ["My name is Vina Raja", "I am a Software Engineeer", "I am a CS Masters Student","I love creating 🎨", "I love coding 👨‍💻", "I love learning about all things tech and beyond!", "Glad you're here!"],
         typeSpeed: 40,
         backSpeed: 30,
         startDelay: 500,     // Small delay before typing starts
@@ -17,6 +17,6 @@ document.addEventListener("DOMContentLoaded", function () {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color:  0x0// Adjust this color as needed
+        color:  0xaca59a// Adjust this color as needed
     });
 });
