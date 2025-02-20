@@ -36,10 +36,9 @@ body {
     width: 100%; /* Make inputs take full width */
     max-width: 500px; /* Limit the maximum width */
     padding: 10px;
-    border: 2px solid white;
     border-radius: 5px;
-    background: #ffffff;
-    color: #000;
+    background: #000000;
+    color: #ffffff;
     font-size: 16px;
     font-family: inherit;
     outline: none;
@@ -49,6 +48,7 @@ body {
 #contact-form textarea {
     resize: vertical;
     min-height: 150px;
+    min-width: 100%;
 }
 
 
@@ -60,6 +60,7 @@ body {
     border-radius: 5px;
     padding: 10px;
     background: #000000; /* White background inside */
+    min-width: 80%;
 }
 
 .form-group i {
