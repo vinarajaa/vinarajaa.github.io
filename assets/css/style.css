@@ -11,6 +11,13 @@
     object-fit: cover;
     margin-bottom: 20px; 
     margin-top: 8%;/* Space between image and text */
+
+}
+.titles-svg {
+    max-height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px; 
+    margin-top: 8%;/* Space between image and text */
 }
 /* ---------------------------------------Body CSS-------------------------------------------------- */
 body {
