@@ -2,26 +2,34 @@ import * as THREE from 'three';
 
 // Scene, Camera, Renderer
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000); // Set background to black
+scene.background = new THREE.Color(0xECD06F); // Soft yellow background
 
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(0, 5, 7); // Position camera above and at an angle
-camera.lookAt(0, 0, 0); // Look at the center of the scene
+camera.position.set(5, 5, 5); // Isometric view
+camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Raycaster & Mouse
+// Full-Screen Plane
+const planeGeometry = new THREE.PlaneGeometry(20, 20);
+const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xDF6C4F }); // Warm coral color
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.rotation.x = -Math.PI / 2; // Lay flat
+scene.add(plane);
+
+// Lighting
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+scene.add(ambientLight);
+
+const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+directionalLight.position.set(5, 10, 7.5);
+scene.add(directionalLight);
+
+// Raycaster & Mouse for Interactivity
 const raycaster = new THREE.Raycaster();
 const mouse = new THREE.Vector2();
-
-// Plane Geometry (angled)
-const planeGeometry = new THREE.PlaneGeometry(10, 10, 32, 32);
-const planeMaterial = new THREE.MeshStandardMaterial({ color: 0x003366, side: THREE.DoubleSide });
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2; // Rotate plane to lie flat
-scene.add(plane);
 
 // Clickable Boxes (Navigation)
 const pages = [
@@ -34,7 +42,7 @@ const clickableObjects = [];
 
 pages.forEach(page => {
   const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0x8b0000 });
+  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White for contrast
   const box = new THREE.Mesh(boxGeometry, boxMaterial);
   box.position.set(...page.position);
   box.userData = { link: page.link, name: page.name };
@@ -45,7 +53,7 @@ pages.forEach(page => {
   const canvas = document.createElement('canvas');
   const ctx = canvas.getContext('2d');
   ctx.font = '30px Arial';
-  ctx.fillStyle = '#fff';
+  ctx.fillStyle = '#000';
   ctx.fillText(page.name, 10, 50);
 
   const texture = new THREE.CanvasTexture(canvas);
@@ -55,14 +63,6 @@ pages.forEach(page => {
   label.position.set(page.position[0], page.position[1] + 1, page.position[2]);
   scene.add(label);
 });
-
-// Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-scene.add(ambientLight);
-
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 10, 5);
-scene.add(directionalLight);
 
 // Responsive Canvas
 window.addEventListener('resize', () => {
@@ -95,7 +95,7 @@ window.addEventListener('mousemove', (event) => {
   const intersects = raycaster.intersectObjects(clickableObjects);
 
   clickableObjects.forEach(obj => {
-    obj.material.color.set(0x8b0000); // Default color
+    obj.material.color.set(0xFFFFFF); // Default color
   });
 
   if (intersects.length > 0) {
@@ -103,7 +103,7 @@ window.addEventListener('mousemove', (event) => {
   }
 });
 
-// Animation Loop (No camera or object movement)
+// Animation Loop
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
