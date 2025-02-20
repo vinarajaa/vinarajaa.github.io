@@ -3,20 +3,27 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>3D Landscape Homepage</title>
-  <link rel="stylesheet" href="assets/css/style.css">
+  <title>3D Plane Homepage</title>
   <style>
     body { margin: 0; overflow: hidden; }
     canvas { display: block; }
   </style>
+  
+  <!-- Import Map for Three.js -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+        "three/examples/jsm/controls/OrbitControls.js": "https://unpkg.com/three@0.161.0/examples/jsm/controls/OrbitControls.js"
+      }
+    }
+  </script>
 </head>
 <body>
 
-  <!-- 3D Landscape will render here -->
+  <!-- Canvas will be auto-appended by Three.js -->
 
-  <!-- Three.js CDN -->
-<!-- Correct Script Order -->
-<script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.152/examples/js/controls/OrbitControls.js"></script>
-<script src="assets/js/main.js"></script>
+  <!-- Main JavaScript -->
+  <script type="module" src="./assets/js/main.js"></script>
+</body>
 </html>
