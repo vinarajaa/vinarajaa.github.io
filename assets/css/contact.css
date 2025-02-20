@@ -32,7 +32,8 @@ body {
 
 /* Form Fields (Inputs and Textarea) */
 #contact-form input,
-#contact-form textarea {
+#contact-form textarea,
+#contact-form subject {
     width: 100%; /* Make inputs take full width */
     max-width: 500px; /* Limit the maximum width */
     padding: 10px;
