@@ -25,7 +25,7 @@ document.getElementById("contact-form").addEventListener("submit", function(even
         message: message
     })
     .then(function(response) {
-        formStatus.textContent = "Message sent successfully! 🚀";
+        formStatus.textContent = "Message sent!🚀";
         document.getElementById("contact-form").reset();
     }, function(error) {
         formStatus.textContent = "Failed to send message. Please try again.";

@@ -185,7 +185,6 @@ textarea {
 
 /* Form Status Message */
 #form-status {
-    margin-top: 15px;
     font-size: 16px;
-    color: #64ffda;
+    color: #ffffff;
 }
