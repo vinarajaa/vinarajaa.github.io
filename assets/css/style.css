@@ -6,6 +6,12 @@
     font-family: 'Courier New', Courier, monospace;
     font-weight: 400;
 }
+.welcome-svg {
+    height: 150px;
+    object-fit: cover;
+    margin-bottom: 20px; 
+    margin-top: 8%;/* Space between image and text */
+}
 /* ---------------------------------------Body CSS-------------------------------------------------- */
 body {
     
