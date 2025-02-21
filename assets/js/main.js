@@ -60,7 +60,7 @@ for (let i = 0; i < 5; i++) {
 // 3D Text (BRUNO SIMON)
 const fontLoader = new FontLoader();
 fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
-  const textGeometry = new TextGeometry('YOUR NAME', {
+  const textGeometry = new TextGeometry('Vina Raja', {
     font: font,
     size: 1,
     height: 0.5,
