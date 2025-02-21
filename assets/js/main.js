@@ -1,68 +1,96 @@
 import * as THREE from 'three';
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 
 // Scene, Camera, Renderer
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0xECD06F); // Soft yellow background
+scene.background = new THREE.Color(0xf8d9a0); // Gradient-like peach background
 
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(5, 5, 5); // Isometric view
+const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+camera.position.set(0, 5, 10);
 camera.lookAt(0, 0, 0);
 
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
 document.body.appendChild(renderer.domElement);
 
-// Full-Screen Plane
-const planeGeometry = new THREE.PlaneGeometry(20, 20);
-const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xDF6C4F }); // Warm coral color
-const plane = new THREE.Mesh(planeGeometry, planeMaterial);
-plane.rotation.x = -Math.PI / 2; // Lay flat
-scene.add(plane);
-
 // Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
-directionalLight.position.set(5, 10, 7.5);
-scene.add(directionalLight);
+const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
+dirLight.position.set(5, 10, 7.5);
+dirLight.castShadow = true;
+scene.add(dirLight);
 
-// Raycaster & Mouse for Interactivity
-const raycaster = new THREE.Raycaster();
-const mouse = new THREE.Vector2();
+// Plane (Ground)
+const planeGeometry = new THREE.PlaneGeometry(50, 50);
+const planeMaterial = new THREE.MeshStandardMaterial({ color: 0xf9a875 });
+const plane = new THREE.Mesh(planeGeometry, planeMaterial);
+plane.rotation.x = -Math.PI / 2;
+plane.receiveShadow = true;
+scene.add(plane);
 
-// Clickable Boxes (Navigation)
-const pages = [
-  { name: 'About', position: [-3, 0.5, -2], link: 'about.html' },
-  { name: 'Work', position: [0, 0.5, -2], link: 'work.html' },
-  { name: 'Contact', position: [3, 0.5, -2], link: 'contact.html' }
-];
+// Placeholder Tiles
+for (let i = -3; i <= 3; i++) {
+  const tileGeometry = new THREE.BoxGeometry(1, 0.1, 1);
+  const tileMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const tile = new THREE.Mesh(tileGeometry, tileMaterial);
+  tile.position.set(i * 1.5, 0.05, 0);
+  tile.castShadow = true;
+  scene.add(tile);
+}
 
-const clickableObjects = [];
+// Placeholder Trees (Simple Low-Poly)
+for (let i = 0; i < 5; i++) {
+  const trunkGeometry = new THREE.CylinderGeometry(0.1, 0.1, 1);
+  const trunkMaterial = new THREE.MeshStandardMaterial({ color: 0x8b5a2b });
+  const trunk = new THREE.Mesh(trunkGeometry, trunkMaterial);
+  trunk.position.set(Math.random() * 20 - 10, 0.5, Math.random() * 20 - 10);
+  scene.add(trunk);
 
-pages.forEach(page => {
-  const boxGeometry = new THREE.BoxGeometry(1, 1, 1);
-  const boxMaterial = new THREE.MeshStandardMaterial({ color: 0xFFFFFF }); // White for contrast
-  const box = new THREE.Mesh(boxGeometry, boxMaterial);
-  box.position.set(...page.position);
-  box.userData = { link: page.link, name: page.name };
-  scene.add(box);
-  clickableObjects.push(box);
+  const leavesGeometry = new THREE.ConeGeometry(0.8, 2, 8);
+  const leavesMaterial = new THREE.MeshStandardMaterial({ color: 0xf9f871 });
+  const leaves = new THREE.Mesh(leavesGeometry, leavesMaterial);
+  leaves.position.set(trunk.position.x, 1.8, trunk.position.z);
+  scene.add(leaves);
+}
 
-  // Add Text Label (using canvas texture)
-  const canvas = document.createElement('canvas');
-  const ctx = canvas.getContext('2d');
-  ctx.font = '30px Arial';
-  ctx.fillStyle = '#000';
-  ctx.fillText(page.name, 10, 50);
+// 3D Text (BRUNO SIMON)
+const fontLoader = new FontLoader();
+fontLoader.load('https://threejs.org/examples/fonts/helvetiker_regular.typeface.json', (font) => {
+  const textGeometry = new TextGeometry('YOUR NAME', {
+    font: font,
+    size: 1,
+    height: 0.5,
+    bevelEnabled: true,
+    bevelThickness: 0.05,
+    bevelSize: 0.05,
+    bevelSegments: 5
+  });
 
-  const texture = new THREE.CanvasTexture(canvas);
-  const labelMaterial = new THREE.SpriteMaterial({ map: texture });
-  const label = new THREE.Sprite(labelMaterial);
-  label.scale.set(2, 1, 1);
-  label.position.set(page.position[0], page.position[1] + 1, page.position[2]);
-  scene.add(label);
+  const textMaterial = new THREE.MeshStandardMaterial({ color: 0xffffff });
+  const textMesh = new THREE.Mesh(textGeometry, textMaterial);
+  textMesh.position.set(-4, 0.5, -3);
+  textMesh.castShadow = true;
+  scene.add(textMesh);
 });
+
+// Placeholder Car (Cube for now)
+const carGeometry = new THREE.BoxGeometry(1, 0.5, 2);
+const carMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+const car = new THREE.Mesh(carGeometry, carMaterial);
+car.position.set(0, 0.25, 2);
+car.castShadow = true;
+scene.add(car);
+
+// Animation Loop
+function animate() {
+  requestAnimationFrame(animate);
+  renderer.render(scene, camera);
+}
+animate();
 
 // Responsive Canvas
 window.addEventListener('resize', () => {
@@ -71,42 +99,3 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
 });
-
-// Raycasting for Clicks
-window.addEventListener('click', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(clickableObjects);
-
-  if (intersects.length > 0) {
-    const { link } = intersects[0].object.userData;
-    window.location.href = link; // Navigate to page
-  }
-});
-
-// Raycasting for Hover Effects
-window.addEventListener('mousemove', (event) => {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-  raycaster.setFromCamera(mouse, camera);
-  const intersects = raycaster.intersectObjects(clickableObjects);
-
-  clickableObjects.forEach(obj => {
-    obj.material.color.set(0xFFFFFF); // Default color
-  });
-
-  if (intersects.length > 0) {
-    intersects[0].object.material.color.set(0x00ff00); // Highlight on hover
-  }
-});
-
-// Animation Loop
-function animate() {
-  requestAnimationFrame(animate);
-  renderer.render(scene, camera);
-}
-
-animate();
