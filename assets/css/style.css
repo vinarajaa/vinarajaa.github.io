@@ -1,236 +1,98 @@
-/* assets/css/style.css */
-
-/* ------------------------- */
-/* Color Palette */
-/* ------------------------- */
 :root {
     --bg-color: #F0EFEB;
     --text-color: #2D2D2D;
-    --accent-mauve: #B294A0;
-    --accent-blue: #C2CCD6;
     --accent-green: #7C8D7D;
+    --accent-mauve: #B294A0;
     --accent-orange: #D9966E;
-
-    --dark-bg: #1F1F1F;
-    --dark-text: #E0E0E0;
 }
 
-/* ------------------------- */
-/* Base Styling */
-/* ------------------------- */
 body {
     font-family: 'Fira Code', monospace;
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 a {
     text-decoration: none;
     color: var(--accent-mauve);
-    transition: color 0.3s ease;
+    transition: color 0.3s;
 }
-
 a:hover {
     color: var(--accent-orange);
     text-decoration: underline;
 }
 
-.section {
-    padding: 100px 20px;
-    max-width: 1000px;
-    margin: auto;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1s ease, transform 1s ease;
-}
-
-/* .section.fade-in {
-    opacity: 1;
-    transform: translateY(0);
-} */
-
-/* ------------------------- */
-/* Navbar */
-/* ------------------------- */
 .navbar {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 30px 40px;
+    padding: 20px 30px;
     background: transparent;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 1s ease, transform 1s ease;
-}
-
-.navbar.fade-in-onload {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 .logo {
-    font-size: 1.4rem;
     font-weight: bold;
+    font-size: 1.4rem;
     color: var(--accent-green);
 }
 
 .nav-links {
     display: flex;
-    gap: 30px;
+    gap: 25px;
 }
 
-.nav-links a {
-    font-weight: 500;
-    font-size: 1rem;
-}
-
-/* ------------------------- */
-/* Hero Section */
-/* ------------------------- */
-.hero {
+.section {
+    max-width: 900px;
+    margin: auto;
+    padding: 80px 20px;
     text-align: center;
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1.2s ease, transform 1.2s ease;
-}
-
-.hero.fade-in-onload {
-    opacity: 1;
-    transform: translateY(0);
 }
 
 .hero-title {
     font-size: 2.8rem;
-    line-height: 1.3;
-    margin: 0;
     color: var(--accent-green);
+    margin-bottom: 20px;
 }
 
 .hero-subtitle {
-    font-size: 1.2rem;
-    margin-top: 20px;
-    color: var(--text-color);
+    font-size: 1.1rem;
 }
 
-/* ------------------------- */
-/* Projects & About */
-/* ------------------------- */
-h2 {
-    font-size: 2rem;
-    margin-bottom: 40px;
-    color: var(--accent-green);
+.skills-list {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    padding: 0;
+    margin-top: 30px;
+}
+.skills-list li {
+    background: var(--accent-mauve);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
 }
 
 .project-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 30px;
+    margin-top: 40px;
 }
-
 .project-item {
-    background-color: white;
-    padding: 24px;
+    background: white;
+    padding: 20px;
     border-radius: 8px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.project-item h3 {
+    margin-top: 0;
 }
 
-.project-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 18px rgba(0,0,0,0.15);
-}
-
-body.dark-mode .project-item {
-    background-color: #2C2C2C;
-    color: var(--dark-text);
-}
-
-/* ------------------------- */
-/* Contact & Footer */
-/* ------------------------- */
 .footer {
     text-align: center;
     padding: 40px 20px;
     background-color: var(--accent-mauve);
     color: white;
-}
-
-.footer a {
-    color: white;
-    margin-left: 10px;
-}
-
-.footer a:hover {
-    color: var(--accent-orange);
-}
-
-/* ------------------------- */
-/* Dark Mode */
-/* ------------------------- */
-body.dark-mode {
-    background-color: var(--dark-bg);
-    color: var(--dark-text);
-}
-
-body.dark-mode .navbar {
-    background-color: var(--dark-bg);
-}
-
-body.dark-mode .hero-subtitle,
-body.dark-mode .nav-links a {
-    color: var(--dark-text);
-}
-
-body.dark-mode .footer {
-    background-color: var(--accent-green);
-}
-
-/* ------------------------- */
-/* Responsive */
-/* ------------------------- */
-@media (max-width: 768px) {
-    .project-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .navbar {
-        flex-direction: column;
-        gap: 20px;
-    }
-}
-
-/* Typed Text Cursor Style */
-.typed-text {
-    font-size: 1.1rem;
-    color: var(--text-color);
-    display: inline-block;
-}
-
-.cursor {
-    display: inline-block;
-    color: var(--accent-mauve);
-    font-weight: bold;
-    animation: blink 1s infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
-
-/* Fade-in Scroll Effect */
-.fade-in-scroll {
-    opacity: 0;
-    transform: translateY(30px);
-    transition: opacity 1s ease-out, transform 1s ease-out;
-}
-
-.fade-in-scroll.fade-in {
-    opacity: 1;
-    transform: translateY(0);
 }
