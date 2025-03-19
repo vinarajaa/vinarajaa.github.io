@@ -38,7 +38,7 @@ a:hover {
     position: fixed;
     top: 0;
     left: 0;
-    width: 180px;
+    /* width: 180px; */
     height: 100vh;
     background-color: var(--bg-color);
     padding: 40px 20px;
