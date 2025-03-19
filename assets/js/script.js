@@ -25,11 +25,8 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeElements.forEach(el => observer.observe(el));
 
-// Smart Typed Text Effect
 const typedOutput = document.getElementById('typed-output');
-const cursor = document.querySelector('.cursor');
 
-// Word groups: [prefix, variable part]
 const lines = [
     ["My name is ", "Vina Raja."],
     ["I am a ", "programmer."],
@@ -39,50 +36,47 @@ const lines = [
     ["", "Explore around, glad you're here!"]
 ];
 
-let lineIndex = 0;
-let charIndex = 0;
-let isDeleting = false;
+let currentLine = 0;
+let currentText = "";
+let isTyping = true;
 let prefix = "";
-let variablePart = "";
+let suffix = "";
 
-function typeSmart() {
-    const [currentPrefix, currentVariable] = lines[lineIndex];
+function typeLine() {
+    const [nextPrefix, nextSuffix] = lines[currentLine];
 
-    if (prefix !== currentPrefix) {
-        // Switching to a new prefix – type from start
-        prefix = currentPrefix;
-        variablePart = "";
-        charIndex = 0;
+    // If prefix changed, reset everything
+    if (prefix !== nextPrefix) {
+        prefix = nextPrefix;
+        suffix = "";
+        currentText = "";
         typedOutput.textContent = prefix;
     }
 
-    const fullText = prefix + currentVariable;
-    const visibleText = prefix + variablePart;
-    typedOutput.textContent = visibleText;
-
-    if (!isDeleting && charIndex < currentVariable.length) {
-        variablePart += currentVariable.charAt(charIndex);
-        charIndex++;
-        setTimeout(typeSmart, 70);
-    } else if (isDeleting && charIndex > 0) {
-        variablePart = variablePart.substring(0, charIndex - 1);
-        charIndex--;
-        setTimeout(typeSmart, 40);
-    } else {
-        if (!isDeleting) {
-            setTimeout(() => {
-                isDeleting = true;
-                typeSmart();
-            }, 1200);
+    // If typing
+    if (isTyping) {
+        if (suffix.length < nextSuffix.length) {
+            suffix += nextSuffix.charAt(suffix.length);
+            typedOutput.textContent = prefix + suffix;
+            setTimeout(typeLine, 70);
         } else {
-            isDeleting = false;
-            lineIndex = (lineIndex + 1) % lines.length;
-            prefix = "";
-            variablePart = "";
-            charIndex = 0;
-            setTimeout(typeSmart, 300);
+            isTyping = false;
+            setTimeout(typeLine, 1500); // Pause before deleting
+        }
+    } else {
+        if (suffix.length > 0) {
+            suffix = suffix.substring(0, suffix.length - 1);
+            typedOutput.textContent = prefix + suffix;
+            setTimeout(typeLine, 40);
+        } else {
+            // Move to next line
+            currentLine = (currentLine + 1) % lines.length;
+            isTyping = true;
+            setTimeout(typeLine, 300);
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', typeSmart);
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(typeLine, 500);
+});
