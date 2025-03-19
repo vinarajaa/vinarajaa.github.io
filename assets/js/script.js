@@ -1,38 +1,21 @@
 // assets/js/script.js
 
-// Smooth Scroll
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        document.querySelector(this.getAttribute('href')).scrollIntoView({
-            behavior: 'smooth'
-        });
-    });
-});
-
-// Dark Mode Toggle
+// Dark Mode Toggle (optional - add button if desired)
 const themeToggle = document.getElementById('themeToggle');
+if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+    });
+}
 
-themeToggle.addEventListener('click', () => {
-    document.body.classList.toggle('dark-mode');
-    themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-});
-
-// Hamburger Menu
-const hamburger = document.getElementById('hamburger');
-const navLinks = document.getElementById('navLinks');
-
-hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('show');
-});
-// Scroll Fade-In Animation
-const fadeElements = document.querySelectorAll('.section');
+// Scroll Fade-In Sections
+const fadeElements = document.querySelectorAll('.fade-in-scroll');
 
 const observerOptions = {
     threshold: 0.1
 };
 
-const fadeInObserver = new IntersectionObserver((entries) => {
+const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
             entry.target.classList.add('fade-in');
@@ -40,6 +23,4 @@ const fadeInObserver = new IntersectionObserver((entries) => {
     });
 }, observerOptions);
 
-fadeElements.forEach(el => {
-    fadeInObserver.observe(el);
-});
+fadeElements.forEach(el => observer.observe(el));

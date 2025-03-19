@@ -5,11 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vina Raja | Portfolio</title>
 
-    <!-- Google Font: Fira Code -->
+    <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    
-    <!-- Font Awesome Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="assets/css/style.css" />
@@ -17,93 +14,51 @@
 </head>
 <body>
     <!-- Navigation -->
-    <header class="navbar">
+    <header class="navbar fade-in-onload">
         <div class="logo">Vina Raja</div>
-        <nav class="nav-links" id="navLinks">
-            <a href="#hero">Home</a>
+        <nav class="nav-links">
             <a href="#projects">Projects</a>
             <a href="#about">About</a>
             <a href="#contact">Contact</a>
-            <button id="themeToggle">🌙</button>
         </nav>
-        <div class="hamburger" id="hamburger">&#9776;</div>
     </header>
 
     <!-- Hero Section -->
-    <section id="hero" class="section hero">
-        <div class="hero-content">
-            <img src="assets/images/your-profile.jpg" alt="Vina Raja" class="profile-img"/>
-            <h1>Hello, I'm <span class="highlight">Vina Raja</span></h1>
-            <p class="tagline">Creative Developer | Designer | Dreamer</p>
-            <a href="#projects" class="btn">View My Work</a>
-        </div>
+    <section id="hero" class="section hero fade-in-onload">
+        <h1 class="hero-title">Creative Developer <br> Crafting Functional Design</h1>
+        <p class="hero-subtitle">Code meets creativity. Explore selected work ↓</p>
     </section>
 
-    <!-- Icon Links Section -->
-    <section class="section quick-links">
-        <div class="icon-card">
-            <i class="fas fa-user fa-2x"></i>
-            <h3>Profile</h3>
-        </div>
-        <div class="icon-card">
-            <i class="fas fa-laptop-code fa-2x"></i>
-            <h3>Projects</h3>
-        </div>
-        <div class="icon-card">
-            <i class="fas fa-envelope fa-2x"></i>
-            <h3>Contact</h3>
-        </div>
-    </section>
-
-    <!-- Projects Section -->
-    <section id="projects" class="section projects">
-        <h2>My Projects</h2>
+    <!-- Projects -->
+    <section id="projects" class="section fade-in-scroll">
+        <h2>Selected Projects</h2>
         <div class="project-grid">
-            <div class="project-card">
+            <div class="project-item">
                 <h3>Project One</h3>
-                <p>Brief description of your project with a clean design.</p>
+                <p>Elegant solution for a complex problem.</p>
             </div>
-            <div class="project-card">
+            <div class="project-item">
                 <h3>Project Two</h3>
-                <p>Showcase another awesome project that highlights skills.</p>
-            </div>
-            <div class="project-card">
-                <h3>Project Three</h3>
-                <p>Detail this project’s functionality or impact briefly.</p>
+                <p>Designed and developed for maximum impact.</p>
             </div>
         </div>
     </section>
 
-    <!-- About Section -->
-    <section id="about" class="section about">
-        <h2>About Me</h2>
-        <p>I’m passionate about crafting elegant, performant web experiences with brilliant functionality and design.</p>
-        <ul class="skills-list">
-            <li>HTML5 & CSS3</li>
-            <li>JavaScript (ES6+)</li>
-            <li>React</li>
-            <li>UI/UX Design</li>
-        </ul>
+    <!-- About -->
+    <section id="about" class="section fade-in-scroll">
+        <h2>About</h2>
+        <p>I'm Vina Raja, a developer blending function with aesthetic. Focused on creating seamless digital experiences that speak through design and usability.</p>
     </section>
 
-    <!-- Contact Section -->
-    <section id="contact" class="section contact">
-        <h2>Get In Touch</h2>
-        <form id="contactForm">
-            <input type="text" placeholder="Your Name" required/>
-            <input type="email" placeholder="Your Email" required/>
-            <textarea placeholder="Your Message" required></textarea>
-            <button type="submit" class="btn">Send Message</button>
-        </form>
+    <!-- Contact -->
+    <section id="contact" class="section fade-in-scroll">
+        <h2>Contact</h2>
+        <p>Let’s create something impactful. <br>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></p>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
+    <footer class="footer fade-in-scroll">
         <p>&copy; 2025 Vina Raja</p>
-        <div class="social-links">
-            <a href="https://github.com/yourusername" target="_blank"><i class="fab fa-github"></i></a>
-            <a href="https://linkedin.com/in/yourusername" target="_blank"><i class="fab fa-linkedin"></i></a>
-        </div>
     </footer>
 </body>
 </html>
