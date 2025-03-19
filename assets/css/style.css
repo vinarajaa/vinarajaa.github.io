@@ -222,3 +222,16 @@ body.dark-mode .footer {
     0%, 100% { opacity: 1; }
     50% { opacity: 0; }
 }
+
+/* Initial Hidden State */
+.fade-in-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+/* Fade-in Activated */
+.fade-in-scroll.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}

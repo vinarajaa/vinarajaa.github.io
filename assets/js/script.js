@@ -8,7 +8,7 @@ if (themeToggle) {
     });
 }
 
-// Scroll Fade-In Sections
+// Scroll Fade-In Trigger
 const fadeElements = document.querySelectorAll('.fade-in-scroll');
 
 const observerOptions = {
@@ -80,3 +80,4 @@ function typeLine() {
 document.addEventListener('DOMContentLoaded', () => {
     setTimeout(typeLine, 500);
 });
+
