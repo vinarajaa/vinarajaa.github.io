@@ -14,7 +14,7 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
-    margin-left: 180px; /* Offset for sidebar nav */
+    padding-left: 180px; /* Use padding instead of margin for smoother layout */
 }
 
 /*==========================
@@ -45,7 +45,9 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    border-right: 1px solid var(--accent-mauve);
+    /* Remove border-right */
+    border-right: none;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.05); /* Optional soft shadow */
     z-index: 1000;
 }
 
