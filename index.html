@@ -5,9 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Vina Raja | Portfolio</title>
 
-    <!-- Google Fonts: Fira Code -->
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&display=swap" rel="stylesheet">
-
+    <!-- Google Font: Fira Code -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 
@@ -16,7 +16,7 @@
     <script defer src="assets/js/script.js"></script>
 </head>
 <body>
-    <!-- Navbar -->
+    <!-- Navigation -->
     <header class="navbar">
         <div class="logo">Vina Raja</div>
         <nav class="nav-links" id="navLinks">
@@ -31,10 +31,12 @@
 
     <!-- Hero Section -->
     <section id="hero" class="section hero">
-        <img src="assets/images/your-profile.jpg" alt="Vina Raja Profile" class="profile-img"/>
-        <h1>Hello, I'm <span class="highlight">Vina Raja</span></h1>
-        <p class="tagline">Creative Developer | Designer | Dreamer</p>
-        <a href="#projects" class="btn">View My Work</a>
+        <div class="hero-content">
+            <img src="assets/images/your-profile.jpg" alt="Vina Raja" class="profile-img"/>
+            <h1>Hello, I'm <span class="highlight">Vina Raja</span></h1>
+            <p class="tagline">Creative Developer | Designer | Dreamer</p>
+            <a href="#projects" class="btn">View My Work</a>
+        </div>
     </section>
 
     <!-- Icon Links Section -->
@@ -48,26 +50,26 @@
             <h3>Projects</h3>
         </div>
         <div class="icon-card">
-            <i class="fas fa-address-card fa-2x"></i>
-            <h3>About Me</h3>
+            <i class="fas fa-envelope fa-2x"></i>
+            <h3>Contact</h3>
         </div>
     </section>
 
     <!-- Projects Section -->
     <section id="projects" class="section projects">
-        <h2>Projects</h2>
+        <h2>My Projects</h2>
         <div class="project-grid">
             <div class="project-card">
                 <h3>Project One</h3>
-                <p>Short description of project one.</p>
+                <p>Brief description of your project with a clean design.</p>
             </div>
             <div class="project-card">
                 <h3>Project Two</h3>
-                <p>Short description of project two.</p>
+                <p>Showcase another awesome project that highlights skills.</p>
             </div>
             <div class="project-card">
                 <h3>Project Three</h3>
-                <p>Short description of project three.</p>
+                <p>Detail this project’s functionality or impact briefly.</p>
             </div>
         </div>
     </section>
@@ -75,18 +77,18 @@
     <!-- About Section -->
     <section id="about" class="section about">
         <h2>About Me</h2>
-        <p>Hello! I'm passionate about creating beautiful and functional websites. I enjoy turning ideas into reality with clean code and creative designs.</p>
+        <p>I’m passionate about crafting elegant, performant web experiences with brilliant functionality and design.</p>
         <ul class="skills-list">
-            <li>HTML/CSS</li>
-            <li>JavaScript</li>
+            <li>HTML5 & CSS3</li>
+            <li>JavaScript (ES6+)</li>
             <li>React</li>
-            <li>Git & GitHub</li>
+            <li>UI/UX Design</li>
         </ul>
     </section>
 
     <!-- Contact Section -->
     <section id="contact" class="section contact">
-        <h2>Contact Me</h2>
+        <h2>Get In Touch</h2>
         <form id="contactForm">
             <input type="text" placeholder="Your Name" required/>
             <input type="email" placeholder="Your Email" required/>
