@@ -25,8 +25,7 @@ const observer = new IntersectionObserver((entries) => {
 
 fadeElements.forEach(el => observer.observe(el));
 
-const typedOutput = document.getElementById('typed-output');
-
+const typedOutput = document.getElementById('typed-text');
 const lines = [
     ["My name is ", "Vina Raja."],
     ["I am a ", "programmer."],
