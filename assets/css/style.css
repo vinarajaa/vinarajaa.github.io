@@ -1,9 +1,6 @@
-/* style.css */
+/* assets/css/style.css */
 
-/* ------------------------- */
-/* Part 1: Base & Variables  */
-/* ------------------------- */
-
+/* Base Variables */
 :root {
     --bg-color: #FDF6F0;
     --text-color: #333333;
@@ -13,11 +10,12 @@
     --dark-text: #EAEAEA;
 }
 
+/* Base Styling */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', sans-serif;
+    font-family: 'Fira Code', monospace;
     background-color: var(--bg-color);
     color: var(--text-color);
+    margin: 0;
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -55,10 +53,7 @@ a {
     color: var(--text-color);
 }
 
-/* ------------------------- */
-/* Part 2: Navbar & Header   */
-/* ------------------------- */
-
+/* Navbar */
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -81,10 +76,6 @@ a {
     align-items: center;
 }
 
-.nav-links a {
-    font-weight: 500;
-}
-
 #themeToggle {
     background: none;
     border: none;
@@ -98,10 +89,7 @@ a {
     cursor: pointer;
 }
 
-/* ------------------------- */
-/* Part 3: Hero Section      */
-/* ------------------------- */
-
+/* Hero Section */
 .hero {
     background-color: var(--bg-color);
 }
@@ -120,10 +108,26 @@ a {
     margin-bottom: 20px;
 }
 
-/* ------------------------- */
-/* Part 4: Projects Section  */
-/* ------------------------- */
+/* Icon Quick Links */
+.quick-links {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    background-color: #fff;
+    padding: 40px 20px;
+    border-top: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
 
+.icon-card {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: var(--bg-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Projects */
 .project-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -144,10 +148,7 @@ a {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-/* ------------------------- */
-/* Part 5: About Section     */
-/* ------------------------- */
-
+/* About */
 .skills-list {
     list-style: none;
     padding: 0;
@@ -165,10 +166,7 @@ a {
     font-weight: 500;
 }
 
-/* ------------------------- */
-/* Part 6: Contact Form      */
-/* ------------------------- */
-
+/* Contact */
 form {
     max-width: 500px;
     margin: 0 auto;
@@ -189,10 +187,7 @@ textarea {
     min-height: 100px;
 }
 
-/* ------------------------- */
-/* Part 7: Footer            */
-/* ------------------------- */
-
+/* Footer */
 .footer {
     padding: 20px;
     background-color: var(--accent-pink);
@@ -209,10 +204,7 @@ textarea {
     font-weight: bold;
 }
 
-/* ------------------------- */
-/* Part 8: Dark Mode         */
-/* ------------------------- */
-
+/* Dark Mode */
 body.dark-mode {
     background-color: var(--dark-bg);
     color: var(--dark-text);
@@ -232,10 +224,7 @@ body.dark-mode .project-card {
     color: var(--dark-text);
 }
 
-/* ------------------------- */
-/* Part 9: Responsive Menu   */
-/* ------------------------- */
-
+/* Responsive */
 @media (max-width: 768px) {
     .nav-links {
         display: none;
@@ -256,16 +245,4 @@ body.dark-mode .project-card {
     .hamburger {
         display: block;
     }
-}
-
-/* Scroll Fade-In Animation */
-.section {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease, transform 1s ease;
-}
-
-.section.fade-in {
-    opacity: 1;
-    transform: translateY(0);
 }
