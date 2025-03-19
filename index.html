@@ -1,59 +1,84 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Your Portfolio</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="script.js"></script>
 </head>
-<body id="vanta-bg">
-    
-    <!-- <header>
-            <div class="glow-navbar">
-                <ul class="nav-links">
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="about.html">About</a></li>
-                    <li><a href="work.html">My Work</a></li>
-                    <li><a href="contact.html">Contact</a></li>
-                </ul>
-            </div>
-    </header> -->
+<body>
+    <!-- Navbar -->
+    <header class="navbar">
+        <div class="logo">YourName</div>
+        <nav class="nav-links" id="navLinks">
+            <a href="#hero">Home</a>
+            <a href="#projects">Projects</a>
+            <a href="#about">About</a>
+            <a href="#contact">Contact</a>
+            <button id="themeToggle">🌙</button>
+        </nav>
+        <div class="hamburger" id="hamburger">&#9776;</div>
+    </header>
 
-    <section class="hero">
-        <img src="assets/images/Welcome.svg" alt="Welcome sign" class="welcome-svg">
-        <!-- <h1>My name is Vina Raja</h1> -->
-        <h2><span id="typed-text"></span></h2>
-        <!-- <p>Building the future, one project at a time.</p> -->
-<!-- Bottom Navigation Bar -->
-        <div class="hero-buttons">
-            <!-- These buttons will always be present -->
-            <a href="about.html" class="glow-on-hover">
-                <i class="fas fa-user"></i>
-                <span class="btn-text">About Me</span>
-            </a>
-
-            <a href="work.html" class="glow-on-hover">
-                <i class="fas fa-briefcase"></i>
-                <span class="btn-text">My Work</span>
-            </a>
-
-            <a href="contact.html" class="glow-on-hover">
-                <i class="fas fa-envelope"></i>
-                <span class="btn-text">Contact Me</span>
-            </a>
-        </div>
-
-
-        <!-- <a href="work.html" class="btn">View My Work</a> -->
+    <!-- Hero Section -->
+    <section id="hero" class="section hero">
+        <img src="your-profile.jpg" alt="Your Profile" class="profile-img"/>
+        <h1>Hello, I'm <span class="highlight">Your Name</span></h1>
+        <p class="tagline">Creative Developer | Designer | Dreamer</p>
+        <a href="#projects" class="btn">View My Work</a>
     </section>
-    <script src="assets/js/nav.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
-    <script src="assets/js/vanta.waves.min.js"></script>
-    <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script> -->
-    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script src="assets/js/script.js"></script>
+
+    <!-- Projects Section -->
+    <section id="projects" class="section projects">
+        <h2>Projects</h2>
+        <div class="project-grid">
+            <div class="project-card">
+                <h3>Project One</h3>
+                <p>Short description of project one.</p>
+            </div>
+            <div class="project-card">
+                <h3>Project Two</h3>
+                <p>Short description of project two.</p>
+            </div>
+            <div class="project-card">
+                <h3>Project Three</h3>
+                <p>Short description of project three.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section about">
+        <h2>About Me</h2>
+        <p>Hello! I'm passionate about creating beautiful and functional websites. I enjoy turning ideas into reality with clean code and creative designs.</p>
+        <ul class="skills-list">
+            <li>HTML/CSS</li>
+            <li>JavaScript</li>
+            <li>React</li>
+            <li>Git & GitHub</li>
+        </ul>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <h2>Contact Me</h2>
+        <form id="contactForm">
+            <input type="text" placeholder="Your Name" required/>
+            <input type="email" placeholder="Your Email" required/>
+            <textarea placeholder="Your Message" required></textarea>
+            <button type="submit" class="btn">Send Message</button>
+        </form>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2025 Your Name</p>
+        <div class="social-links">
+            <a href="https://github.com/yourusername" target="_blank">GitHub</a>
+            <a href="https://linkedin.com/in/yourusername" target="_blank">LinkedIn</a>
+        </div>
+    </footer>
 </body>
 </html>

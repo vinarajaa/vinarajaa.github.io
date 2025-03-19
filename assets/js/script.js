@@ -1,26 +1,54 @@
-document.addEventListener("DOMContentLoaded", function () {
-    let typed = new Typed("#typed-text", {
-        strings: ["My name is Vina Raja", "I am a Software Engineeer", "I am a CS Masters Student","I love creating 🎨", "I love coding 👨‍💻", "I love learning about all things tech and beyond!", "Glad you're here!"],
-        typeSpeed: 40,
-        backSpeed: 30,
-        startDelay: 500,     // Small delay before typing starts
-        backDelay: 1250, 
-        loop: true
-    });
+// script.js
 
-    VANTA.WAVES({
-        el: "#vanta-bg",
-        mouseControls: true,
-        touchControls: true,
-        gyroControls: false,
-        minHeight: 200.00,
-        minWidth: 200.00,
-        scale: 1.00,
-        scaleMobile: 1.00,
-        color: 0x1b412e,
-        shininess: 28.00,
-        waveHeight: 7.00,
-        waveSpeed: 1.55,
-        zoom: 1.13
+// ---------------------------
+// Smooth Scroll
+// ---------------------------
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+        e.preventDefault();
+        document.querySelector(this.getAttribute('href')).scrollIntoView({
+            behavior: 'smooth'
+        });
     });
+});
+
+// ---------------------------
+// Dark Mode Toggle
+// ---------------------------
+const themeToggle = document.getElementById('themeToggle');
+
+themeToggle.addEventListener('click', () => {
+    document.body.classList.toggle('dark-mode');
+    themeToggle.textContent = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+});
+
+// ---------------------------
+// Hamburger Menu Toggle
+// ---------------------------
+const hamburger = document.getElementById('hamburger');
+const navLinks = document.getElementById('navLinks');
+
+hamburger.addEventListener('click', () => {
+    navLinks.classList.toggle('show');
+});
+
+// ---------------------------
+// Scroll Animations
+// ---------------------------
+const fadeElements = document.querySelectorAll('.section');
+
+const observerOptions = {
+    threshold: 0.1
+};
+
+const fadeInObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, observerOptions);
+
+fadeElements.forEach(el => {
+    fadeInObserver.observe(el);
 });
