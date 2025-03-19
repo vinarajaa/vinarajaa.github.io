@@ -203,3 +203,22 @@ body.dark-mode .footer {
         gap: 20px;
     }
 }
+
+/* Typed Text Cursor Style */
+.typed-text {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    display: inline-block;
+}
+
+.cursor {
+    display: inline-block;
+    color: var(--accent-mauve);
+    font-weight: bold;
+    animation: blink 1s infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}

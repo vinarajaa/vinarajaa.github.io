@@ -24,3 +24,45 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 fadeElements.forEach(el => observer.observe(el));
+
+// Typed Text Effect
+const typedOutput = document.getElementById('typed-output');
+const words = [
+    "My name is Vina Raja.",
+    "I am a programmer.",
+    "I am a painter.",
+    "I am a designer.",
+    "I am a student.",
+    "Explore around, glad you're here!"
+];
+
+let wordIndex = 0;
+let charIndex = 0;
+let isDeleting = false;
+
+function type() {
+    const currentWord = words[wordIndex];
+    const visibleText = currentWord.substring(0, charIndex);
+    typedOutput.textContent = visibleText;
+
+    if (!isDeleting && charIndex < currentWord.length) {
+        charIndex++;
+        setTimeout(type, 70);
+    } else if (isDeleting && charIndex > 0) {
+        charIndex--;
+        setTimeout(type, 40);
+    } else {
+        if (!isDeleting) {
+            setTimeout(() => {
+                isDeleting = true;
+                type();
+            }, 1200); // Pause before delete
+        } else {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+            setTimeout(type, 300);
+        }
+    }
+}
+
+document.addEventListener('DOMContentLoaded', type);
