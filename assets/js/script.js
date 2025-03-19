@@ -25,3 +25,21 @@ const navLinks = document.getElementById('navLinks');
 hamburger.addEventListener('click', () => {
     navLinks.classList.toggle('show');
 });
+// Scroll Fade-In Animation
+const fadeElements = document.querySelectorAll('.section');
+
+const observerOptions = {
+    threshold: 0.1
+};
+
+const fadeInObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('fade-in');
+        }
+    });
+}, observerOptions);
+
+fadeElements.forEach(el => {
+    fadeInObserver.observe(el);
+});

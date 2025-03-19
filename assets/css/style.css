@@ -245,4 +245,14 @@ body.dark-mode .project-card {
     .hamburger {
         display: block;
     }
+}/* Scroll Fade-In Animation */
+.section {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+}
+
+.section.fade-in {
+    opacity: 1;
+    transform: translateY(0);
 }
