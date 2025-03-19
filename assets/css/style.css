@@ -1,3 +1,6 @@
+/*==========================
+  COLOR VARIABLES & FONT
+==========================*/
 :root {
     --bg-color: #F0EFEB;
     --text-color: #2D2D2D;
@@ -11,37 +14,62 @@ body {
     background-color: var(--bg-color);
     color: var(--text-color);
     margin: 0;
+    margin-left: 180px; /* Offset for sidebar nav */
 }
 
+/*==========================
+  GLOBAL LINKS
+==========================*/
 a {
     text-decoration: none;
     color: var(--accent-mauve);
-    transition: color 0.3s;
+    transition: color 0.3s ease;
 }
+
 a:hover {
     color: var(--accent-orange);
     text-decoration: underline;
 }
 
-.navbar {
+/*==========================
+  SIDEBAR NAVIGATION
+==========================*/
+.sidebar-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 100vh;
+    background-color: var(--bg-color);
+    padding: 40px 20px;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 30px;
-    background: transparent;
+    flex-direction: column;
+    align-items: flex-start;
+    border-right: 1px solid var(--accent-mauve);
+    z-index: 1000;
 }
 
 .logo {
     font-weight: bold;
     font-size: 1.4rem;
     color: var(--accent-green);
+    margin-bottom: 40px;
 }
 
-.nav-links {
+.vertical-links {
     display: flex;
-    gap: 25px;
+    flex-direction: column;
+    gap: 20px;
 }
 
+.vertical-links a {
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+/*==========================
+  SECTION LAYOUTS
+==========================*/
 .section {
     max-width: 900px;
     margin: auto;
@@ -59,6 +87,30 @@ a:hover {
     font-size: 1.1rem;
 }
 
+/*==========================
+  PROJECTS GRID
+==========================*/
+.project-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+.project-item {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.project-item h3 {
+    margin-top: 0;
+}
+
+/*==========================
+  ABOUT - SKILLS
+==========================*/
 .skills-list {
     list-style: none;
     display: flex;
@@ -67,6 +119,7 @@ a:hover {
     padding: 0;
     margin-top: 30px;
 }
+
 .skills-list li {
     background: var(--accent-mauve);
     color: white;
@@ -74,36 +127,15 @@ a:hover {
     border-radius: 6px;
 }
 
-.project-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 30px;
-    margin-top: 40px;
-}
-.project-item {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-}
-.project-item h3 {
-    margin-top: 0;
-}
-
-.footer {
-    text-align: center;
-    padding: 40px 20px;
-    background-color: var(--accent-mauve);
-    color: white;
-}
-/* Section Title */
+/*==========================
+  CONTACT FORM
+==========================*/
 .contact-section h2 {
     font-size: 2rem;
     margin-bottom: 30px;
-    color: #7C8D7D; /* Sage green */
+    color: var(--accent-green);
 }
 
-/* Form Layout */
 form {
     max-width: 600px;
     margin: auto;
@@ -112,7 +144,6 @@ form {
     gap: 20px;
 }
 
-/* Form Groups */
 .form-group {
     position: relative;
 }
@@ -122,33 +153,31 @@ form {
     top: 50%;
     left: 12px;
     transform: translateY(-50%);
-    color: #B294A0; /* Mauve */
+    color: var(--accent-mauve);
 }
 
-/* Inputs + Textarea */
 input, textarea {
     width: 100%;
     padding: 12px 12px 12px 40px;
-    border: 1px solid #B294A0;
+    border: 1px solid var(--accent-mauve);
     border-radius: 6px;
     background-color: #fff;
-    color: #2D2D2D;
+    color: var(--text-color);
     font-size: 1rem;
     transition: border 0.3s;
 }
 
 input::placeholder, textarea::placeholder {
-    color: #7C8D7D;
+    color: var(--accent-green);
 }
 
 input:focus, textarea:focus {
-    border-color: #D9966E; /* Orange hover */
+    border-color: var(--accent-orange);
     outline: none;
 }
 
-/* Send Button */
 .btn, .glow-on-hover-contact {
-    background-color: #B294A0; /* Mauve */
+    background-color: var(--accent-mauve);
     color: white;
     border: none;
     padding: 10px 20px;
@@ -159,12 +188,21 @@ input:focus, textarea:focus {
 }
 
 .btn:hover, .glow-on-hover-contact:hover {
-    background-color: #D9966E; /* Orange hover */
+    background-color: var(--accent-orange);
     transform: scale(1.05);
 }
 
-/* Form Status Text */
 #form-status {
     font-size: 0.9rem;
-    color: #7C8D7D; /* Sage green */
+    color: var(--accent-green);
+}
+
+/*==========================
+  FOOTER
+==========================*/
+.footer {
+    text-align: center;
+    padding: 40px 20px;
+    background-color: var(--accent-mauve);
+    color: white;
 }
