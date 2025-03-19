@@ -96,3 +96,75 @@ a:hover {
     background-color: var(--accent-mauve);
     color: white;
 }
+/* Section Title */
+.contact-section h2 {
+    font-size: 2rem;
+    margin-bottom: 30px;
+    color: #7C8D7D; /* Sage green */
+}
+
+/* Form Layout */
+form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Form Groups */
+.form-group {
+    position: relative;
+}
+
+.form-group i {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: #B294A0; /* Mauve */
+}
+
+/* Inputs + Textarea */
+input, textarea {
+    width: 100%;
+    padding: 12px 12px 12px 40px;
+    border: 1px solid #B294A0;
+    border-radius: 6px;
+    background-color: #fff;
+    color: #2D2D2D;
+    font-size: 1rem;
+    transition: border 0.3s;
+}
+
+input::placeholder, textarea::placeholder {
+    color: #7C8D7D;
+}
+
+input:focus, textarea:focus {
+    border-color: #D9966E; /* Orange hover */
+    outline: none;
+}
+
+/* Send Button */
+.btn, .glow-on-hover-contact {
+    background-color: #B294A0; /* Mauve */
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.btn:hover, .glow-on-hover-contact:hover {
+    background-color: #D9966E; /* Orange hover */
+    transform: scale(1.05);
+}
+
+/* Form Status Text */
+#form-status {
+    font-size: 0.9rem;
+    color: #7C8D7D; /* Sage green */
+}
