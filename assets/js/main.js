@@ -2,196 +2,143 @@
  * Main JavaScript file for Vina Raja's Portfolio
  */
 
-document.addEventListener('DOMContentLoaded', function() {
-    // Navbar scroll effect
-    const navbar = document.querySelector('.navbar');
+// DOM Elements
+const hamburger = document.querySelector('.hamburger');
+const navLinks = document.querySelector('.header__links');
+const dropdown = document.querySelector('.dropdown');
+const dropdownLabel = document.querySelector('.dropdown__label');
+const dropdownOptions = document.querySelectorAll('.dropdown__option');
+
+// Page title animation
+const steps = "/-\\|";
+const FPS = 2;
+const frameInterval = 1000 / FPS;
+
+let step = 0;
+let lastTimestep = 0;
+
+// Function to animate the page title
+function animateTitle() {
+    const pathName = document.querySelector('.path__name')?.textContent || 
+                      (window.location.pathname === '/' ? 'home' : 'portfolio');
     
-    if (navbar) {
-      window.addEventListener('scroll', () => {
-        if (window.scrollY > 50) {
-          navbar.classList.add('scrolled');
-        } else {
-          navbar.classList.remove('scrolled');
+    requestAnimationFrame(function animation(timestamp) {
+        if (lastTimestep + frameInterval < timestamp) {
+            document.title = `${steps[step++]} Vina Raja | ${pathName}`;
+            step %= steps.length;
+            lastTimestep = timestamp;
         }
-      });
-      
-      // Mobile menu toggle
-      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
-      const navLinks = document.querySelector('.nav-links');
-      
-      if (mobileMenuBtn && navLinks) {
-        mobileMenuBtn.addEventListener('click', () => {
-          navLinks.classList.toggle('active');
-          const icon = mobileMenuBtn.querySelector('i');
-          
-          if (icon) {
-            if (navLinks.classList.contains('active')) {
-              icon.classList.remove('fa-bars');
-              icon.classList.add('fa-times');
-            } else {
-              icon.classList.remove('fa-times');
-              icon.classList.add('fa-bars');
-            }
-          }
-        });
-      }
-    }
-    
-    // Intersection Observer for animations
-    const animateElements = document.querySelectorAll('.animate-on-scroll');
-    
-    if (animateElements.length > 0) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('animate-fade-in');
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-      
-      animateElements.forEach(el => {
-        observer.observe(el);
-      });
-    }
-    
-    // Init Typed.js if element exists
-    const typedElement = document.getElementById('typed-text');
-    
-    if (typedElement && typeof Typed !== 'undefined') {
-      new Typed('#typed-text', {
-        strings: [
-          'Building the future, one project at a time.',
-          'Front-end Developer',
-          'UI/UX Enthusiast',
-          'Creative Coder',
-          '3D Web Developer'
-        ],
-        typeSpeed: 60,
-        backSpeed: 40,
-        backDelay: 2000,
-        startDelay: 1000,
-        loop: true,
-        showCursor: true,
-        cursorChar: '|'
-      });
-    }
-    
-    // Project filtering
-    const filterBtns = document.querySelectorAll('.filter-btn');
-    const projectItems = document.querySelectorAll('.project-item');
-    
-    if (filterBtns.length > 0 && projectItems.length > 0) {
-      filterBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-          // Update active button
-          filterBtns.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          
-          const filter = btn.dataset.filter;
-          
-          // Filter projects
-          projectItems.forEach(item => {
-            if (filter === 'all' || item.dataset.category === filter) {
-              item.style.display = 'block';
-              setTimeout(() => {
-                item.style.opacity = '1';
-                item.style.transform = 'translateY(0)';
-              }, 10);
-            } else {
-              item.style.opacity = '0';
-              item.style.transform = 'translateY(20px)';
-              setTimeout(() => {
-                item.style.display = 'none';
-              }, 300);
-            }
-          });
-        });
-      });
-    }
-    
-    // Contact form handling
-    const contactForm = document.getElementById('contact-form');
-    
-    if (contactForm) {
-      contactForm.addEventListener('submit', function(event) {
-        event.preventDefault();
         
-        const formStatus = document.getElementById('form-status');
-        if (!formStatus) return;
-        
-        // Show sending status
-        formStatus.textContent = "Sending message...";
-        
-        // Here you would typically send the form data to your backend
-        // This is a simulation for demo purposes
-        setTimeout(() => {
-          formStatus.textContent = "Message sent successfully!";
-          formStatus.style.color = "var(--color-primary)";
-          contactForm.reset();
-        }, 1500);
-        
-        // Uncomment and configure when ready to use a real email service
-        /*
-        if (typeof emailjs !== 'undefined') {
-          // Get form data
-          const templateParams = {
-            from_name: document.getElementById('name').value,
-            from_email: document.getElementById('email').value,
-            subject: document.getElementById('subject').value,
-            message: document.getElementById('message').value
-          };
-          
-          // Send the form using EmailJS - Replace with your own credentials
-          emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', templateParams)
-            .then(function() {
-              formStatus.textContent = "Message sent successfully!";
-              formStatus.style.color = "var(--color-primary)";
-              contactForm.reset();
-            }, function(error) {
-              formStatus.textContent = "Error sending message. Please try again later.";
-              formStatus.style.color = "var(--color-accent)";
-              console.error('EmailJS error:', error);
-            });
-        }
-        */
-      });
-    }
-    
-    // Theme toggle (if you want to add a light/dark mode feature)
-    const themeToggle = document.getElementById('theme-toggle');
-    
-    if (themeToggle) {
-      themeToggle.addEventListener('click', () => {
-        document.body.classList.toggle('light-theme');
-        
-        // Save preference to localStorage
-        if (document.body.classList.contains('light-theme')) {
-          localStorage.setItem('theme', 'light');
-        } else {
-          localStorage.setItem('theme', 'dark');
-        }
-      });
-      
-      // Check for saved preference
-      const savedTheme = localStorage.getItem('theme');
-      if (savedTheme === 'light') {
-        document.body.classList.add('light-theme');
-      }
-    }
-    
-    // Add smooth scroll for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        e.preventDefault();
-        
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          window.scrollTo({
-            top: target.offsetTop - 100, // Offset for fixed header
-            behavior: 'smooth'
-          });
-        }
-      });
+        requestAnimationFrame(animation);
     });
-  });
+}
+
+// Handle mobile menu
+if (hamburger) {
+    hamburger.addEventListener('change', function() {
+        if (this.checked) {
+            navLinks.style.transform = 'translateY(0)';
+        } else {
+            navLinks.style.transform = 'translateY(-100%)';
+        }
+    });
+}
+
+// Handle language selection
+if (dropdownOptions) {
+    // Set up initial language from localStorage or default to English
+    const savedLocale = localStorage.getItem('locale') || 'en';
+    
+    // Update dropdown to show current language
+    if (dropdownLabel) {
+        dropdownLabel.textContent = savedLocale;
+    }
+    
+    // Set up language switching
+    dropdownOptions.forEach(option => {
+        // Swap the label and option if this is the current language
+        if (option.textContent === savedLocale && dropdownLabel) {
+            // We'll swap on click instead of on page load to avoid issues
+            option.dataset.currentLanguage = 'true';
+        }
+        
+        // Handle click on language option
+        option.addEventListener('click', () => {
+            const newLocale = option.textContent;
+            
+            // Save the selection
+            localStorage.setItem('locale', newLocale);
+            
+            // Reload the page to apply the language change
+            window.location.reload();
+        });
+    });
+}
+
+// Start title animation
+animateTitle();
+
+// Highlight current navigation link
+document.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.header__link');
+    
+    navLinks.forEach(link => {
+        const linkPath = link.getAttribute('href');
+        
+        // Handle root path specially
+        if (currentPath === '/' && linkPath === '/') {
+            link.classList.add('header__link_active');
+        } 
+        // For other paths
+        else if (currentPath.includes(linkPath) && linkPath !== '/') {
+            link.classList.add('header__link_active');
+        }
+    });
+});
+
+// Smooth scroll for anchor links
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            
+            const targetId = this.getAttribute('href');
+            const targetElement = document.querySelector(targetId);
+            
+            if (targetElement) {
+                window.scrollTo({
+                    top: targetElement.offsetTop - 80, // Account for header height
+                    behavior: 'smooth'
+                });
+                
+                // Update URL but don't add to history
+                history.replaceState(null, null, targetId);
+            }
+        });
+    });
+});
+
+// Add animation to elements on scroll
+document.addEventListener('DOMContentLoaded', function() {
+    const animateElements = document.querySelectorAll('.project, .skill-block, .fact');
+    
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1 });
+    
+    animateElements.forEach(element => {
+        // Set initial styles for animation
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(20px)';
+        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+        
+        observer.observe(element);
+    });
+});

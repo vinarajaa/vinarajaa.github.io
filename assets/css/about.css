@@ -1,0 +1,95 @@
+/* ===== About Page ===== */
+.about {
+    display: flex;
+    gap: var(--space-xl);
+    margin-bottom: var(--space-xxl);
+}
+
+.about__illustrations {
+    flex: 0 0 300px;
+}
+
+.about__image {
+    width: 100%;
+    border: 1px solid var(--text-secondary);
+}
+
+.about__text {
+    flex: 1;
+}
+
+.about__description {
+    margin-bottom: var(--space-md);
+    color: var(--text-secondary);
+}
+
+/* ===== Skills Section ===== */
+.skills {
+    margin-bottom: var(--space-xxl);
+}
+
+.skills__content {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: var(--space-lg);
+}
+
+/* ===== Facts Section ===== */
+.facts {
+    margin-bottom: var(--space-xxl);
+}
+
+.facts__content {
+    display: flex;
+    gap: var(--space-xl);
+}
+
+.facts__list {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-md);
+}
+
+.fact {
+    border: 1px solid var(--text-secondary);
+    padding: var(--space-md);
+    position: relative;
+}
+
+.fact::before {
+    content: "•";
+    color: var(--primary-color);
+    margin-right: var(--space-sm);
+}
+
+.facts__illustrations {
+    flex: 0 0 300px;
+    position: relative;
+}
+
+/* Media Queries */
+@media screen and (max-width: 992px) {
+    .about {
+        flex-direction: column;
+    }
+    
+    .about__illustrations {
+        max-width: 300px;
+        margin: 0 auto;
+    }
+    
+    .facts__content {
+        flex-direction: column;
+    }
+    
+    .facts__illustrations {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .facts__list {
+        grid-template-columns: 1fr;
+    }
+}
