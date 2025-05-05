@@ -6,5 +6,5 @@ export default defineConfig({
   plugins: [
     react(),
   ],
-  base: '/',
+  base: '/',  // Use root path since it's your custom domain
 })
