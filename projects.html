@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
@@ -34,5 +34,342 @@
     <footer class="footer">
         <p>&copy; 2025 Vina Raja</p>
     </footer>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vina Raja's Projects - Creative Developer Portfolio">
+  <title>Projects | Vina Raja</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="logo">VINA RAJA</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html" class="active">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a href="3d-experience.html">3D Experience</a>
+    </nav>
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Page Header -->
+  <section class="section" style="padding-top: 120px;">
+    <div class="container">
+      <h1>My Projects</h1>
+      <p>A selection of my recent work and personal projects.</p>
+    </div>
+  </section>
+
+  <!-- Project Filter -->
+  <section class="section" style="padding-top: 0;">
+    <div class="container">
+      <div class="projects-filter">
+        <button class="filter-btn active" data-filter="all">All</button>
+        <button class="filter-btn" data-filter="web">Web Development</button>
+        <button class="filter-btn" data-filter="ui">UI/UX Design</button>
+        <button class="filter-btn" data-filter="3d">3D & Creative</button>
+      </div>
+      
+      <div class="project-grid">
+        <!-- Project 1 -->
+        <div class="project-item" data-category="3d">
+          <img src="/api/placeholder/600/400" alt="3D Portfolio Experience" class="project-image">
+          <div class="project-content">
+            <h3>3D Interactive Portfolio</h3>
+            <p>A WebGL-powered interactive experience showcasing my work in an immersive 3D environment.</p>
+            <div class="project-tags">
+              <span class="project-tag">Three.js</span>
+              <span class="project-tag">WebGL</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="3d-experience.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> View Project
+              </a>
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 2 -->
+        <div class="project-item" data-category="web">
+          <img src="/api/placeholder/600/400" alt="E-commerce Website" class="project-image">
+          <div class="project-content">
+            <h3>E-commerce Platform</h3>
+            <p>A fully responsive e-commerce website with modern design and smooth animations.</p>
+            <div class="project-tags">
+              <span class="project-tag">React</span>
+              <span class="project-tag">Node.js</span>
+              <span class="project-tag">CSS Grid</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 3 -->
+        <div class="project-item" data-category="ui">
+          <img src="/api/placeholder/600/400" alt="Mobile App UI" class="project-image">
+          <div class="project-content">
+            <h3>Fitness App UI Design</h3>
+            <p>UI/UX design for a fitness tracking application with custom illustrations and animations.</p>
+            <div class="project-tags">
+              <span class="project-tag">Figma</span>
+              <span class="project-tag">UI/UX</span>
+              <span class="project-tag">Prototyping</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Case Study
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 4 -->
+        <div class="project-item" data-category="web">
+          <img src="/api/placeholder/600/400" alt="Weather Dashboard" class="project-image">
+          <div class="project-content">
+            <h3>Weather Dashboard</h3>
+            <p>An interactive weather application with dynamic visualizations and real-time data.</p>
+            <div class="project-tags">
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">API Integration</span>
+              <span class="project-tag">SVG Animation</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 5 -->
+        <div class="project-item" data-category="3d">
+          <img src="/api/placeholder/600/400" alt="3D Product Configurator" class="project-image">
+          <div class="project-content">
+            <h3>3D Product Configurator</h3>
+            <p>An interactive 3D product configurator allowing users to customize and visualize products in real-time.</p>
+            <div class="project-tags">
+              <span class="project-tag">Three.js</span>
+              <span class="project-tag">GLSL</span>
+              <span class="project-tag">React</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Live Demo
+              </a>
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> Source Code
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 6 -->
+        <div class="project-item" data-category="ui">
+          <img src="/api/placeholder/600/400" alt="Design System" class="project-image">
+          <div class="project-content">
+            <h3>Comprehensive Design System</h3>
+            <p>A complete design system with components, guidelines, and documentation for consistent UI development.</p>
+            <div class="project-tags">
+              <span class="project-tag">Design Systems</span>
+              <span class="project-tag">Documentation</span>
+              <span class="project-tag">Component Library</span>
+            </div>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Case Study
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Other Projects -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container">
+      <h2>Other Noteworthy Projects</h2>
+      <p>A collection of smaller projects and experiments.</p>
+      
+      <div class="grid grid-cols-3" style="gap: var(--space-lg); margin-top: var(--space-lg);">
+        <!-- Mini Project 1 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>CSS Animation Library</h3>
+            <p>A collection of reusable CSS animations and transitions.</p>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mini Project 2 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>Interactive SVG Icons</h3>
+            <p>Custom animated SVG icons for modern web interfaces.</p>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fas fa-external-link-alt"></i> Demo
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Mini Project 3 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>Responsive Email Templates</h3>
+            <p>A set of responsive email templates that work across all email clients.</p>
+            <div class="project-links">
+              <a href="#" class="project-link">
+                <i class="fab fa-github"></i> GitHub
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section">
+    <div class="container text-center">
+      <h2 style="margin-left: auto; margin-right: auto;">Like what you see?</h2>
+      <p>I'm always open to discussing new projects and opportunities.</p>
+      <a href="contact.html" class="btn btn-primary">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+      </div>
+      <p>&copy; 2025 Vina Raja. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+      
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+      
+      // Project filtering
+      const filterBtns = document.querySelectorAll('.filter-btn');
+      const projectItems = document.querySelectorAll('.project-item');
+      
+      filterBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          // Update active button
+          filterBtns.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          
+          const filter = btn.dataset.filter;
+          
+          // Filter projects
+          projectItems.forEach(item => {
+            if (filter === 'all' || item.dataset.category === filter) {
+              item.style.display = 'block';
+              setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateY(0)';
+              }, 10);
+            } else {
+              item.style.opacity = '0';
+              item.style.transform = 'translateY(20px)';
+              setTimeout(() => {
+                item.style.display = 'none';
+              }, 300);
+            }
+          });
+        });
+      });
+      
+      // Initial animation
+      projectItems.forEach((item, index) => {
+        setTimeout(() => {
+          item.classList.add('animate-fade-in');
+        }, index * 100);
+      });
+    });
+  </script>
+  
+  <style>
+    .project-item {
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    
+    .project-image {
+      border-radius: var(--radius-md) var(--radius-md) 0 0;
+      transition: transform 0.3s ease;
+    }
+    
+    .project-item:hover .project-image {
+      transform: scale(1.02);
+    }
+  </style>
 </body>
 </html>

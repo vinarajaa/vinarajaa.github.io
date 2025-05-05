@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -54,4 +54,234 @@
   </footer>
 
 </body>
-</html>
+</html> -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Vina Raja - Creative Developer Portfolio">
+  <title>Vina Raja | Creative Developer</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="logo">VINA RAJA</div>
+    <nav class="nav-links">
+      <a href="index.html" class="active">Home</a>
+      <a href="about.html">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a href="3d-experience.html">3D Experience</a>
+    </nav>
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="animate-fade-in">
+        Hi, I'm <span class="text-primary">Vina Raja</span>
+      </h1>
+      <p class="animate-fade-in delay-1">
+        Creative Developer crafting beautiful digital experiences
+      </p>
+      <div class="hero-buttons">
+        <a href="projects.html" class="btn btn-primary animate-fade-in delay-2">
+          <i class="fas fa-code"></i> View My Work
+        </a>
+        <a href="contact.html" class="btn btn-outline animate-fade-in delay-3">
+          <i class="fas fa-paper-plane"></i> Let's Talk
+        </a>
+      </div>
+      <div class="animate-fade-in delay-4">
+        <p id="typed-text" class="text-gradient"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section Preview -->
+  <section class="section">
+    <div class="container">
+      <h2>About Me</h2>
+      <div class="about-grid">
+        <div>
+          <p>
+            I'm a creative developer passionate about crafting beautiful, functional web experiences. 
+            I blend design with code to build clean, impactful interfaces that people love to use.
+          </p>
+          <p>
+            With a background in both design and development, I create websites and applications 
+            that are not only visually appealing but also technically sound.
+          </p>
+          <a href="about.html" class="btn btn-outline">Learn More About Me</a>
+        </div>
+        <div>
+          <h3>My Skills</h3>
+          <ul class="skills-list">
+            <li>HTML5/CSS3</li>
+            <li>JavaScript (ES6+)</li>
+            <li>React</li>
+            <li>Three.js</li>
+            <li>Node.js</li>
+            <li>UI/UX Design</li>
+            <li>Responsive Design</li>
+            <li>Animation</li>
+            <li>WebGL</li>
+            <li>Design Systems</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Featured Projects -->
+  <section class="section">
+    <div class="container">
+      <h2>Featured Projects</h2>
+      <div class="project-grid">
+        <!-- Project 1 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>3D Interactive Portfolio</h3>
+            <p>A WebGL-powered interactive experience showcasing my work in an immersive 3D environment.</p>
+            <div class="project-tags">
+              <span class="project-tag">Three.js</span>
+              <span class="project-tag">WebGL</span>
+              <span class="project-tag">JavaScript</span>
+            </div>
+            <div class="project-links">
+              <a href="3d-experience.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> View Project
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 2 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>Responsive Web Design</h3>
+            <p>Modern, responsive web designs that work flawlessly across all devices.</p>
+            <div class="project-tags">
+              <span class="project-tag">HTML5</span>
+              <span class="project-tag">CSS3</span>
+              <span class="project-tag">Responsive</span>
+            </div>
+            <div class="project-links">
+              <a href="projects.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> View Projects
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Project 3 -->
+        <div class="project-item">
+          <div class="project-content">
+            <h3>Interactive Web Applications</h3>
+            <p>Web applications with smooth animations and interactive elements.</p>
+            <div class="project-tags">
+              <span class="project-tag">JavaScript</span>
+              <span class="project-tag">React</span>
+              <span class="project-tag">Animation</span>
+            </div>
+            <div class="project-links">
+              <a href="projects.html" class="project-link">
+                <i class="fas fa-external-link-alt"></i> View Projects
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="text-center" style="margin-top: var(--space-lg);">
+        <a href="projects.html" class="btn btn-primary">View All Projects</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Testimonials/Call to Action -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container text-center">
+      <h2 style="margin-left: auto; margin-right: auto;">Ready to work together?</h2>
+      <p>Let's create something amazing. Get in touch and let's discuss your project.</p>
+      <a href="contact.html" class="glow-on-hover">
+        <i class="fas fa-envelope"></i> Contact Me
+      </a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+      </div>
+      <p>&copy; 2025 Vina Raja. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+  <script>
+    // Typed.js initialization
+    document.addEventListener('DOMContentLoaded', function() {
+      const typed = new Typed('#typed-text', {
+        strings: [
+          'Building the future, one project at a time.',
+          'Front-end Developer',
+          'UI/UX Enthusiast',
+          'Creative Coder',
+          '3D Web Developer'
+        ],
+        typeSpeed: 60,
+        backSpeed: 40,
+        backDelay: 2000,
+        startDelay: 1000,
+        loop: true,
+        showCursor: true,
+        cursorChar: '|'
+      });
+      
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+      
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+    });
+  </script>

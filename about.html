@@ -1,35 +1,695 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>About | Vina Raja</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Vina Raja - Creative Developer">
+  <title>About | Vina Raja</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <header class="navbar">
-        <div class="logo">VINA RAJA</div>
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="projects.html">Playground</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </header>
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="logo">VINA RAJA</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a href="3d-experience.html">3D Experience</a>
+    </nav>
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
 
-    <section class="section">
-        <h2>About Me</h2>
-        <p>I’m Vina Raja – a creative developer passionate about crafting beautiful, functional web experiences. I blend design with code to build clean, impactful interfaces.</p>
-        <ul class="skills-list">
+  <!-- Page Header -->
+  <section class="section" style="padding-top: 120px;">
+    <div class="container">
+      <h1>About Me</h1>
+    </div>
+  </section>
+
+  <!-- About Content -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-cols-2" style="gap: var(--space-xl);">
+        <div>
+          <h2>My Story</h2>
+          <p>
+            I'm Vina Raja, a creative developer with a passion for building beautiful, 
+            functional digital experiences. My journey began with sa fascination for both 
+            design and technology, which naturally led me to web development—a perfect 
+            blend of both worlds.
+          </p>
+          <p>
+            With several years of experience in the industry, I've had the opportunity 
+            to work on a diverse range of projects, from responsive websites to 
+            interactive applications and 3D web experiences. I'm constantly exploring 
+            new technologies and approaches to create engaging digital products.
+          </p>
+          <p>
+            My approach combines technical precision with creative vision. I believe that 
+            the best digital experiences are not just visually striking but also intuitive, 
+            accessible, and performant. Every line of code I write and every pixel I place 
+            serves a purpose in creating meaningful interactions.
+          </p>
+          <p>
+            When I'm not coding, you can find me experimenting with new design tools, 
+            exploring 3D animation, or staying up-to-date with the latest web development trends.
+          </p>
+        </div>
+        <div>
+          <h2>Skills &amp; Expertise</h2>
+          
+          <!-- Frontend Development -->
+          <h3><i class="fas fa-code"></i> Frontend Development</h3>
+          <ul class="skills-list">
             <li>HTML5/CSS3</li>
             <li>JavaScript (ES6+)</li>
+            <li>TypeScript</li>
             <li>React</li>
+            <li>Vue.js</li>
+            <li>Responsive Design</li>
+            <li>CSS Animation</li>
+            <li>SASS/SCSS</li>
+          </ul>
+          
+          <!-- Creative Coding -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-palette"></i> Creative Coding</h3>
+          <ul class="skills-list">
+            <li>Three.js</li>
+            <li>WebGL</li>
+            <li>GLSL Shaders</li>
+            <li>Canvas API</li>
+            <li>SVG Animation</li>
+            <li>P5.js</li>
+          </ul>
+          
+          <!-- UI/UX Design -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-pen-nib"></i> UI/UX Design</h3>
+          <ul class="skills-list">
+            <li>Figma</li>
+            <li>Adobe XD</li>
+            <li>Wireframing</li>
+            <li>Prototyping</li>
+            <li>User Research</li>
             <li>Design Systems</li>
-        </ul>
-    </section>
+          </ul>
+          
+          <!-- Tools & Other -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-tools"></i> Tools &amp; Other</h3>
+          <ul class="skills-list">
+            <li>Git/GitHub</li>
+            <li>Webpack</li>
+            <li>Vite</li>
+            <li>Jest</li>
+            <li>Node.js</li>
+            <li>Netlify/Vercel</li>
+            <li>Performance Optimization</li>
+            <li>Accessibility (A11y)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
 
-    <footer class="footer">
-        <p>&copy; 2025 Vina Raja</p>
-    </footer>
+  <!-- Experience Timeline -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container">
+      <h2>Experience</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2023 - Present</div>
+          <div class="timeline-content">
+            <h3>Senior Frontend Developer</h3>
+            <p class="timeline-company">Digital Innovation Studio</p>
+            <p>Leading frontend development for interactive web applications and creative digital experiences. 
+            Specializing in 3D web development with Three.js and WebGL.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2020 - 2023</div>
+          <div class="timeline-content">
+            <h3>UI Developer</h3>
+            <p class="timeline-company">Web Solutions Inc.</p>
+            <p>Developed responsive and accessible user interfaces for various clients. 
+            Implemented complex UI animations and interactive elements using JavaScript and CSS.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2018 - 2020</div>
+          <div class="timeline-content">
+            <h3>Frontend Developer</h3>
+            <p class="timeline-company">Creative Tech Lab</p>
+            <p>Built and maintained frontend codebases for client websites and applications. 
+            Collaborated with designers to implement pixel-perfect UIs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section">
+    <div class="container">
+      <h2>Education</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2014 - 2018</div>
+          <div class="timeline-content">
+            <h3>Bachelor of Science in Computer Science</h3>
+            <p class="timeline-company">University of Technology</p>
+            <p>Focused on web technologies and interactive media. Graduated with honors.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2016</div>
+          <div class="timeline-content">
+            <h3>UI/UX Design Certification</h3>
+            <p class="timeline-company">Design Academy</p>
+            <p>Specialized training in user interface design, user experience principles, and design systems.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container text-center">
+      <h2 style="margin-left: auto; margin-right: auto;">Want to work together?</h2>
+      <p>I'm always interested in new projects and collaborations.</p>
+      <a href="contact.html" class="btn btn-primary">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+      </div>
+      <p>&copy; 2025 Vina Raja. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+      
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+      
+      // Add timeline animation
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      timelineItems.forEach(item => {
+        observer.observe(item);
+      });
+    });
+  </script>
+  
+  <style>
+    /* Timeline Styles */
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-lg) 0;
+    }
+    
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 20%;
+      width: 2px;
+      background: var(--color-primary);
+      opacity: 0.5;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-xl);
+      opacity: 0;
+    }
+    
+    .timeline-date {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18%;
+      text-align: right;
+      padding-right: var(--space-md);
+      font-weight: 500;
+      color: var(--color-primary);
+    }
+    
+    .timeline-content {
+      margin-left: 25%;
+      padding: var(--space-md);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-md);
+      position: relative;
+    }
+    
+    .timeline-content:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 15px;
+      width: 20px;
+      height: 2px;
+      background: var(--color-primary);
+    }
+    
+    .timeline-company {
+      color: var(--color-muted);
+      margin-bottom: var(--space-sm);
+    }
+    
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline:before {
+        left: 30px;
+      }
+      
+      .timeline-date {
+        position: relative;
+        width: auto;
+        text-align: left;
+        padding-left: 60px;
+        margin-bottom: var(--space-sm);
+      }
+      
+      .timeline-content {
+        margin-left: 60px;
+      }
+      
+      .timeline-content:before {
+        left: -30px;
+        width: 30px;
+      }
+    }
+  </style>
+</body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="About Vina Raja - Creative Developer">
+  <title>About | Vina Raja</title>
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;700&display=swap" rel="stylesheet">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="logo">VINA RAJA</div>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="about.html" class="active">About</a>
+      <a href="projects.html">Projects</a>
+      <a href="contact.html">Contact</a>
+      <a href="3d-experience.html">3D Experience</a>
+    </nav>
+    <button class="mobile-menu-btn">
+      <i class="fas fa-bars"></i>
+    </button>
+  </header>
+
+  <!-- Page Header -->
+  <section class="section" style="padding-top: 120px;">
+    <div class="container">
+      <h1>About Me</h1>
+    </div>
+  </section>
+
+  <!-- About Content -->
+  <section class="section">
+    <div class="container">
+      <div class="grid grid-cols-2" style="gap: var(--space-xl);">
+        <div>
+          <h2>My Story</h2>
+          <p>
+            I'm Vina Raja, a creative developer with a passion for building beautiful, 
+            functional digital experiences. My journey began with a fascination for both 
+            design and technology, which naturally led me to web development—a perfect 
+            blend of both worlds.
+          </p>
+          <p>
+            With several years of experience in the industry, I've had the opportunity 
+            to work on a diverse range of projects, from responsive websites to 
+            interactive applications and 3D web experiences. I'm constantly exploring 
+            new technologies and approaches to create engaging digital products.
+          </p>
+          <p>
+            My approach combines technical precision with creative vision. I believe that 
+            the best digital experiences are not just visually striking but also intuitive, 
+            accessible, and performant. Every line of code I write and every pixel I place 
+            serves a purpose in creating meaningful interactions.
+          </p>
+          <p>
+            When I'm not coding, you can find me experimenting with new design tools, 
+            exploring 3D animation, or staying up-to-date with the latest web development trends.
+          </p>
+        </div>
+        <div>
+          <h2>Skills &amp; Expertise</h2>
+          
+          <!-- Frontend Development -->
+          <h3><i class="fas fa-code"></i> Frontend Development</h3>
+          <ul class="skills-list">
+            <li>HTML5/CSS3</li>
+            <li>JavaScript (ES6+)</li>
+            <li>TypeScript</li>
+            <li>React</li>
+            <li>Vue.js</li>
+            <li>Responsive Design</li>
+            <li>CSS Animation</li>
+            <li>SASS/SCSS</li>
+          </ul>
+          
+          <!-- Creative Coding -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-palette"></i> Creative Coding</h3>
+          <ul class="skills-list">
+            <li>Three.js</li>
+            <li>WebGL</li>
+            <li>GLSL Shaders</li>
+            <li>Canvas API</li>
+            <li>SVG Animation</li>
+            <li>P5.js</li>
+          </ul>
+          
+          <!-- UI/UX Design -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-pen-nib"></i> UI/UX Design</h3>
+          <ul class="skills-list">
+            <li>Figma</li>
+            <li>Adobe XD</li>
+            <li>Wireframing</li>
+            <li>Prototyping</li>
+            <li>User Research</li>
+            <li>Design Systems</li>
+          </ul>
+          
+          <!-- Tools & Other -->
+          <h3 style="margin-top: var(--space-lg);"><i class="fas fa-tools"></i> Tools &amp; Other</h3>
+          <ul class="skills-list">
+            <li>Git/GitHub</li>
+            <li>Webpack</li>
+            <li>Vite</li>
+            <li>Jest</li>
+            <li>Node.js</li>
+            <li>Netlify/Vercel</li>
+            <li>Performance Optimization</li>
+            <li>Accessibility (A11y)</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Experience Timeline -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container">
+      <h2>Experience</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2023 - Present</div>
+          <div class="timeline-content">
+            <h3>Senior Frontend Developer</h3>
+            <p class="timeline-company">Digital Innovation Studio</p>
+            <p>Leading frontend development for interactive web applications and creative digital experiences. 
+            Specializing in 3D web development with Three.js and WebGL.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2020 - 2023</div>
+          <div class="timeline-content">
+            <h3>UI Developer</h3>
+            <p class="timeline-company">Web Solutions Inc.</p>
+            <p>Developed responsive and accessible user interfaces for various clients. 
+            Implemented complex UI animations and interactive elements using JavaScript and CSS.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2018 - 2020</div>
+          <div class="timeline-content">
+            <h3>Frontend Developer</h3>
+            <p class="timeline-company">Creative Tech Lab</p>
+            <p>Built and maintained frontend codebases for client websites and applications. 
+            Collaborated with designers to implement pixel-perfect UIs.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Education -->
+  <section class="section">
+    <div class="container">
+      <h2>Education</h2>
+      
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2014 - 2018</div>
+          <div class="timeline-content">
+            <h3>Bachelor of Science in Computer Science</h3>
+            <p class="timeline-company">University of Technology</p>
+            <p>Focused on web technologies and interactive media. Graduated with honors.</p>
+          </div>
+        </div>
+        
+        <div class="timeline-item">
+          <div class="timeline-date">2016</div>
+          <div class="timeline-content">
+            <h3>UI/UX Design Certification</h3>
+            <p class="timeline-company">Design Academy</p>
+            <p>Specialized training in user interface design, user experience principles, and design systems.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="section" style="background: rgba(100, 255, 218, 0.05);">
+    <div class="container text-center">
+      <h2 style="margin-left: auto; margin-right: auto;">Want to work together?</h2>
+      <p>I'm always interested in new projects and collaborations.</p>
+      <a href="contact.html" class="btn btn-primary">Get In Touch</a>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="social-links">
+        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="social-link"><i class="fab fa-dribbble"></i></a>
+      </div>
+      <p>&copy; 2025 Vina Raja. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Navbar scroll effect
+      const navbar = document.querySelector('.navbar');
+      window.addEventListener('scroll', () => {
+        if (window.scrollY > 50) {
+          navbar.classList.add('scrolled');
+        } else {
+          navbar.classList.remove('scrolled');
+        }
+      });
+      
+      // Mobile menu toggle
+      const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+      const navLinks = document.querySelector('.nav-links');
+      
+      mobileMenuBtn.addEventListener('click', () => {
+        navLinks.classList.toggle('active');
+        const icon = mobileMenuBtn.querySelector('i');
+        if (navLinks.classList.contains('active')) {
+          icon.classList.remove('fa-bars');
+          icon.classList.add('fa-times');
+        } else {
+          icon.classList.remove('fa-times');
+          icon.classList.add('fa-bars');
+        }
+      });
+      
+      // Add timeline animation
+      const timelineItems = document.querySelectorAll('.timeline-item');
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-fade-in');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.2 });
+      
+      timelineItems.forEach(item => {
+        observer.observe(item);
+      });
+    });
+  </script>
+  
+  <style>
+    /* Timeline Styles */
+    .timeline {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: var(--space-lg) 0;
+    }
+    
+    .timeline:before {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 20%;
+      width: 2px;
+      background: var(--color-primary);
+      opacity: 0.5;
+    }
+    
+    .timeline-item {
+      position: relative;
+      margin-bottom: var(--space-xl);
+      opacity: 0;
+    }
+    
+    .timeline-date {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 18%;
+      text-align: right;
+      padding-right: var(--space-md);
+      font-weight: 500;
+      color: var(--color-primary);
+    }
+    
+    .timeline-content {
+      margin-left: 25%;
+      padding: var(--space-md);
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: var(--radius-md);
+      position: relative;
+    }
+    
+    .timeline-content:before {
+      content: '';
+      position: absolute;
+      left: -10px;
+      top: 15px;
+      width: 20px;
+      height: 2px;
+      background: var(--color-primary);
+    }
+    
+    .timeline-company {
+      color: var(--color-muted);
+      margin-bottom: var(--space-sm);
+    }
+    
+    @media (max-width: 768px) {
+      .grid-cols-2 {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline:before {
+        left: 30px;
+      }
+      
+      .timeline-date {
+        position: relative;
+        width: auto;
+        text-align: left;
+        padding-left: 60px;
+        margin-bottom: var(--space-sm);
+      }
+      
+      .timeline-content {
+        margin-left: 60px;
+      }
+      
+      .timeline-content:before {
+        left: -30px;
+        width: 30px;
+      }
+    }
+  </style>
 </body>
 </html>
