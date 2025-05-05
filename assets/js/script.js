@@ -17,6 +17,10 @@ document.addEventListener("DOMContentLoaded", function () {
         minWidth: 200.00,
         scale: 1.00,
         scaleMobile: 1.00,
-        color: 0x878076
-      })
+        color: 0x1a1a1e,
+        shininess: 150.00,
+        waveHeight: 24.50,
+        waveSpeed: 0.45,
+        zoom: 1.28
+        })
 });
