@@ -1,144 +1,332 @@
 /**
- * Main JavaScript file for Vina Raja's Portfolio
+ * Main JavaScript file for Elias Portfolio
+ * - GSAP animations
+ * - Scroll effects
+ * - Mobile menu handling
  */
 
-// DOM Elements
-const hamburger = document.querySelector('.hamburger');
-const navLinks = document.querySelector('.header__links');
-const dropdown = document.querySelector('.dropdown');
-const dropdownLabel = document.querySelector('.dropdown__label');
-const dropdownOptions = document.querySelectorAll('.dropdown__option');
-
-// Page title animation
-const steps = "/-\\|";
-const FPS = 2;
-const frameInterval = 1000 / FPS;
-
-let step = 0;
-let lastTimestep = 0;
-
-// Function to animate the page title
-function animateTitle() {
-    const pathName = document.querySelector('.path__name')?.textContent || 
-                      (window.location.pathname === '/' ? 'home' : 'portfolio');
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize GSAP and ScrollTrigger
+    gsap.registerPlugin(ScrollTrigger);
     
-    requestAnimationFrame(function animation(timestamp) {
-        if (lastTimestep + frameInterval < timestamp) {
-            document.title = `${steps[step++]} Vina Raja | ${pathName}`;
-            step %= steps.length;
-            lastTimestep = timestamp;
-        }
-        
-        requestAnimationFrame(animation);
-    });
-}
-
-// Handle mobile menu
-if (hamburger) {
-    hamburger.addEventListener('change', function() {
-        if (this.checked) {
-            navLinks.style.transform = 'translateY(0)';
-        } else {
-            navLinks.style.transform = 'translateY(-100%)';
-        }
-    });
-}
-
-// Handle language selection
-if (dropdownOptions) {
-    // Set up initial language from localStorage or default to English
-    const savedLocale = localStorage.getItem('locale') || 'en';
+    // Mobile menu functionality
+    initMobileMenu();
     
-    // Update dropdown to show current language
-    if (dropdownLabel) {
-        dropdownLabel.textContent = savedLocale;
-    }
+    // Smooth scrolling for navigation links
+    initSmoothScroll();
     
-    // Set up language switching
-    dropdownOptions.forEach(option => {
-        // Swap the label and option if this is the current language
-        if (option.textContent === savedLocale && dropdownLabel) {
-            // We'll swap on click instead of on page load to avoid issues
-            option.dataset.currentLanguage = 'true';
-        }
-        
-        // Handle click on language option
-        option.addEventListener('click', () => {
-            const newLocale = option.textContent;
-            
-            // Save the selection
-            localStorage.setItem('locale', newLocale);
-            
-            // Reload the page to apply the language change
-            window.location.reload();
-        });
+    // Page animations
+    initAnimations();
+    
+    // Scroll-triggered animations
+    initScrollAnimations();
+  });
+  
+  /**
+   * Initialize mobile menu functionality
+   */
+  function initMobileMenu() {
+    const menuToggle = document.querySelector('.menu-toggle');
+    const mobileMenu = document.querySelector('.mobile-menu');
+    const hamburger = document.querySelector('.hamburger');
+    const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+    
+    if (!menuToggle || !mobileMenu) return;
+    
+    let isOpen = false;
+    
+    // Toggle menu function
+    const toggleMenu = () => {
+      isOpen = !isOpen;
+      
+      // Animate hamburger icon
+      gsap.to(hamburger.querySelectorAll('span'), {
+        duration: 0.3,
+        backgroundColor: isOpen ? '#c778dd' : '#ffffff'
+      });
+      
+      // First span animation (top)
+      gsap.to(hamburger.querySelector('span:first-child'), {
+        duration: 0.3,
+        rotation: isOpen ? 45 : 0,
+        y: isOpen ? 7 : 0
+      });
+      
+      // Second span animation (bottom)
+      gsap.to(hamburger.querySelector('span:last-child'), {
+        duration: 0.3,
+        rotation: isOpen ? -45 : 0,
+        y: isOpen ? -7 : 0
+      });
+      
+      // Animate mobile menu
+      gsap.to(mobileMenu, {
+        duration: 0.5,
+        x: isOpen ? '0%' : '100%',
+        ease: 'power3.inOut'
+      });
+      
+      // Prevent scrolling when menu is open
+      document.body.style.overflow = isOpen ? 'hidden' : '';
+    };
+    
+    // Event listeners
+    menuToggle.addEventListener('click', toggleMenu);
+    
+    // Close menu when clicking on a link
+    mobileMenuLinks.forEach(link => {
+      link.addEventListener('click', () => {
+        if (isOpen) toggleMenu();
+      });
     });
-}
-
-// Start title animation
-animateTitle();
-
-// Highlight current navigation link
-document.addEventListener('DOMContentLoaded', function() {
-    const currentPath = window.location.pathname;
-    const navLinks = document.querySelectorAll('.header__link');
+  }
+  
+  /**
+   * Initialize smooth scrolling for navigation links
+   */
+  function initSmoothScroll() {
+    const navLinks = document.querySelectorAll('.nav-link, .mobile-menu-link');
     
     navLinks.forEach(link => {
-        const linkPath = link.getAttribute('href');
+      link.addEventListener('click', e => {
+        const targetId = link.getAttribute('href');
         
-        // Handle root path specially
-        if (currentPath === '/' && linkPath === '/') {
-            link.classList.add('header__link_active');
-        } 
-        // For other paths
-        else if (currentPath.includes(linkPath) && linkPath !== '/') {
-            link.classList.add('header__link_active');
+        // Only process internal links
+        if (targetId.startsWith('#')) {
+          e.preventDefault();
+          const targetElement = document.querySelector(targetId);
+          
+          if (targetElement) {
+            // Smooth scroll to the target
+            window.scrollTo({
+              top: targetElement.offsetTop - 80, // Account for fixed header
+              behavior: 'smooth'
+            });
+          }
         }
+      });
     });
-});
-
-// Smooth scroll for anchor links
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
-            const targetId = this.getAttribute('href');
-            const targetElement = document.querySelector(targetId);
-            
-            if (targetElement) {
-                window.scrollTo({
-                    top: targetElement.offsetTop - 80, // Account for header height
-                    behavior: 'smooth'
-                });
-                
-                // Update URL but don't add to history
-                history.replaceState(null, null, targetId);
-            }
-        });
-    });
-});
-
-// Add animation to elements on scroll
-document.addEventListener('DOMContentLoaded', function() {
-    const animateElements = document.querySelectorAll('.project, .skill-block, .fact');
+  }
+  
+  /**
+   * Initialize page animations
+   */
+  function initAnimations() {
+    // Initial animations for hero section
+    const heroTimeline = gsap.timeline();
     
-    const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-                observer.unobserve(entry.target);
-            }
-        });
-    }, { threshold: 0.1 });
+    heroTimeline
+      .from('.hero-title', {
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        ease: 'power3.out'
+      })
+      .from('.hero-subtitle', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.4')
+      .from('.hero-cta', {
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      }, '-=0.4')
+      .from('.hero-image', {
+        opacity: 0,
+        scale: 0.9,
+        duration: 1,
+        ease: 'power3.out'
+      }, '-=0.6');
     
-    animateElements.forEach(element => {
-        // Set initial styles for animation
-        element.style.opacity = '0';
-        element.style.transform = 'translateY(20px)';
-        element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-        
-        observer.observe(element);
+    // Marquee animation (continuous)
+    gsap.to('.marquee-content', {
+      xPercent: -50,
+      repeat: -1,
+      duration: 15,
+      ease: 'linear'
     });
-});
+    
+    // Navbar animation on scroll
+    let lastScrollTop = 0;
+    
+    window.addEventListener('scroll', () => {
+      const nav = document.querySelector('.nav');
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      
+      if (scrollTop > lastScrollTop) {
+        // Scrolling down
+        gsap.to(nav, {
+          y: -80,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      } else {
+        // Scrolling up
+        gsap.to(nav, {
+          y: 0,
+          duration: 0.3,
+          ease: 'power3.out'
+        });
+      }
+      
+      // Add shadow when scrolled
+      if (scrollTop > 50) {
+        nav.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.1)';
+      } else {
+        nav.style.boxShadow = 'none';
+      }
+      
+      lastScrollTop = scrollTop;
+    });
+  }
+  
+  /**
+   * Initialize scroll-triggered animations
+   */
+  function initScrollAnimations() {
+    // Section headers animation
+    gsap.utils.toArray('.section-header').forEach(header => {
+      gsap.from(header, {
+        scrollTrigger: {
+          trigger: header,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+    });
+    
+    // Projects animation
+    gsap.utils.toArray('.project').forEach((project, index) => {
+      gsap.from(project, {
+        scrollTrigger: {
+          trigger: project,
+          start: 'top 85%',
+          toggleActions: 'play none none none'
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        delay: index * 0.2,
+        ease: 'power3.out'
+      });
+    });
+    
+    // About section animation
+    const aboutContent = document.querySelector('.about-content');
+    if (aboutContent) {
+      const aboutTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: aboutContent,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      });
+      
+      aboutTimeline
+        .from('.about-image', {
+          opacity: 0,
+          x: -50,
+          duration: 0.8,
+          ease: 'power3.out'
+        })
+        .from('.about-text p', {
+          opacity: 0,
+          y: 30,
+          duration: 0.8,
+          stagger: 0.2,
+          ease: 'power3.out'
+        }, '-=0.4')
+        .from('.about-text .btn', {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          ease: 'power3.out'
+        }, '-=0.2');
+    }
+    
+    // Skills animation
+    const skillsContent = document.querySelector('.skills-content');
+    if (skillsContent) {
+      gsap.from('.skill-category', {
+        scrollTrigger: {
+          trigger: skillsContent,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        },
+        opacity: 0,
+        y: 50,
+        duration: 0.8,
+        stagger: 0.2,
+        ease: 'power3.out'
+      });
+      
+      gsap.from('.skill-item', {
+        scrollTrigger: {
+          trigger: skillsContent,
+          start: 'top 70%',
+          toggleActions: 'play none none none'
+        },
+        opacity: 0,
+        y: 20,
+        duration: 0.6,
+        stagger: 0.05,
+        ease: 'power3.out'
+      });
+    }
+    
+    // Contact section animation
+    const contactContent = document.querySelector('.contact-content');
+    if (contactContent) {
+      const contactTimeline = gsap.timeline({
+        scrollTrigger: {
+          trigger: contactContent,
+          start: 'top 80%',
+          toggleActions: 'play none none none'
+        }
+      });
+      
+      contactTimeline
+        .from('.contact-info', {
+          opacity: 0,
+          x: -50,
+          duration: 0.8,
+          ease: 'power3.out'
+        })
+        .from('.contact-form', {
+          opacity: 0,
+          x: 50,
+          duration: 0.8,
+          ease: 'power3.out'
+        }, '-=0.6')
+        .from('.form-group', {
+          opacity: 0,
+          y: 20,
+          duration: 0.6,
+          stagger: 0.1,
+          ease: 'power3.out'
+        }, '-=0.4');
+    }
+    
+    // Footer animation
+    const footer = document.querySelector('.footer');
+    if (footer) {
+      gsap.from(footer, {
+        scrollTrigger: {
+          trigger: footer,
+          start: 'top 90%',
+          toggleActions: 'play none none none'
+        },
+        opacity: 0,
+        y: 30,
+        duration: 0.8,
+        ease: 'power3.out'
+      });
+    }
+  }
