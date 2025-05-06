@@ -17,6 +17,7 @@
 <meta content="summary_large_image" name="twitter:card"/>
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
 <meta content="Webflow" name="generator"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.5/lottie.min.js"></script>
 <link href="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/css/vinas-five-star-site-b2d6de.webflow.shared.b468cbd7c.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript">
             !function(o, c) {
@@ -1007,15 +1008,20 @@
         </div>
         <div class="slide-col">
           <div class="slide-img">
-            <div class="dual-img">
-              <img alt="Vina" class="dual-img-img" loading="eager" src="assets/images/about-1.png"/>
-              <img alt="" class="dual-img-shadow" loading="eager" src="assets/images/shadow-1.png"/>
-            </div>
+            <div id="Slide1Animation" style="width: 100%; height: 100%;"></div>
           </div>
         </div>
       </div>
     </li>
-  
+    <script>
+        lottie.loadAnimation({
+          container: document.getElementById('aboutMeAnimation'),
+          renderer: 'svg',
+          loop: true,
+          autoplay: true,
+          path: 'assets/animations/girl-creating-program.json' // Path to your Lottie file
+        });
+      </script>
     <li class="slide-outer">
       <div class="slide">
         <div class="slide-col flex-ve">
