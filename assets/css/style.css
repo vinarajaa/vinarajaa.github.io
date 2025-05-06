@@ -2203,9 +2203,10 @@ html {
   }
   
   .comp.toggle-w {
-    z-index: 3;
-    top: -10svh;
-  }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
   .comp.scroller {
     grid-column-gap: 0rem;
@@ -2833,11 +2834,10 @@ html {
   }
   
   .toggle-w {
-    width: 18rem;
-    height: 10rem;
-    margin-bottom: 0;
-    position: relative;
-  }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
   .toggle-html-input {
     opacity: 0;
@@ -3697,8 +3697,10 @@ html {
     }
   
     .comp.toggle-w {
-      top: -3rem;
-    }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
     .font-c.hero-text {
       font-size: 14vw;
@@ -3767,9 +3769,10 @@ html {
     }
   
     .toggle-w {
-      width: 10rem;
-      height: 5rem;
-    }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
     .toggle-slider {
       border-width: .2rem;
@@ -3890,8 +3893,10 @@ html {
     }
   
     .comp.toggle-w {
-      top: -1.5rem;
-    }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
     .layer.hero-alt.show {
       padding-bottom: 0;
@@ -3944,8 +3949,10 @@ html {
     }
   
     .toggle-w {
-      width: 9rem;
-    }
+  transform: scale(0.6);
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
   
     .explainer-par {
       max-width: 100%;
