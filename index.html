@@ -854,52 +854,52 @@
 </div>
 </section>
 <section class="sec scrolltrigger-sec" data-animate="videogrow" id="scrolltrigger">
-    <!-- Sticky section with title -->
     <div class="sticky-w">
+      <!-- Moved: Title first -->
       <div class="comp video">
         <div class="font-c size-screen overflow-cut" data-videogrow="title">
           My Resume
         </div>
       </div>
-    </div>
   
-    <!-- Moved image/overlay layer OUTSIDE sticky -->
-    <div class="layer">
-      <div class="sky-scroller" data-videogrow="video">
-        <div style="position: relative; width: 100%; height: 100%;">
-          <img alt="Resume" class="img-sky" loading="eager" sizes="100vw"
-               src="assets/images/resume-crop.png"
-               style="width: 100%; height: auto; display: block;">
-          <div style="
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(173, 216, 230, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-          ">
-            <h1 style="
-              background-color: #add8e6;
-              color: #007bff;
-              font-size: 38px;
-              line-height: 44px;
-              font-family: Anton, Arial, sans-serif;
-              font-weight: 400;
-              padding: 20px 40px;
-              border-radius: 8px;
-              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-              max-width: 90%;
-              text-transform: uppercase;
-              margin: 0;
+      <!-- Image with overlay underneath -->
+      <div class="layer">
+        <div class="sky-scroller" data-videogrow="video">
+          <div style="position: relative; width: 100%; height: 100%;">
+            <img alt="Resume" class="img-sky" loading="eager" sizes="100vw"
+                 src="assets/images/resume-crop.png"
+                 style="width: 100%; height: auto; display: block;">
+            <div style="
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(173, 216, 230, 0.6);
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              text-align: center;
+              padding: 20px;
+              box-sizing: border-box;
             ">
-              View my full resume
-            </h1>
+              <h1 style="
+                background-color: #add8e6;
+                color: #007bff;
+                font-size: 38px;
+                line-height: 44px;
+                font-family: Anton, Arial, sans-serif;
+                font-weight: 400;
+                padding: 20px 40px;
+                border-radius: 8px;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+                max-width: 90%;
+                text-transform: uppercase;
+                margin: 0;
+              ">
+                View my full resume
+              </h1>
+            </div>
           </div>
         </div>
       </div>
@@ -987,7 +987,7 @@
       </div>
     </div>
   </section>
-<section class="sec" id="slider">
+  <section class="sec" id="slider">
 <div class="comp slider-w" data-animate="slider">
 <div class="slider-ctrls-w">
 <div class="slider-progress-w" data-slider="progress">
