@@ -188,27 +188,27 @@ html {
   }
   
   .w-icon-slider-right:before {
-    content: "";
+    content: "î˜€";
   }
   
   .w-icon-slider-left:before {
-    content: "";
+    content: "î˜";
   }
   
   .w-icon-nav-menu:before {
-    content: "";
+    content: "î˜‚";
   }
   
   .w-icon-arrow-down:before, .w-icon-dropdown-toggle:before {
-    content: "";
+    content: "î˜ƒ";
   }
   
   .w-icon-file-upload-remove:before {
-    content: "";
+    content: "î¤€";
   }
   
   .w-icon-file-upload-icon:before {
-    content: "";
+    content: "î¤ƒ";
   }
   
   * {
@@ -2203,10 +2203,9 @@ html {
   }
   
   .comp.toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+    z-index: 3;
+    top: -10svh;
+  }
   
   .comp.scroller {
     grid-column-gap: 0rem;
@@ -2524,7 +2523,12 @@ html {
   }
   
   .img-sky {
+    -webkit-text-fill-color: transparent;
     object-fit: cover;
+    background-color: #00f;
+    background-image: linear-gradient(#00f, #00f);
+    -webkit-background-clip: text;
+    background-clip: text;
     width: 100%;
     height: 100%;
   }
@@ -2834,24 +2838,31 @@ html {
   }
   
   .toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+    align-self: center;
+    width: 8rem;
+    height: 5.5rem;
+    margin-top: 60px;
+    margin-bottom: 0;
+    position: relative;
+  }
   
   .toggle-html-input {
     opacity: 0;
   }
   
   .toggle-slider {
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
     cursor: pointer;
     background-color: #ffe9cf;
     border: .55rem solid #ffe9cf;
     border-radius: 10rem;
+    flex-flow: row;
+    align-items: flex-end;
     padding: .5rem;
     display: flex;
-    position: absolute;
-    inset: 0%;
+    position: relative;
+    inset: auto 0% 0%;
   }
   
   .toggle-ball {
@@ -2860,7 +2871,7 @@ html {
     background-color: #3875f9;
     border: .4rem solid #3875f9;
     border-radius: 100%;
-    width: 8rem;
+    width: 3rem;
     transition: background-color .2s, border-color .2s;
   }
   
@@ -3024,9 +3035,13 @@ html {
     opacity: .4;
     filter: blur(2px);
     border-radius: 5rem;
+    min-width: 8.5rem;
+    margin-left: auto;
+    margin-right: auto;
     position: absolute;
     inset: 0%;
-    transform: translate(0, 15%);
+    overflow: visible;
+    transform: translate(-3px, 15%);
   }
   
   .hero-running-w {
@@ -3171,6 +3186,7 @@ html {
     width: 310%;
     position: absolute;
     top: -205%;
+    overflow: hidden;
   }
   
   .overflow {
@@ -3569,10 +3585,20 @@ html {
   }
   
   .dual-img {
+    box-sizing: border-box;
+    aspect-ratio: 1;
+    outline-offset: 0px;
+    object-fit: fill;
+    border-radius: 0;
+    outline: 3px #270f03;
     justify-content: center;
     align-items: center;
+    max-width: 200px;
+    height: auto;
+    max-height: 100%;
     display: flex;
     position: relative;
+    overflow: clip;
   }
   
   .dual-img-img {
@@ -3595,6 +3621,20 @@ html {
   
   .mobile-explainer-prompt {
     display: none;
+  }
+  
+  .defs {
+    overflow: visible;
+  }
+  
+  .heading {
+    font-family: Anton, Arial, sans-serif;
+    font-size: 45px;
+    font-weight: 400;
+  }
+  
+  .image {
+    overflow: hidden;
   }
   
   @media screen and (max-width: 991px) {
@@ -3697,10 +3737,8 @@ html {
     }
   
     .comp.toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+      top: -3rem;
+    }
   
     .font-c.hero-text {
       font-size: 14vw;
@@ -3769,10 +3807,9 @@ html {
     }
   
     .toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+      width: 10rem;
+      height: 5rem;
+    }
   
     .toggle-slider {
       border-width: .2rem;
@@ -3893,10 +3930,8 @@ html {
     }
   
     .comp.toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+      top: -1.5rem;
+    }
   
     .layer.hero-alt.show {
       padding-bottom: 0;
@@ -3949,10 +3984,8 @@ html {
     }
   
     .toggle-w {
-  transform: scale(0.6);
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+      width: 9rem;
+    }
   
     .explainer-par {
       max-width: 100%;
