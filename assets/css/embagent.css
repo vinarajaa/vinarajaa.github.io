@@ -3628,6 +3628,7 @@ figcaption {
   padding-bottom: 30px;
   display: flex;
   position: relative;
+  border: white 1px solid;
 }
 
 .video-wrap {
@@ -3845,6 +3846,9 @@ figcaption {
   max-width: 630px;
   margin: 0 auto 15px;
   font-weight: 600;
+  font-variant: titling-caps;
+  font-family: Coolvetica Condensed Rg, sans-serif;
+  letter-spacing: 1.5px;
 }
 
 .main-blog-post ul {
@@ -6640,7 +6644,7 @@ figcaption {
 
 .section-heading .top-text {
   font-size: 2.5rem;
-  color: #007bff;
+  color: #71ccdf;
   text-align: center;
   margin: 0;
 }
