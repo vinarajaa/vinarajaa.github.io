@@ -1190,8 +1190,6 @@
                       , r = o.attr("data-wf-domain") || "";
                     /\.webflow\.io$/i.test(r) && a.hostname !== r && (n = !0),
                     n && !c && (t = t || function() {
-                        var t = e('<a class="w-webflow-badge"></a>').attr("href", "https://webflow.com?utm_campaign=brandjs")
-                          , n = e("<img>").attr("src", "https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-icon-d2.89e12c322e.svg").attr("alt", "").css({
                             marginRight: "4px",
                             width: "26px"
                         })
@@ -1205,9 +1203,6 @@
                 }
                 ;
                 function f() {
-                    var e = u.children(".w-webflow-badge")
-                      , n = e.length && e.get(0) === t
-                      , i = r.env("editor");
                     if (n) {
                         i && e.remove();
                         return
@@ -7015,9 +7010,3 @@
     r = n.O(r)
 }
 )();
-document.addEventListener("DOMContentLoaded", function () {
-    const badge = document.querySelector('.w-webflow-badge');
-    if (badge) {
-      badge.remove();
-    }
-  });
