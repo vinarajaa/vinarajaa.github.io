@@ -6631,15 +6631,15 @@ figcaption {
   font-display: swap;
 }
 .section-heading {
-  position: relative;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  text-align: center;
   margin-bottom: 2rem;
 }
 
 .section-heading .top-text {
-  color: #007bff;
   font-size: 2.5rem;
-  text-transform: uppercase;
-  mix-blend-mode: normal;
+  color: #007bff;
+  text-align: center;
+  margin: 0;
 }
