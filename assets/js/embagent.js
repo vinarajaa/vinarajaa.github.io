@@ -1798,36 +1798,36 @@
                     var n = i.fullScreen || i.mozFullScreen || i.webkitIsFullScreen || i.msFullscreenElement || !!i.webkitFullscreenElement;
                     e(t).attr("style", n ? "display: none !important;" : "")
                 }
-                n.ready = function() {
-                    var n = a.attr("data-wf-status")
-                      , r = a.attr("data-wf-domain") || "";
-                    /\.webflow\.io$/i.test(r) && s.hostname !== r && (n = !0),
-                    n && !u && (t = t || function() {
-                        var t = e('<a class="w-webflow-badge"></a>').attr("href", "https://webflow.com?utm_campaign=brandjs")
-                          , n = e("<img>").attr("src", "https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-icon-d2.89e12c322e.svg").attr("alt", "").css({
-                            marginRight: "4px",
-                            width: "26px"
-                        })
-                          , r = e("<img>").attr("src", "https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-text-d2.c82cec3b78.svg").attr("alt", "Made in Webflow");
-                        return t.append(n, r),
-                        t[0]
-                    }(),
-                    d(),
-                    setTimeout(d, 500),
-                    e(i).off(l, c).on(l, c))
-                }
+                // n.ready = function() {
+                //     var n = a.attr("data-wf-status")
+                //       , r = a.attr("data-wf-domain") || "";
+                //     /\.webflow\.io$/i.test(r) && s.hostname !== r && (n = !0),
+                //     n && !u && (t = t || function() {
+                //         var t = e('<a class="w-webflow-badge"></a>').attr("href", "https://webflow.com?utm_campaign=brandjs")
+                //           , n = e("<img>").attr("src", "https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-icon-d2.89e12c322e.svg").attr("alt", "").css({
+                //             marginRight: "4px",
+                //             width: "26px"
+                //         })
+                //           , r = e("<img>").attr("src", "https://d3e54v103j8qbb.cloudfront.net/img/webflow-badge-text-d2.c82cec3b78.svg").attr("alt", "Made in Webflow");
+                //         return t.append(n, r),
+                //         t[0]
+                //     }(),
+                //     d(),
+                //     setTimeout(d, 500),
+                //     e(i).off(l, c).on(l, c))
+                // }
                 ;
-                function d() {
-                    var e = o.children(".w-webflow-badge")
-                      , n = e.length && e.get(0) === t
-                      , i = r.env("editor");
-                    if (n) {
-                        i && e.remove();
-                        return
-                    }
-                    e.length && e.remove(),
-                    !i && o.append(t)
-                }
+                // function d() {
+                //     var e = o.children(".w-webflow-badge")
+                //       , n = e.length && e.get(0) === t
+                //       , i = r.env("editor");
+                //     if (n) {
+                //         i && e.remove();
+                //         return
+                //     }
+                //     e.length && e.remove(),
+                //     !i && o.append(t)
+                // }
                 return n
             }
             )
