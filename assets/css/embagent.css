@@ -6634,7 +6634,8 @@ figcaption {
   display: flex;
   justify-content: center;
   width: 100%;
-  margin-bottom: 2rem;
+  font-variant: small-caps;
+  text-decoration: underline;
 }
 
 .section-heading .top-text {
