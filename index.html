@@ -731,132 +731,138 @@
 <div id="content">
     <!-- PROJECTS SECTION -->
     <section id="flip" data-animate="flip" class="sec reorganise">
-<div class="layer"></div>
-<h1 class="heading">PROJECTS</h1>
-<div data-flip="toggle" class="flip-btn-w">
-    <button class="btn flip-switch-btn current">
-        <div>List</div>
-    </button>
-    <button class="btn flip-switch-btn">
+        <div class="layer"></div>
+        <h1 class="heading">PROJECTS</h1>
+        <div data-flip="toggle" class="flip-btn-w">
+          <button class="btn flip-switch-btn current">
+            <div>List</div>
+          </button>
+          <button class="btn flip-switch-btn">
             <div>Grid</div>
-    </button>
-</div>
-
-<div class="comp">
-<ul class="flip-list-w list w-list-unstyled" data-flip="item" role="list">
-<li>
-<div class="flip-item">
-<div class="item-num">01</div>
-<h3 class="font-c size-md _w-ch">DataBase</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="lazy" width="238" src="assets/images/database.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b65d_watch-shadow.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-<li>
-<div class="flip-item is-2">
-<div class="item-num">02</div>
-<h3 class="font-c size-md _w-ch">AI Chatbots</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="eager" src="assets/images/ai-bot.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b663_can-shadow.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-<li>
-<div class="flip-item is-3">
-<div class="item-num">03</div>
-<h3 class="font-c size-md _w-ch">Website Crash Monitoring</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="eager" src="assets/images/web-error.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b65f_chair-shadow.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-<li>
-<div class="flip-item is-4">
-<div class="item-num">04</div>
-<h3 class="font-c size-md _w-ch">Apps</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="eager" src="assets/images/app.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b667_socks-shadow.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-<li>
-<div class="flip-item is-5">
-<div class="item-num">05</div>
-<h3 class="font-c size-md _w-ch">My Tech Stacks</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="eager" src="assets/images/virtual-layer.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b660_headphones-shadows.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-<li>
-<div class="flip-item is-6">
-<div class="item-num">06</div>
-<h3 class="font-c size-md _w-ch">Junkyard</h3>
-<div class="abs-img">
-<div class="dual-img">
-<img alt="" class="dual-img-img" loading="eager" src="assets/images/abstract-liquid-shape.png"/>
-<!-- <img alt="" class="dual-img-shadow" loading="eager" src="https://cdn.prod.website-files.com/6819158a3225e4b2e0c0b594/6819158b3225e4b2e0c0b664_tomato-shadow.avif"/> -->
-</div>
-</div>
-</div>
-</li>
-</ul>
-</div>
-<div class="code-block w-embed w-script">
-<script>
-                                // https://codepen.io/GreenSock/pen/RwLepdQ?editors=1010
-
-                                addEventListener("GSAPReady", (event) => {
-                                    const wrapper = document.querySelector("[data-animate='flip']");
-                                    const toggles = [...wrapper.querySelector("[data-flip='toggle']").children];
-                                    const items = wrapper.querySelector("[data-flip='item']");
-
-                                    // console.log("flip", wrapper, toggles, items);
-
-                                    const flipGridList = () => {
-                                        const state = Flip.getState(items.children);
-                                        items.classList.toggle("list");
-
-                                        Flip.from(state, {
-                                            duration: 0.8,
-                                            ease: "expo.out",
-                                            onComplete: () => {
-                                                ScrollTrigger.refresh();
-                                            }
-                                        });
-                                    }
-                                    ;
-
-                                    toggles.forEach( (toggle, index) => {
-                                        toggle.addEventListener("click", () => {
-                                            toggles[0].classList.toggle("current");
-                                            toggles[1].classList.toggle("current");
-                                            flipGridList();
-                                        }
-                                        );
-                                    }
-                                    );
-                                }
-                                );
-                            </script>
-</div>
-</section>
+          </button>
+        </div>
+      
+        <div class="comp">
+          <ul class="flip-list-w list w-list-unstyled" data-flip="item" role="list">
+      
+            <li>
+              <a href="database.html" style="text-decoration: none;">
+                <div class="flip-item">
+                  <div class="item-num">01</div>
+                  <h3 class="font-c size-md _w-ch">DataBase</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="lazy" width="238" src="assets/images/database.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+            <li>
+              <a href="ai-chatbots.html" style="text-decoration: none;">
+                <div class="flip-item is-2">
+                  <div class="item-num">02</div>
+                  <h3 class="font-c size-md _w-ch">AI Chatbots</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="eager" src="assets/images/ai-bot.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+            <li>
+              <a href="website-crash-monitoring.html" style="text-decoration: none;">
+                <div class="flip-item is-3">
+                  <div class="item-num">03</div>
+                  <h3 class="font-c size-md _w-ch">Website Crash Monitoring</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="eager" src="assets/images/web-error.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+            <li>
+              <a href="apps.html" style="text-decoration: none;">
+                <div class="flip-item is-4">
+                  <div class="item-num">04</div>
+                  <h3 class="font-c size-md _w-ch">Apps</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="eager" src="assets/images/app.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+            <li>
+              <a href="tech-stacks.html" style="text-decoration: none;">
+                <div class="flip-item is-5">
+                  <div class="item-num">05</div>
+                  <h3 class="font-c size-md _w-ch">My Tech Stacks</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="eager" src="assets/images/virtual-layer.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+            <li>
+              <a href="junkyard.html" style="text-decoration: none;">
+                <div class="flip-item is-6">
+                  <div class="item-num">06</div>
+                  <h3 class="font-c size-md _w-ch">Junkyard</h3>
+                  <div class="abs-img">
+                    <div class="dual-img">
+                      <img alt="" class="dual-img-img" loading="eager" src="assets/images/abstract-liquid-shape.png" />
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+      
+          </ul>
+        </div>
+      
+        <div class="code-block w-embed w-script">
+          <script>
+            addEventListener("GSAPReady", (event) => {
+              const wrapper = document.querySelector("[data-animate='flip']");
+              const toggles = [...wrapper.querySelector("[data-flip='toggle']").children];
+              const items = wrapper.querySelector("[data-flip='item']");
+      
+              const flipGridList = () => {
+                const state = Flip.getState(items.children);
+                items.classList.toggle("list");
+      
+                Flip.from(state, {
+                  duration: 0.8,
+                  ease: "expo.out",
+                  onComplete: () => {
+                    ScrollTrigger.refresh();
+                  }
+                });
+              };
+      
+              toggles.forEach((toggle, index) => {
+                toggle.addEventListener("click", () => {
+                  toggles[0].classList.toggle("current");
+                  toggles[1].classList.toggle("current");
+                  flipGridList();
+                });
+              });
+            });
+          </script>
+        </div>
+      </section>
 
 <!-- RESUME SECTION -->
 <section class="sec scrolltrigger-sec" data-animate="videogrow" id="scrolltrigger">
