@@ -6630,3 +6630,16 @@ figcaption {
   font-style: normal;
   font-display: swap;
 }
+.section-heading {
+  position: relative;
+  width: 100%;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.section-heading .top-text {
+  color: #007bff;
+  font-size: 2.5rem;
+  text-transform: uppercase;
+  mix-blend-mode: normal;
+}
