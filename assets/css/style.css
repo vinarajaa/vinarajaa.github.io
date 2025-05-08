@@ -2105,7 +2105,7 @@ html {
   }
   
   .sec {
-    padding-top: var(--y-base);
+    /* padding-top: var(--y-base); */
     padding-bottom: var(--y-base);
     flex-flow: column;
     justify-content: center;
