@@ -2229,13 +2229,13 @@ html {
   }
   
   .comp.video {
-    order: -1;
+    /* order: -1;
     justify-content: flex-start;
     align-self: flex-start;
     align-items: center;
-    max-width: 100%;
+    max-width: 100%; */
     padding-bottom: 20px;
-    display: block;
+    /* display: block; */
   }
   
   .scroll-wrapper {
