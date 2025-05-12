@@ -760,8 +760,7 @@
             </li>
       
             <li>
-              <a href="pages/ai-chatbots.html" style="text-decoration: none;">
-                <div class="flip-item is-2">
+                <a href="https://www.embagent.com" style="text-decoration: none;" target="_blank" rel="noopener noreferrer">                <div class="flip-item is-2">
                   <div class="item-num">02</div>
                   <h3 class="font-c size-md _w-ch">AI Chatbots</h3>
                   <div class="abs-img">
@@ -938,10 +937,10 @@
             const tl = gsap.timeline({
               scrollTrigger: {
                 trigger: section,
-                start: "top center",
+                start: "top 90%",
                 end: "bottom bottom+=100%",
                 invalidateOnRefresh: true,
-                scrub: 1,
+                scrub: false,
               },
             });
   
@@ -952,50 +951,64 @@
   
             tl.to(title, {
               scale: 1,
-              duration: 0.2,
+              duration: 0.1,
               rotation: 0,
               ease: "expo.out",
               stagger: { each: 0.05, from: "random" },
             });
   
-            tl.fromTo(video, {
-              clipPath: "inset(10% 50% 10% 50%)",
-              yPercent: 100,
-            }, {
-              ease: "power3",
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1,
-              yPercent: 0,
-            }, ".3");
+            // tl.fromTo(video, {
+            //   clipPath: "inset(10% 50% 10% 50%)",
+            //   yPercent: 100,
+            // }, {
+            //   ease: "power3",
+            //   clipPath: "inset(0% 0% 0% 0%)",
+            //   duration: 1,
+            //   yPercent: 0,
+            // }, ".3");
   
-            tl.fromTo(video, {
-              scale: 0.5,
-            }, {
-              ease: "back.inOut(.2)",
-              scale: 1,
-              duration: 0.8,
-            }, "<");
+            // tl.fromTo(video, {
+            //   scale: 0.5,
+            // }, {
+            //   ease: "back.inOut(.2)",
+            //   scale: 1,
+            //   duration: 0.8,
+            // }, "<");
   
-            tl.fromTo(img, {
-              scale: 2.8,
-              yPercent: 40,
-            }, {
-              scale: 1.2,
-              duration: 0.8,
-              delay: 0.2,
-              yPercent: 0,
-            }, "<");
+            // tl.fromTo(img, {
+            //   scale: 2.8,
+            //   yPercent: 40,
+            // }, {
+            //   scale: 1.2,
+            //   duration: 0.8,
+            //   delay: 0.2,
+            //   yPercent: 0,
+            // }, "<");
   
-            tl.to(video, {
-              scale: 0.9,
-              ease: "linear",
-            });
+            // tl.to(video, {
+            //   scale: 0.9,
+            //   ease: "linear",
+            // });
   
-            tl.to(img, {
-              scale: 1,
-              ease: "linear",
-            }, "<");
-          });
+            // tl.to(img, {
+            //   scale: 1,
+            //   ease: "linear",
+            // }, "<");
+          
+        // FADE UP ON IMAGE (runs independently)
+        gsap.from(img, {
+        scrollTrigger: {
+            trigger: img,
+            start: "top 80%", // triggers when img hits 80% of screen height
+            toggleActions: "play none none none",
+        },
+        opacity: 0,
+        y: 40,
+        duration: 1.2,
+        ease: "power2.out"
+        });
+        
+        });
         </script>
       </div>
     </div>
@@ -2036,23 +2049,23 @@
       flex-wrap: wrap;
     ">
       <!-- LinkedIn -->
-      <a href="https://www.linkedin.com/in/vinaraja/" target="_blank" style="display: block; height: 140px; width: 140px;">
-        <img src="assets/images/linkedin (1).png" alt="LinkedIn"
+      <a href="https://www.linkedin.com/in/vinaraja/" target="_blank" style="display: block; height: 20%; width: 20%;">
+        <img src="assets/images/linkedin.png" alt="LinkedIn"
              style="height: 100%; width: 100%; object-fit: contain; transition: transform 0.2s;"
              onmouseover="this.style.transform='scale(1.1)'" 
              onmouseout="this.style.transform='scale(1)'">
       </a>
   
       <!-- Message (iOS mail style icon) -->
-      <a href="contact.html" style="display: block; height: 140px; width: 140px;">
-        <img src="assets/images/ios-mail-application.png" alt="Message"
+      <a onclick="openModal()" style="cursor:pointer; display: block; height: 20%; width: 20%;">
+        <img src="assets/images/message.png" alt="Message"
              style="height: 100%; width: 100%; object-fit: contain; transition: transform 0.2s;"
              onmouseover="this.style.transform='scale(1.1)'" 
              onmouseout="this.style.transform='scale(1)'">
       </a>
   
       <!-- GitHub -->
-      <a href="https://github.com/vinarajaa" target="_blank" style="display: block; height: 140px; width: 140px;">
+      <a href="https://github.com/vinarajaa" target="_blank" style="display: block; height: 20%; width: 20%;">
         <img src="assets/images/github.png" alt="GitHub"
              style="height: 100%; width: 100%; object-fit: contain; transition: transform 0.2s;"
              onmouseover="this.style.transform='scale(1.1)'" 
@@ -2493,6 +2506,70 @@
                 }
             }
         </script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const modal = document.getElementById("contact-modal");
+  
+      window.openModal = function () {
+        modal.style.display = "flex";
+      }
+  
+      window.closeModal = function () {
+        modal.style.display = "none";
+        document.getElementById("thank-you-message").style.display = "none";
+      }
+  
+      window.handleFormSubmit = function (event) {
+        event.preventDefault();
+        const form = event.target;
+  
+        fetch(form.action, {
+          method: "POST",
+          body: new FormData(form),
+          headers: { 'Accept': 'application/json' }
+        }).then(response => {
+          if (response.ok) {
+            form.reset();
+            document.getElementById("thank-you-message").style.display = "block";
+          } else {
+            alert("Something went wrong. Please try again.");
+          }
+        });
+  
+        return false;
+      }
+    });
+  </script>
+  
+<!-- Contact Modal -->
+<div id="contact-modal" class="modal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeModal()">×</button>
+      <form action="https://formspree.io/f/mnndzvrz" method="POST" onsubmit="return handleFormSubmit(event)">
+        <label for="name">Name:</label>
+        <input type="text" name="name" required />
+  
+        <label for="email">Email:</label>
+        <input type="email" name="email" required />
+  
+        <label for="reason">Reason:</label>
+        <select name="reason" required>
+          <option value="" disabled selected>Select a reason</option>
+          <option value="collaboration">Collaboration</option>
+          <option value="freelance">Freelance Work</option>
+          <option value="just-saying-hi">Just Saying Hi</option>
+        </select>
+  
+        <label for="message">Message:</label>
+        <textarea name="message" rows="4" required></textarea>
+  
+        <button type="submit" style="background: none; border: none;">
+          <img src="assets/images/send.png" alt="Send" style="height: 60px;" />
+        </button>
+      </form>
+      <div id="thank-you-message">Thanks for messaging! ✨</div>
+    </div>
+  </div>
 
 </body>
 </html>
