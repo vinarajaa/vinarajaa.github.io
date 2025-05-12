@@ -760,8 +760,7 @@
             </li>
       
             <li>
-              <a href="pages/ai-chatbots.html" style="text-decoration: none;">
-                <div class="flip-item is-2">
+                <a href="https://www.embagent.com" style="text-decoration: none;" target="_blank" rel="noopener noreferrer">                <div class="flip-item is-2">
                   <div class="item-num">02</div>
                   <h3 class="font-c size-md _w-ch">AI Chatbots</h3>
                   <div class="abs-img">
@@ -938,10 +937,10 @@
             const tl = gsap.timeline({
               scrollTrigger: {
                 trigger: section,
-                start: "top center",
+                start: "top 90%",
                 end: "bottom bottom+=100%",
                 invalidateOnRefresh: true,
-                scrub: 1,
+                scrub: false,
               },
             });
   
@@ -952,50 +951,64 @@
   
             tl.to(title, {
               scale: 1,
-              duration: 0.2,
+              duration: 0.1,
               rotation: 0,
               ease: "expo.out",
               stagger: { each: 0.05, from: "random" },
             });
   
-            tl.fromTo(video, {
-              clipPath: "inset(10% 50% 10% 50%)",
-              yPercent: 100,
-            }, {
-              ease: "power3",
-              clipPath: "inset(0% 0% 0% 0%)",
-              duration: 1,
-              yPercent: 0,
-            }, ".3");
+            // tl.fromTo(video, {
+            //   clipPath: "inset(10% 50% 10% 50%)",
+            //   yPercent: 100,
+            // }, {
+            //   ease: "power3",
+            //   clipPath: "inset(0% 0% 0% 0%)",
+            //   duration: 1,
+            //   yPercent: 0,
+            // }, ".3");
   
-            tl.fromTo(video, {
-              scale: 0.5,
-            }, {
-              ease: "back.inOut(.2)",
-              scale: 1,
-              duration: 0.8,
-            }, "<");
+            // tl.fromTo(video, {
+            //   scale: 0.5,
+            // }, {
+            //   ease: "back.inOut(.2)",
+            //   scale: 1,
+            //   duration: 0.8,
+            // }, "<");
   
-            tl.fromTo(img, {
-              scale: 2.8,
-              yPercent: 40,
-            }, {
-              scale: 1.2,
-              duration: 0.8,
-              delay: 0.2,
-              yPercent: 0,
-            }, "<");
+            // tl.fromTo(img, {
+            //   scale: 2.8,
+            //   yPercent: 40,
+            // }, {
+            //   scale: 1.2,
+            //   duration: 0.8,
+            //   delay: 0.2,
+            //   yPercent: 0,
+            // }, "<");
   
-            tl.to(video, {
-              scale: 0.9,
-              ease: "linear",
-            });
+            // tl.to(video, {
+            //   scale: 0.9,
+            //   ease: "linear",
+            // });
   
-            tl.to(img, {
-              scale: 1,
-              ease: "linear",
-            }, "<");
-          });
+            // tl.to(img, {
+            //   scale: 1,
+            //   ease: "linear",
+            // }, "<");
+          
+        // FADE UP ON IMAGE (runs independently)
+        gsap.from(img, {
+        scrollTrigger: {
+            trigger: img,
+            start: "top 80%", // triggers when img hits 80% of screen height
+            toggleActions: "play none none none",
+        },
+        opacity: 0,
+        y: 40,
+        duration: 1.2,
+        ease: "power2.out"
+        });
+        
+        });
         </script>
       </div>
     </div>
