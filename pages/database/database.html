@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>House Inventory</title>
+  <script defer src="database.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/css/style.css">
+</head>
+<body style="margin: 2%; background-color: #ffe9cf; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
+
+  <h1 class="text-3xl font-bold mb-4">🏠 House Inventory</h1>
+  <!-- Add items Block  -->
+  <div class="max-w-5xl mx-auto mb-10 border border-black p-6 rounded-md shadow" style="background-color: #926ba4;">
+    <h2 class="text-2xl font-bold mb-4 text-white">➕ Add New Item</h2>
+  
+    <form id="addItemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <input type="text" name="name" placeholder="Item name"
+      class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
+      background: #f9e3ca;"/>
+      
+      <input type="number" name="quantity" placeholder="Quantity" class="p-2 border border-black rounded bg-[#f9e3ca]" required  style="
+      background: #f9e3ca;"/>
+      <input type="date" name="purchase_date" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
+      background: #f9e3ca;"/>
+  
+      <select name="room_id" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
+      background: #f9e3ca;"></select>
+      <select name="category_id" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
+      background: #f9e3ca;"></select>
+  
+      <textarea name="description" placeholder="Description (optional)" class="p-2 border border-black rounded md:col-span-2"style="
+      background: #f9e3ca;"></textarea>
+  
+      <div class="md:col-span-2">
+        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
+          Add Item
+        </button>
+      </div>
+    </form>
+  </div>
+  <!-- Filter and DataBase Items -->
+  <div style="max-width: 1200px; margin: 0 auto;">
+
+  <div class="mb-4 flex gap-4">
+    <select id="roomFilter" class="p-2 border rounded"></select>
+    <select id="categoryFilter" class="p-2 border rounded"></select>
+    <button onclick="loadItems()" class="px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
+  </div>
+  <div class="overflow-auto rounded-md shadow border border-black">
+    <table class="w-full text-left text-sm bg-white border border-black">
+      <thead style="background-color: #ffe9cf;">
+        <tr class="text-black uppercase text-xs tracking-wide font-semibold border-b border-black">
+          <th class="p-3 border-r border-black">Name</th>
+          <th class="p-3 border-r border-black">Quantity</th>
+          <th class="p-3 border-r border-black">Room</th>
+          <th class="p-3 border-r border-black">Category</th>
+          <th class="p-3">Purchase Date</th>
+        </tr>
+      </thead>
+      <tbody id="itemsTable" class="text-[#270f03] font-normal"></tbody>
+    </table>
+  </div>
+</div>
+</body>
+</html>
