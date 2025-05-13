@@ -7,59 +7,137 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="../../assets/css/style.css">
 </head>
-<body style="margin: 2%; background-color: #ffe9cf; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
+<body style="background-color: #562e96;color: #270f03;font-family: 'Worksans', Arial, sans-serif;" data-new-gr-c-s-check-loaded="14.1235.0" data-gr-ext-installed="">
+  <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-center items-center gap-4 my-8">
+      <!-- <img src="/assets/images/database.png" alt="Database Icon" class="w-12 h-12" /> -->
+      <h1 class="text-4xl font-bold text-[#270f03]" style="color: #ad73ef;">HOUSE INVENTORY</h1>
+    </div>
 
-  <h1 class="text-3xl font-bold mb-4">🏠 House Inventory</h1>
-  <!-- Add items Block  -->
-  <div class="max-w-5xl mx-auto mb-10 border border-black p-6 rounded-md shadow" style="background-color: #926ba4;">
-    <h2 class="text-2xl font-bold mb-4 text-white">➕ Add New Item</h2>
-  
-    <form id="addItemForm" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-      <input type="text" name="name" placeholder="Item name"
-      class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
-      background: #f9e3ca;"/>
-      
-      <input type="number" name="quantity" placeholder="Quantity" class="p-2 border border-black rounded bg-[#f9e3ca]" required  style="
-      background: #f9e3ca;"/>
-      <input type="date" name="purchase_date" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
-      background: #f9e3ca;"/>
-  
-      <select name="room_id" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
-      background: #f9e3ca;"></select>
-      <select name="category_id" class="p-2 border border-black rounded bg-[#f9e3ca]" required style="
-      background: #f9e3ca;"></select>
-  
-      <textarea name="description" placeholder="Description (optional)" class="p-2 border border-black rounded md:col-span-2"style="
-      background: #f9e3ca;"></textarea>
-  
-      <div class="md:col-span-2">
-        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded shadow">
-          Add Item
-        </button>
+    <!-- Filter & Actions Row -->
+    <div class="flex flex-wrap justify-start items-center gap-6 mb-6">
+      <img src="/assets/images/filter.png" class="w-16 h-16 cursor-pointer" onclick="toggleFilters()" />
+      <div id="filterControls" class="hidden flex-wrap items-center gap-4">
+        <select id="roomFilter" class="p-2 border border-black rounded bg-[#f9e3ca]"></select>
+        <select id="categoryFilter" class="p-2 border border-black rounded bg-[#f9e3ca]"></select>
+        <button onclick="loadItems()" class="px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
       </div>
-    </form>
-  </div>
-  <!-- Filter and DataBase Items -->
-  <div style="max-width: 1200px; margin: 0 auto;">
+      <img src="/assets/images/add.png" class="h-16 w-40 cursor-pointer" onclick="openAddModal()" />
+      <img src="/assets/images/delete.png" class="h-16 w-40 cursor-pointer" onclick="openDeleteModal()" />
+      <!-- Search Input and Button -->
+      <div class="flex items-center gap-4">
+        <input
+          type="text"
+          id="searchInput"
+          placeholder="Search by name..."
+          class="px-4 py-3 w-64 border border-black rounded bg-[#f9e3ca] text-black text-base"
+        />
+        <img
+          src="/assets/images/search.png"
+          onclick="handleSearch()"
+          class="h-16 w-40 cursor-pointer"
+        />
+      </div>
+    </div>
 
-  <div class="mb-4 flex gap-4">
-    <select id="roomFilter" class="p-2 border rounded"></select>
-    <select id="categoryFilter" class="p-2 border rounded"></select>
-    <button onclick="loadItems()" class="px-4 py-2 bg-blue-600 text-white rounded">Filter</button>
+    <!-- Table Card -->
+    <div class="rounded-xl shadow-[0_6px_30px_rgba(0,0,0,0.1)] border border-black overflow-hidden bg-white" style="
+    box-shadow: 0 3px 20px rgb(58 36 87);
+">
+      <div class="overflow-auto" style="max-height: 500px;">
+        <table class="w-full text-left text-sm bg-white">
+          <thead class="sticky top-0 z-10 shadow-sm bg-[#ffe9cf] text-black">
+            <tr class="uppercase text-xs tracking-wide text-white font-semibold border-b border-black" style="background: #6D46AAFF;">
+              <th class="p-3 border-r border-black">Select</th>
+              <th class="p-3 border-r border-black">Name</th>
+              <th class="p-3 border-r border-black">Quantity</th>
+              <th class="p-3 border-r border-black">Room</th>
+              <th class="p-3 border-r border-black">Category</th>
+              <th class="p-3">Purchase Date</th>
+            </tr>
+          </thead>
+          <tbody id="itemsTable" class="text-[#270f03] font-normal"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Dashboard Cards Section -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
+      <!-- Stats Card -->
+      <div class="bg-white text-white border border-black rounded-xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)]" style="
+    background-color: #6D46AAFF; box-shadow: 0 3px 20px rgb(44 0 98 / 81%);">
+        <h2 class="text-2xl font-bold mb-4">📊 Stats</h2>
+        <ul class="space-y-2 text-lg" id="statsList">
+          <li>Total Items: <span id="stat-total">56</span></li>
+          <li>Unique Rooms: <span id="stat-rooms">4</span></li>
+          <li>Categories: <span id="stat-categories">4</span></li>
+          <li>Last Added: <span id="stat-recent">5/12/2025</span></li>
+        </ul>
+      </div>
+
+      <!-- Lists Card -->
+      <div class="bg-white text-white border border-black rounded-xl p-5 shadow-[0_6px_20px_rgba(0,0,0,0.05)]" style="
+    background-color: #6D46AAFF; box-shadow: 0 3px 20px rgb(44 0 98 / 81%);
+">
+        <div class="flex justify-between items-center mb-4">
+          <h2 class="text-2xl font-bold">📋 Lists</h2>
+          <button onclick="openNewListModal()" class="text-sm bg-black text-white px-3 py-1 rounded">+ New List</button>
+        </div>
+        <div id="listsContainer" class="space-y-3">
+          <!-- Lists will render here -->
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="overflow-auto rounded-md shadow border border-black">
-    <table class="w-full text-left text-sm bg-white border border-black">
-      <thead style="background-color: #ffe9cf;">
-        <tr class="text-black uppercase text-xs tracking-wide font-semibold border-b border-black">
-          <th class="p-3 border-r border-black">Name</th>
-          <th class="p-3 border-r border-black">Quantity</th>
-          <th class="p-3 border-r border-black">Room</th>
-          <th class="p-3 border-r border-black">Category</th>
-          <th class="p-3">Purchase Date</th>
-        </tr>
-      </thead>
-      <tbody id="itemsTable" class="text-[#270f03] font-normal"></tbody>
-    </table>
+
+  <!-- Add Item Modal -->
+  <div id="add-modal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm hidden justify-center items-center z-50">
+    <div class="modal-content bg-[#926ba4] text-black p-6 rounded-lg shadow-lg max-w-md w-full relative border border-black">
+      <button class="modal-close absolute top-3 right-4 text-black text-3xl" onclick="closeAddModal()">×</button>
+      <h2 class="text-2xl font-bold mb-4">➕ Add Item</h2>
+      <form id="addItemFormStyled" onsubmit="return handleAddItemSubmit(event)">
+        <label>Name:</label>
+        <input type="text" name="name" class="w-full mb-2 p-2 rounded border border-black bg-[#f9e3ca] text-black" required>
+        <label>Quantity:</label>
+        <input type="number" name="quantity" class="w-full mb-2 p-2 rounded border border-black bg-[#f9e3ca] text-black" required>
+        <label>Purchase Date:</label>
+        <input type="date" name="purchase_date" class="w-full mb-2 p-2 rounded border border-black bg-[#f9e3ca] text-black" required>
+        <label>Room:</label>
+        <select name="room_id" class="w-full mb-2 p-2 rounded border border-black bg-[#f9e3ca] text-black" required></select>
+        <label>Category:</label>
+        <select name="category_id" class="w-full mb-2 p-2 rounded border border-black bg-[#f9e3ca] text-black" required></select>
+        <label>Description:</label>
+        <textarea name="description" class="w-full mb-4 p-2 rounded border border-black bg-[#f9e3ca] text-black"></textarea>
+        <button type="submit" style="background: none; border: none;">
+          <img src="/assets/images/add.png" alt="Add" style="height: 4rem; width: 12rem;" />
+        </button>
+      </form>
+      <div id="thank-you-message" class="text-white hidden mt-4">✅ Item added successfully! ✨</div>
+    </div>
+  </div>
+
+  <!-- New List Modal -->
+  <div id="newListModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden justify-center items-center z-50">
+    <div class="bg-white text-black p-6 rounded-lg shadow-lg border border-black max-w-md w-full relative">
+      <button class="absolute top-3 right-4 text-black text-2xl" onclick="closeNewListModal()">×</button>
+      <h3 class="text-xl font-bold mb-4">Create New List</h3>
+      <input id="newListTitle" type="text" placeholder="List name..." class="w-full p-2 border border-black rounded mb-4" />
+      <button onclick="createList()" class="bg-[#926ba4] text-white px-4 py-2 rounded shadow">Create</button>
+    </div>
+  </div>
+  <!-- Delete Confirmation Modal -->
+<!-- Delete Confirmation Modal -->
+<div id="delete-modal" class="modal fixed inset-0 bg-black/50 backdrop-blur-sm hidden justify-center items-center z-50">
+  <div class="modal-content bg-[#926ba4] text-black p-6 rounded-lg shadow-lg max-w-md w-full relative border border-black">
+    <button class="absolute top-3 right-4 text-black text-2xl" onclick="closeDeleteModal()">×</button>
+    <h2 class="text-2xl font-bold mb-4">🗑️ Confirm Deletion</h2>
+    <p class="mb-6 text-black text-center">Are you sure you want to delete <span id="delete-count">0</span> item(s)?</p>
+    <div class="flex justify-between">
+      <button onclick="closeDeleteModal()" class="bg-gray-700 text-white px-4 py-2 rounded hover:bg-gray-800 transition">Cancel</button>
+      <button onclick="confirmDelete()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition" style="background-color: #562e96;">Delete</button>
+    </div>
+    <div id="delete-success-message" class="text-white text-center mt-4 hidden">✅ Selected items deleted!</div>
   </div>
 </div>
 </body>
