@@ -1,4 +1,4 @@
-const API_BASE = "https://house-inventory-c5c7cyfpfqe9e6gk.westus-01.azurewebsites.net/";  // Update if hosted differently
+const API_BASE = "https://house-inventory-c5c7cyfpfqe9e6gk.westus-01.azurewebsites.net";
 let roomMap = {};        // ✅ Declare this
 let categoryMap = {};    
 
