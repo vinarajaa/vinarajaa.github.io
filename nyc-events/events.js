@@ -70,7 +70,7 @@ function renderEventsTable(list) {
     return;
   }
   tbody.innerHTML = list.map(function (e) {
-    var date = e.date || "—";
+    var date = e.date ? (String(e.date).slice(0, 10) || "—") : "—";
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
     var price = (e.price || "—");
@@ -149,21 +149,30 @@ function hideModal(id) {
   }
 }
 
-function openPullFromDiceModal() {
-  var link = get("pull-dice-actions-link");
-  var hint = get("pull-dice-actions-hint");
-  if (link) {
-    if (GITHUB_REPO) {
-      link.href = "https://github.com/" + GITHUB_REPO + "/actions/workflows/" + GITHUB_WORKFLOW_FILE;
-      link.textContent = "Open GitHub Actions workflow";
-      if (hint) hint.style.display = "none";
-    } else {
-      link.href = "#";
-      link.textContent = "Configure GITHUB_REPO to enable this link";
-      if (hint) hint.style.display = "block";
-    }
+async function triggerPullFromDice() {
+  var base = eventsApiUrl();
+  if (!base) {
+    setStatus("Set EVENTS_API_URL to enable Pull from Dice.");
+    return;
   }
-  showModal("pull-dice-modal");
+  var scrapeUrl = (EVENTS_API_URL || "").replace(/\/$/, "") + "/api/scrape";
+  setStatus("Pulling from Dice…");
+  try {
+    var res = await fetch(scrapeUrl, { method: "POST", headers: { "Content-Type": "application/json" } });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) {
+      setStatus("Pull failed: " + (data.error || res.status));
+      return;
+    }
+    setStatus("Pulled " + (data.inserted || 0) + " new event(s). Refreshing…");
+    await fetchEvents();
+    populateFilterDropdowns();
+    applyEventFilters();
+    setStatus(eventsData.length + " event(s). Pulled " + (data.inserted || 0) + " new.");
+  } catch (err) {
+    setStatus("Pull failed: " + (err.message || "Network error"));
+    console.error(err);
+  }
 }
 
 function closePullFromDiceModal() {
