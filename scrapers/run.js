@@ -1,6 +1,6 @@
 /**
  * Entry point for NYC events scrapers.
- * Run: SUPABASE_URL=... SUPABASE_ANON_KEY=... node run.js
+ * Run: EVENTS_API_URL=https://your-project.vercel.app node run.js
  * Add more platforms by requiring other scraper modules and calling their main().
  */
 const diceNy = require("./dice-nyc.js");

@@ -41,6 +41,7 @@
         </select>
         <button type="button" onclick="applyEventFilters()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
       </div>
+      <button type="button" onclick="openPullFromDiceModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Pull from Dice</button>
       <button type="button" onclick="openAddEventModal(null)" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add event (form)</button>
       <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>
     </div>
@@ -127,6 +128,29 @@
       <div class="flex gap-3">
         <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Cancel</button>
         <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold text-white transition" style="background-color: #B36A5E;">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pull from Dice (manual trigger instructions) -->
+  <div id="pull-dice-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
+    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closePullFromDiceModal()">×</button>
+      <h2 class="text-xl font-bold mb-2" style="color: #B36A5E;">Pull from Dice</h2>
+      <p class="text-sm mb-4" style="color: #270f03;">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
+
+      <div class="rounded-xl p-4 border mb-4" style="border-color: #C89F9C; background-color: #EEE2DF;">
+        <div class="font-semibold mb-2" style="color: #B36A5E;">Option A: Run locally</div>
+        <pre class="text-xs whitespace-pre-wrap" style="color:#270f03; background:#FAF6F4; border:1px solid #C89F9C; padding:10px; border-radius:12px;">cd scrapers
+npm install
+EVENTS_API_URL=https://your-project.vercel.app node run.js</pre>
+      </div>
+
+      <div class="rounded-xl p-4 border" style="border-color: #C89F9C; background-color: #EEE2DF;">
+        <div class="font-semibold mb-2" style="color: #B36A5E;">Option B: Run on GitHub (manual)</div>
+        <p class="text-sm mb-3">Set repo secrets first, then click “Run workflow”.</p>
+        <a id="pull-dice-actions-link" href="#" target="_blank" rel="noopener noreferrer" class="underline font-semibold" style="color:#C97C5D;">Open GitHub Actions workflow</a>
+        <p id="pull-dice-actions-hint" class="text-xs mt-2" style="color:#C89F9C;">If this link is blank, set `GITHUB_REPO` in `nyc-events/events.js`.</p>
       </div>
     </div>
   </div>

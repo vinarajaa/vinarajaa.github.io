@@ -1,0 +1,20 @@
+-- NYC Events – schema for Vercel + Neon (or any Postgres)
+-- Run this in Neon SQL Editor (Neon dashboard → SQL Editor) or your Postgres client.
+
+create table if not exists events (
+  id uuid primary key default gen_random_uuid(),
+  title text not null,
+  date date not null,
+  time text,
+  neighborhood text,
+  price text,
+  link text not null,
+  platform text not null,
+  description text,
+  created_at timestamptz default now(),
+  unique(link)
+);
+
+create index if not exists events_date_idx on events (date);
+create index if not exists events_platform_idx on events (platform);
+create index if not exists events_neighborhood_idx on events (neighborhood);
