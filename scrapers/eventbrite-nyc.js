@@ -231,6 +231,40 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
+/** Extract address from a nested object (Eventbrite-style: address_1, city, region, postal_code). */
+function addressFromObj(obj) {
+  if (!obj || typeof obj !== "object") return null;
+  const a1 = obj.address_1 || obj.address1 || obj.street_address || obj.streetAddress || obj.street || obj.line1;
+  const city = obj.city || obj.addressLocality || obj.address_locality;
+  const region = obj.region || obj.address_region || obj.addressRegion || obj.state;
+  const zip = obj.postal_code || obj.postalCode || obj.zip;
+  const parts = [a1, city, region, zip].filter(Boolean);
+  return parts.length ? parts.join(", ").trim().slice(0, 300) : null;
+}
+
+/** Recursively find first object that looks like a venue/address (has address_1 or streetAddress + city or zip). */
+function findAddressInJson(obj, depth) {
+  if (depth > 8) return null;
+  if (!obj) return null;
+  if (typeof obj === "string") return null;
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      const r = findAddressInJson(obj[i], depth + 1);
+      if (r) return r;
+    }
+    return null;
+  }
+  if (typeof obj === "object") {
+    const addr = addressFromObj(obj);
+    if (addr && (obj.city || obj.postal_code || obj.postalCode || (obj.address_1 && /\d{5}/.test(addr)))) return addr;
+    for (const k in obj) {
+      const r = findAddressInJson(obj[k], depth + 1);
+      if (r) return r;
+    }
+  }
+  return null;
+}
+
 /** Fetch event detail page and extract full venue address (e.g. "415 5th Avenue New York, NY 10016"). */
 async function fetchEventbriteEventDetails(link) {
   try {
@@ -242,8 +276,9 @@ async function fetchEventbriteEventDetails(link) {
     let addressStr = null;
     let venueName = null;
 
-    // JSON-LD Event with location.address (or @graph with Event + Place)
+    // 1) JSON-LD Event with location.address (or @graph with Event + Place)
     $('script[type="application/ld+json"]').each(function () {
+      if (addressStr) return;
       try {
         const raw = $(this).html() || "{}";
         const data = JSON.parse(raw);
@@ -275,16 +310,84 @@ async function fetchEventbriteEventDetails(link) {
       } catch (_) {}
     });
 
-    // Fallback: look for address in data attributes or common patterns
+    // 2) Any script with JSON that contains venue/address (__NEXT_DATA__, __SERVER_DATA__, etc.)
     if (!addressStr) {
-      const addrEl = $("[data-testid='venue-address'], [data-automation='venue-address'], .venue-address, .event-venue-address, [class*='venueAddress']").first();
-      if (addrEl.length) addressStr = addrEl.text().replace(/\s+/g, " ").trim().slice(0, 300);
+      $("script").each(function () {
+        if (addressStr) return;
+        let raw = $(this).html();
+        if (!raw || raw.length < 100) return;
+        const tryParse = function (str) {
+          try {
+            return findAddressInJson(JSON.parse(str), 0);
+          } catch (_) {
+            return null;
+          }
+        };
+        addressStr = tryParse(raw);
+        if (!addressStr && /=\s*\{/.test(raw)) {
+          const assignMatch = raw.match(/=\s*(\{[\s\S]{50,80000}\})\s*;?\s*$/m) || raw.match(/(\{[\s\S]{100,50000}\})/);
+          if (assignMatch) addressStr = tryParse(assignMatch[1]);
+        }
+        if (!addressStr && /\d{5}/.test(raw)) {
+          const street = raw.match(/"address_1"\s*:\s*"((?:[^"\\]|\\.)*)"/) || raw.match(/"streetAddress"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+          const city = raw.match(/"city"\s*:\s*"((?:[^"\\]|\\.)*)"/) || raw.match(/"addressLocality"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+          const region = raw.match(/"region"\s*:\s*"((?:[^"\\]|\\.)*)"/) || raw.match(/"addressRegion"\s*:\s*"((?:[^"\\]|\\.)*)"/);
+          const zip = raw.match(/"postal_code"\s*:\s*"(\d{5})"/) || raw.match(/"postalCode"\s*:\s*"(\d{5})"/);
+          const parts = [(street && street[1].trim()), (city && city[1].trim()), (region && region[1].trim()) || "NY", (zip && zip[1])].filter(Boolean);
+          if (parts.length >= 2) addressStr = parts.join(", ").slice(0, 300);
+        }
+      });
     }
+
+    // 3) HTML elements with address-like content
+    if (!addressStr) {
+      const selectors = [
+        "[data-testid='venue-address']", "[data-automation='venue-address']",
+        ".venue-address", ".event-venue-address", "[class*='venueAddress']", "[class*='VenueAddress']",
+        "[class*='location-address']", "[class*='event-detail-venue']", "address"
+      ];
+      for (let s = 0; s < selectors.length; s++) {
+        const el = $(selectors[s]).first();
+        if (el.length) {
+          const t = el.text().replace(/\s+/g, " ").trim();
+          if (t.length > 10 && /\d{5}/.test(t)) {
+            addressStr = t.slice(0, 300);
+            break;
+          }
+        }
+      }
+    }
+
+    // 4) Google Maps / Apple Maps links (address in query or path)
+    if (!addressStr) {
+      $('a[href*="maps.google"], a[href*="google.com/maps"], a[href*="maps.apple"], a[href*="q="]').each(function () {
+        if (addressStr) return;
+        const href = $(this).attr("href") || "";
+        const decoded = decodeURIComponent(href);
+        const qMatch = decoded.match(/[?&]q=([^&]+)/);
+        if (qMatch && qMatch[1]) {
+          const addr = qMatch[1].replace(/\+/g, " ").trim();
+          if (addr.length > 15 && /\d{5}/.test(addr)) addressStr = addr.slice(0, 300);
+        }
+      });
+    }
+
+    // 5) Body text: street address + City, NY zip (broad patterns)
     if (!addressStr) {
       const bodyText = $("body").text().replace(/\s+/g, " ");
-      const addrMatch = bodyText.match(/(\d+[\s\w\.]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^·]*?,?\s*New York,?\s*NY\s*\d{5})/i)
-        || bodyText.match(/(\d+[\s\w\.]+(?:Avenue|Ave|Street|St)[^·]*?,?\s*Brooklyn,?\s*NY\s*\d{5})/i);
-      if (addrMatch) addressStr = addrMatch[1].trim().slice(0, 300);
+      const patterns = [
+        /(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct|Parkway|Pkwy)[^·]*?,?\s*(?:New York|NYC|Brooklyn|Queens|Bronx|Manhattan),?\s*NY\s*\d{5})/i,
+        /(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl)[^·]*?,?\s*Brooklyn,?\s*NY\s*\d{5})/i,
+        /(\d+\s+[\w\.\s]+?,?\s*(?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i,
+        /((?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i
+      ];
+      for (let p = 0; p < patterns.length && !addressStr; p++) {
+        const m = bodyText.match(patterns[p]);
+        if (m && m[1]) {
+          const cand = m[1].trim();
+          if (cand.length >= 15) addressStr = cand.slice(0, 300);
+        }
+      }
     }
 
     return addressStr ? { address: addressStr, venueName: venueName } : null;
@@ -320,9 +423,9 @@ async function scrapeEventbriteNy() {
       // For events that only have "City · Venue" (no street address), fetch detail page to get full address
       const needAddress = events.filter(function (e) {
         const a = (e.address || "").trim();
-        return !a || a.indexOf("·") >= 0 && !/\d{5}/.test(a);
+        return !a || (a.indexOf("·") >= 0 && !/\d{5}/.test(a));
       });
-      const maxFetch = 12;
+      const maxFetch = 40;
       for (let i = 0; i < Math.min(needAddress.length, maxFetch); i++) {
         const ev = needAddress[i];
         const details = await fetchEventbriteEventDetails(ev.link);
