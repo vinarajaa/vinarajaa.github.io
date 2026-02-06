@@ -34,6 +34,13 @@ function formatDateDisplay(val) {
   return DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
 }
 
+/** Truncate price decimals to hundredth (2 places); drop the rest. */
+function formatPriceDisplay(val) {
+  if (val == null || val === "") return "—";
+  var s = String(val).trim();
+  return s.replace(/(\.\d{2})\d+/g, "$1");
+}
+
 function setStatus(text) {
   var el = get("events-status");
   if (el) el.textContent = text;
@@ -103,7 +110,7 @@ function renderEventsTable(list) {
     }
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
-    var price = (e.price || "—");
+    var price = formatPriceDisplay(e.price);
     var platform = (e.platform || "—");
     var link = (e.link || "#");
     var title = (e.title || "Untitled").replace(/</g, "&lt;").replace(/>/g, "&gt;");
