@@ -123,7 +123,7 @@ function extractEventsFromHtml(html, baseUrl) {
         .replace(/Promoted/gi, "")
         .replace(/\w*\d+\s*followers\s*/gi, "")
         .replace(/([a-zA-Z])Free(?=[A-Z])/g, "$1")
-        .replace(/\s*(?:Share\s+this\s+event[^\w]*|Save\s+this\s+event[^\w]*|Almost\s+full|Sales\s+end\s+soon|Going\s+fast).*$/i, "")
+        .replace(/\s*(?:From\s+\$[\d.]+\s*|Share\s+this\s+event[^\w]*|Save\s+this\s+event[^\w]*|Almost\s+full|Sales\s+end\s+soon|Going\s+fast).*$/i, "")
         .replace(/\s+(?:Mon|Tue|Wed|Thu|Fri|Sat|Sun)[a-z]*\s*$/i, "")
         .replace(/\s{2,}/g, " ")
         .trim()
@@ -231,6 +231,72 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
+/** Fetch event detail page and extract full venue address (e.g. "415 5th Avenue New York, NY 10016"). */
+async function fetchEventbriteEventDetails(link) {
+  try {
+    const res = await fetch(link, { headers: FETCH_HEADERS });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const $ = cheerio.load(html);
+
+    let addressStr = null;
+    let venueName = null;
+
+    // JSON-LD Event with location.address (or @graph with Event + Place)
+    $('script[type="application/ld+json"]').each(function () {
+      try {
+        const raw = $(this).html() || "{}";
+        const data = JSON.parse(raw);
+        const graph = data["@graph"] || (Array.isArray(data) ? data : [data]);
+        const items = Array.isArray(graph) ? graph : [graph];
+        for (let k = 0; k < items.length; k++) {
+          const item = items[k];
+          if (!item || item["@type"] !== "Event") continue;
+          const loc = item.location;
+          if (!loc) continue;
+          const place = (loc["@id"] && items.find(function (x) { return x["@id"] === loc["@id"]; })) || loc;
+          const addr = place.address || (place["@type"] === "Place" && place.address);
+          if (addr) {
+            if (typeof addr === "string") {
+              addressStr = addr.trim().slice(0, 300);
+            } else {
+              const parts = [
+                addr.streetAddress || addr.street,
+                addr.addressLocality || addr.addressCity || addr.city,
+                addr.addressRegion || addr.addressState || addr.region || addr.state,
+                addr.postalCode || addr.zip
+              ].filter(Boolean);
+              if (parts.length) addressStr = parts.join(", ").slice(0, 300);
+            }
+            if (place.name) venueName = String(place.name).trim().slice(0, 200);
+            break;
+          }
+        }
+      } catch (_) {}
+    });
+
+    // Fallback: look for address in data attributes or common patterns
+    if (!addressStr) {
+      const addrEl = $("[data-testid='venue-address'], [data-automation='venue-address'], .venue-address, .event-venue-address, [class*='venueAddress']").first();
+      if (addrEl.length) addressStr = addrEl.text().replace(/\s+/g, " ").trim().slice(0, 300);
+    }
+    if (!addressStr) {
+      const bodyText = $("body").text().replace(/\s+/g, " ");
+      const addrMatch = bodyText.match(/(\d+[\s\w\.]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^·]*?,?\s*New York,?\s*NY\s*\d{5})/i)
+        || bodyText.match(/(\d+[\s\w\.]+(?:Avenue|Ave|Street|St)[^·]*?,?\s*Brooklyn,?\s*NY\s*\d{5})/i);
+      if (addrMatch) addressStr = addrMatch[1].trim().slice(0, 300);
+    }
+
+    return addressStr ? { address: addressStr, venueName: venueName } : null;
+  } catch (_) {
+    return null;
+  }
+}
+
+function sleep(ms) {
+  return new Promise(function (r) { setTimeout(r, ms); });
+}
+
 const FETCH_HEADERS = {
   "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
@@ -248,8 +314,27 @@ async function scrapeEventbriteNy() {
         continue;
       }
       const html = await res.text();
-      const events = extractEventsFromHtml(html, url);
-      if (events.length > 0) return events;
+      let events = extractEventsFromHtml(html, url);
+      if (events.length === 0) continue;
+
+      // For events that only have "City · Venue" (no street address), fetch detail page to get full address
+      const needAddress = events.filter(function (e) {
+        const a = (e.address || "").trim();
+        return !a || a.indexOf("·") >= 0 && !/\d{5}/.test(a);
+      });
+      const maxFetch = 12;
+      for (let i = 0; i < Math.min(needAddress.length, maxFetch); i++) {
+        const ev = needAddress[i];
+        const details = await fetchEventbriteEventDetails(ev.link);
+        if (details && details.address) {
+          const derived = deriveAddressAndArea(details.address);
+          ev.address = derived.address;
+          if (derived.neighborhood) ev.neighborhood = derived.neighborhood;
+        }
+        await sleep(120);
+      }
+
+      return events;
     } catch (e) {
       lastError = e;
     }
