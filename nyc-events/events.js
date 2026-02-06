@@ -2,7 +2,7 @@
 // Set EVENTS_API_URL to your Vercel deployment; leave empty for demo. See NYC_EVENTS_SETUP.md.
 const EVENTS_API_URL = "https://vinarajaa-github-io.vercel.app";  // e.g. https://your-project.vercel.app
 // Optional (for the “Pull from Dice” modal link)
-const GITHUB_REPO = ""; // e.g. "vinarajaa/vinarajaa.github.io"
+const GITHUB_REPO = "vinarajaa/vinarajaa.github.io";
 const GITHUB_WORKFLOW_FILE = "scrape-nyc-events.yml";
 
 let eventsData = [];

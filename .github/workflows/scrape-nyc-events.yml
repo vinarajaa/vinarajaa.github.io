@@ -1,0 +1,30 @@
+# Manual (and optional scheduled) run of NYC events scraper. Pushes to your Vercel API.
+# Add secret: EVENTS_API_URL = https://your-project.vercel.app
+name: Scrape NYC Events
+
+on:
+  workflow_dispatch:   # "Run workflow" button in Actions tab
+  schedule:
+    - cron: "0 6 * * *"   # 6:00 UTC daily (optional)
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: scrapers/package-lock.json
+
+      - name: Install scrapers
+        run: cd scrapers && npm ci
+
+      - name: Run Dice NYC scraper
+        env:
+          EVENTS_API_URL: ${{ secrets.EVENTS_API_URL }}
+        run: cd scrapers && node run.js
+        # If EVENTS_API_URL is not set, the scraper will fail; add it in repo Settings → Secrets
