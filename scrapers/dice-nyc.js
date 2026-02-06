@@ -5,6 +5,7 @@
  */
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const { deriveAddressAndArea } = require("./nyc-areas.js");
 
 const DICE_NYC_URLS = [
   "https://dice.fm/browse/new-york?lng=en-US",
@@ -98,11 +99,13 @@ function extractEventsFromHtml(html, baseUrl) {
     }
 
     const date = normalizeDate(dateStr) || new Date().toISOString().slice(0, 10);
+    const { address, neighborhood } = deriveAddressAndArea(venueStr || null);
     events.push({
       title,
       date,
       time: normalizeTime(timeStr),
-      neighborhood: venueStr ? venueStr.slice(0, 200) : null,
+      address: address || null,
+      neighborhood: neighborhood || null,
       price: priceStr ? priceStr.slice(0, 100) : null,
       link: href,
       platform: PLATFORM
@@ -134,12 +137,21 @@ function extractEventsFromHtml(html, baseUrl) {
             if (t !== "00:00") time = t;
           }
           const venue = ev.venue?.name || ev.venue_name || ev.location || null;
+          const addr = ev.venue?.address || ev.address;
+          let venueAddr = null;
+          if (addr && typeof addr === "object") {
+            const p = [addr.address_line_1 || addr.street, addr.city, addr.region].filter(Boolean);
+            if (p.length) venueAddr = p.join(", ");
+          } else if (addr && typeof addr === "string") venueAddr = addr;
+          const venueOrAddress = venueAddr || venue;
+          const { address, neighborhood } = deriveAddressAndArea(venueOrAddress || null);
           const price = ev.price || ev.price_display || (ev.free ? "Free" : null);
           events.push({
             title,
             date,
             time: time ? String(time).slice(0, 50) : null,
-            neighborhood: venue ? String(venue).slice(0, 200) : null,
+            address: address || null,
+            neighborhood: neighborhood || null,
             price: price ? String(price).slice(0, 100) : null,
             link,
             platform: PLATFORM
@@ -233,7 +245,13 @@ async function scrapeDiceNy() {
         const details = await fetchEventDetails(ev.link);
         if (details) {
           if (details.time) ev.time = details.time;
-          if (details.venue && !ev.neighborhood) ev.neighborhood = details.venue;
+          if (details.venue) {
+            if (!ev.address || !ev.neighborhood) {
+              const out = deriveAddressAndArea(details.venue);
+              if (out.address && !ev.address) ev.address = out.address;
+              if (out.neighborhood && !ev.neighborhood) ev.neighborhood = out.neighborhood;
+            }
+          }
           if (details.price && !ev.price) ev.price = details.price;
         }
         await sleep(80);

@@ -55,8 +55,8 @@ module.exports = async function handler(req, res) {
       if (!link) continue;
       try {
         const row = await sql`
-          INSERT INTO events (title, date, time, neighborhood, price, link, platform, description)
-          VALUES (${title}, ${date}, ${ev.time || null}, ${ev.neighborhood || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
+          INSERT INTO events (title, date, time, address, neighborhood, price, link, platform, description)
+          VALUES (${title}, ${date}, ${ev.time || null}, ${ev.address || null}, ${ev.neighborhood || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
           ON CONFLICT (link) DO NOTHING
           RETURNING id
         `;

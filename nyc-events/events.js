@@ -93,7 +93,7 @@ function renderEventsTable(list) {
   var tbody = get("eventsTable");
   if (!tbody) return;
   if (!list || list.length === 0) {
-    tbody.innerHTML = "<tr><td colspan=\"8\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan=\"9\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
     return;
   }
   tbody.innerHTML = list.map(function (e) {
@@ -110,6 +110,7 @@ function renderEventsTable(list) {
     }
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
+    var address = (e.address || "—");
     var price = formatPriceDisplay(e.price);
     var platform = (e.platform || "—");
     var link = (e.link || "#");
@@ -119,6 +120,7 @@ function renderEventsTable(list) {
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + date + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + time + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + neighborhood + "</td>" +
+      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + address + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + price + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + platform + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\"><a href=\"" + link.replace(/"/g, "&quot;") + "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"underline\" style=\"color: #C97C5D;\">Open</a></td>" +
@@ -259,6 +261,7 @@ function handleAddEventSubmit(ev) {
     date: form.date.value,
     time: (form.time && form.time.value) || null,
     neighborhood: (form.neighborhood && form.neighborhood.value.trim()) || null,
+    address: (form.address && form.address.value.trim()) || null,
     price: (form.price && form.price.value.trim()) || null,
     link: form.link.value.trim(),
     platform: (form.platform && form.platform.value) || "Manual",

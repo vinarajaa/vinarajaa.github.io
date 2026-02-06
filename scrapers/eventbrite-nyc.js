@@ -4,6 +4,7 @@
  */
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
+const { deriveAddressAndArea } = require("./nyc-areas.js");
 
 const EVENTBRITE_NYC_URLS = [
   "https://www.eventbrite.com/d/ny--new-york/all-events/",
@@ -164,11 +165,13 @@ function extractEventsFromHtml(html, baseUrl) {
     }
 
     const date = normalizeDate(dateStr) || new Date().toISOString().slice(0, 10);
+    const { address, neighborhood } = deriveAddressAndArea(venueStr || null);
     events.push({
       title,
       date,
       time: normalizeTime(timeStr),
-      neighborhood: venueStr ? venueStr.slice(0, 200) : null,
+      address: address || null,
+      neighborhood: neighborhood || null,
       price: priceStr ? priceStr.slice(0, 100) : null,
       link: href,
       platform: PLATFORM
@@ -198,16 +201,25 @@ function extractEventsFromHtml(html, baseUrl) {
           if (t !== "00:00") time = t;
         }
         const venue = ev.venue?.name || ev.venue_name || ev.location?.name || ev.location || ev.place || null;
-        const loc = ev.address?.city || ev.venue?.address?.city || ev.venue?.address?.region || "";
-        let neighborhood = [loc, venue].filter(Boolean).join(" · ") || (venue || null);
-        if (neighborhood) neighborhood = neighborhood.replace(/\bPromoted\b/gi, "").replace(/\s{2,}/g, " ").trim();
+        const addr = ev.venue?.address || ev.address || {};
+        const addrParts = [
+          addr.address_line_1 || addr.street || addr.line1,
+          addr.city,
+          addr.region || addr.state,
+          addr.postal_code
+        ].filter(Boolean);
+        const fullAddress = addrParts.length ? addrParts.join(", ") : null;
+        const venueOrAddress = fullAddress || [addr.city || addr.region, venue].filter(Boolean).join(" · ") || venue;
+        const cleaned = (venueOrAddress && String(venueOrAddress).replace(/\bPromoted\b/gi, "").replace(/\s{2,}/g, " ").trim()) || null;
+        const { address, neighborhood } = deriveAddressAndArea(cleaned);
         let price = ev.price_display || ev.price || (ev.is_free ? "Free" : null);
         if (price != null) price = String(price).slice(0, 100);
         events.push({
           title,
           date,
           time: time ? String(time).slice(0, 50) : null,
-          neighborhood: neighborhood ? String(neighborhood).slice(0, 200) : null,
+          address: address || null,
+          neighborhood: neighborhood || null,
           price: price ? String(price).slice(0, 100) : null,
           link: link.startsWith("http") ? link : "https://www.eventbrite.com" + (link.startsWith("/") ? link : "/e/" + link),
           platform: PLATFORM

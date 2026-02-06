@@ -6,6 +6,7 @@ create table if not exists events (
   title text not null,
   date date not null,
   time text,
+  address text,
   neighborhood text,
   price text,
   link text not null,
@@ -15,6 +16,7 @@ create table if not exists events (
   unique(link)
 );
 
+-- If you already have the table, add the column: alter table events add column if not exists address text;
 create index if not exists events_date_idx on events (date);
 create index if not exists events_platform_idx on events (platform);
 create index if not exists events_neighborhood_idx on events (neighborhood);
