@@ -146,12 +146,14 @@ function extractEventsFromHtml(html, baseUrl) {
           const venueOrAddress = venueAddr || venue;
           const { address, neighborhood } = deriveAddressAndArea(venueOrAddress || null);
           const price = ev.price || ev.price_display || (ev.free ? "Free" : null);
+          const venueName = venue ? String(venue).slice(0, 200) : null;
           events.push({
             title,
             date,
             time: time ? String(time).slice(0, 50) : null,
             address: address || null,
             neighborhood: neighborhood || null,
+            venue: venueName,
             price: price ? String(price).slice(0, 100) : null,
             link,
             platform: PLATFORM
@@ -420,6 +422,7 @@ async function scrapeDiceNy() {
       function applyDetails(ev, details) {
         if (!details) return;
         if (details.time) ev.time = details.time;
+        if (details.venue) ev.venue = String(details.venue).slice(0, 200);
         if (details.address && /\d{5}/.test(details.address)) {
           var addr = normalizeAddressLine(details.address);
           if (!addr) addr = details.address;

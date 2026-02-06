@@ -74,12 +74,14 @@ function applyClientFilters() {
   var dateFrom = (get("filterDateFrom") || {}).value;
   var dateTo = (get("filterDateTo") || {}).value;
   var neighborhood = (get("filterNeighborhood") || {}).value;
+  var venue = (get("filterVenue") || {}).value;
   var platform = (get("filterPlatform") || {}).value;
   var price = (get("filterPrice") || {}).value;
   var list = eventsData.filter(function (e) {
     if (dateFrom && e.date < dateFrom) return false;
     if (dateTo && e.date > dateTo) return false;
     if (neighborhood && (e.neighborhood || "") !== neighborhood) return false;
+    if (venue && (e.venue || "") !== venue) return false;
     if (platform && (e.platform || "") !== platform) return false;
     if (price === "free" && (e.price || "").toLowerCase().indexOf("free") < 0) return false;
     if (price === "paid" && !(e.price || "").trim()) return false;
@@ -93,7 +95,7 @@ function renderEventsTable(list) {
   var tbody = get("eventsTable");
   if (!tbody) return;
   if (!list || list.length === 0) {
-    tbody.innerHTML = "<tr><td colspan=\"9\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan=\"10\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
     return;
   }
   tbody.innerHTML = list.map(function (e) {
@@ -110,6 +112,7 @@ function renderEventsTable(list) {
     }
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
+    var venue = (e.venue || "—");
     var address = (e.address || "—");
     var price = formatPriceDisplay(e.price);
     var platform = (e.platform || "—");
@@ -120,6 +123,7 @@ function renderEventsTable(list) {
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + date + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + time + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + neighborhood + "</td>" +
+      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + venue + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + address + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + price + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + platform + "</td>" +
@@ -131,16 +135,23 @@ function renderEventsTable(list) {
 
 function populateFilterDropdowns() {
   var neighborhoods = [];
+  var venues = [];
   var platforms = [];
   eventsData.forEach(function (e) {
     if (e.neighborhood && neighborhoods.indexOf(e.neighborhood) < 0) neighborhoods.push(e.neighborhood);
+    if (e.venue && venues.indexOf(e.venue) < 0) venues.push(e.venue);
     if (e.platform && platforms.indexOf(e.platform) < 0) platforms.push(e.platform);
   });
   neighborhoods.sort();
+  venues.sort();
   platforms.sort();
   var nhSelect = get("filterNeighborhood");
   if (nhSelect) {
     nhSelect.innerHTML = "<option value=\"\">All neighborhoods</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
+  }
+  var venSelect = get("filterVenue");
+  if (venSelect) {
+    venSelect.innerHTML = "<option value=\"\">All venues</option>" + venues.map(function (v) { return "<option value=\"" + v.replace(/"/g, "&quot;") + "\">" + v.replace(/</g, "&lt;") + "</option>"; }).join("");
   }
   var pfSelect = get("filterPlatform");
   if (pfSelect) {
@@ -261,6 +272,7 @@ function handleAddEventSubmit(ev) {
     date: form.date.value,
     time: (form.time && form.time.value) || null,
     neighborhood: (form.neighborhood && form.neighborhood.value.trim()) || null,
+    venue: (form.venue && form.venue.value.trim()) || null,
     address: (form.address && form.address.value.trim()) || null,
     price: (form.price && form.price.value.trim()) || null,
     link: form.link.value.trim(),

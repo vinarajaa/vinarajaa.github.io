@@ -22,7 +22,7 @@ function getConn() {
 }
 
 async function handleGet(sql) {
-  const rows = await sql`SELECT id, title, date, time, address, neighborhood, price, link, platform, description, created_at FROM events ORDER BY date ASC`;
+  const rows = await sql`SELECT id, title, date, time, address, neighborhood, venue, price, link, platform, description, created_at FROM events ORDER BY date ASC`;
   return rows;
 }
 
@@ -37,10 +37,10 @@ async function handlePost(sql, body) {
     if (!link) continue;
     try {
       const row = await sql`
-        INSERT INTO events (title, date, time, address, neighborhood, price, link, platform, description)
-        VALUES (${title}, ${date}, ${ev.time || null}, ${ev.address || null}, ${ev.neighborhood || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
+        INSERT INTO events (title, date, time, address, neighborhood, venue, price, link, platform, description)
+        VALUES (${title}, ${date}, ${ev.time || null}, ${ev.address || null}, ${ev.neighborhood || null}, ${ev.venue || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
         ON CONFLICT (link) DO NOTHING
-        RETURNING id, title, date, time, address, neighborhood, price, link, platform, description, created_at
+        RETURNING id, title, date, time, address, neighborhood, venue, price, link, platform, description, created_at
       `;
       if (row && row[0]) inserted.push(row[0]);
     } catch (e) {

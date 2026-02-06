@@ -166,12 +166,14 @@ function extractEventsFromHtml(html, baseUrl) {
 
     const date = normalizeDate(dateStr) || new Date().toISOString().slice(0, 10);
     const { address, neighborhood } = deriveAddressAndArea(venueStr || null);
+    const venueName = (venueStr && !/\d{5}/.test(venueStr)) ? (venueStr.indexOf(" · ") >= 0 ? venueStr.split(" · ").pop().trim() : venueStr.trim()).slice(0, 200) : null;
     events.push({
       title,
       date,
       time: normalizeTime(timeStr),
       address: address || null,
       neighborhood: neighborhood || null,
+      venue: venueName || null,
       price: priceStr ? priceStr.slice(0, 100) : null,
       link: href,
       platform: PLATFORM
@@ -215,12 +217,14 @@ function extractEventsFromHtml(html, baseUrl) {
         const { address, neighborhood } = deriveAddressAndArea(cleaned);
         let price = ev.price_display || ev.price || (ev.is_free ? "Free" : null);
         if (price != null) price = String(price).slice(0, 100);
+        const venueName = venue ? String(venue).slice(0, 200) : null;
         events.push({
           title,
           date,
           time: time ? String(time).slice(0, 50) : null,
           address: address || null,
           neighborhood: neighborhood || null,
+          venue: venueName,
           price: price ? String(price).slice(0, 100) : null,
           link: link.startsWith("http") ? link : "https://www.eventbrite.com" + (link.startsWith("/") ? link : "/e/" + link),
           platform: PLATFORM
@@ -469,10 +473,13 @@ async function scrapeEventbriteNy() {
       for (let i = 0; i < Math.min(needAddress.length, maxFetch); i++) {
         const ev = needAddress[i];
         const details = await fetchEventbriteEventDetails(ev.link);
-        if (details && details.address) {
-          const derived = deriveAddressAndArea(details.address);
-          ev.address = derived.address;
-          if (derived.neighborhood) ev.neighborhood = derived.neighborhood;
+        if (details) {
+          if (details.venueName) ev.venue = String(details.venueName).slice(0, 200);
+          if (details.address) {
+            const derived = deriveAddressAndArea(details.address);
+            ev.address = derived.address;
+            if (derived.neighborhood) ev.neighborhood = derived.neighborhood;
+          }
         }
         await sleep(120);
       }
