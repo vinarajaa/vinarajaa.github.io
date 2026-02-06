@@ -21,7 +21,7 @@ const ZIP_TO_AREA = {
   "11206": "Williamsburg", "11209": "Bay Ridge", "11211": "Williamsburg", "11215": "Park Slope",
   "11216": "Bed-Stuy", "11217": "Boerum Hill", "11218": "Kensington", "11219": "Borough Park",
   "11220": "Sunset Park", "11221": "Bushwick", "11222": "Greenpoint", "11225": "Crown Heights",
-  "11226": "Flatbush", "11231": "Red Hook", "11233": "Bed-Stuy", "11235": "Sheepshead Bay",
+  "11226": "Flatbush", "11231": "Red Hook", "11232": "Sunset Park", "11233": "Bed-Stuy", "11235": "Sheepshead Bay",
   "11237": "Bushwick", "11238": "Clinton Hill", "11249": "Williamsburg",
   "11101": "Long Island City", "11102": "Astoria", "11103": "Astoria", "11104": "Astoria",
   "11105": "Astoria", "11106": "Long Island City", "11354": "Flushing", "11355": "Flushing",
@@ -107,6 +107,7 @@ function deriveAddressAndArea(venueOrAddressStr) {
   if (zipMatch) {
     const areaFromZip = getAreaFromZip(zipMatch[1]);
     if (areaFromZip) return { address, neighborhood: areaFromZip };
+    return { address, neighborhood: null };
   }
 
   const area = findAreaInText(raw);
