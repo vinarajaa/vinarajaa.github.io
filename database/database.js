@@ -1,8 +1,9 @@
 const API_BASE = "https://house-inventory-c5c7cyfpfqe9e6gk.westus-01.azurewebsites.net";
 let roomMap = {};
 let categoryMap = {};
-var demoMode = false;
+let demoMode = false;
 
+// Demo data when API is down (404 / unreachable) so the UI still works
 var DEMO_ROOMS = [{ room_id: 1, name: "Living Room" }, { room_id: 2, name: "Kitchen" }, { room_id: 3, name: "Bedroom" }];
 var DEMO_CATEGORIES = [{ category_id: 1, name: "Furniture" }, { category_id: 2, name: "Electronics" }, { category_id: 3, name: "Kitchen" }];
 var DEMO_ITEMS = [
@@ -20,7 +21,7 @@ function get(id) {
 }
 
 function showModal(id) {
-  var el = get(id);
+  const el = get(id);
   if (el) {
     el.classList.remove("hidden");
     el.classList.add("flex");
@@ -40,7 +41,7 @@ function hideModal(id) {
 }
 
 function setStatus(text) {
-  var el = get("app-status");
+  const el = get("app-status");
   if (el) el.textContent = text;
 }
 
@@ -48,7 +49,9 @@ async function loadRooms() {
   const roomSelect = get("roomFilter");
   if (roomSelect) roomSelect.innerHTML = "<option value=\"\">All Rooms</option>";
   const addRoomSelect = document.querySelector("select[name='room_id']");
-  if (addRoomSelect) addRoomSelect.innerHTML = "<option value=\"\">Select one</option>";
+  if (addRoomSelect) {
+    addRoomSelect.innerHTML = "<option value=\"\">Select one</option>";
+  }
   try {
     const res = await fetch(API_BASE + "/rooms");
     if (!res.ok) throw new Error("Rooms " + res.status);
@@ -104,7 +107,9 @@ async function loadCategories() {
   const catSelect = get("categoryFilter");
   if (catSelect) catSelect.innerHTML = "<option value=\"\">All Categories</option>";
   const addCatSelect = document.querySelector("select[name='category_id']");
-  if (addCatSelect) addCatSelect.innerHTML = "<option value=\"\">Select one</option>";
+  if (addCatSelect) {
+    addCatSelect.innerHTML = "<option value=\"\">Select one</option>";
+  }
   try {
     const res = await fetch(API_BASE + "/categories");
     if (!res.ok) throw new Error("Categories " + res.status);
@@ -120,6 +125,71 @@ async function loadCategories() {
     console.warn("Load categories failed:", err);
     loadDemoCategories();
   }
+}
+
+function showApiError(message) {
+  const table = get("itemsTable");
+  if (table) {
+    table.innerHTML = `<tr><td colspan="6" class="p-6 text-center" style="color: #B36A5E;">${message}</td></tr>`;
+  }
+  updateStats([]);
+}
+
+async function loadItems(searchTerm) {
+  if (typeof searchTerm !== "string") searchTerm = "";
+  const roomSelect = get("roomFilter");
+  const catSelect = get("categoryFilter");
+  const roomId = roomSelect ? roomSelect.value : "";
+  const catId = catSelect ? catSelect.value : "";
+
+  let url = `${API_BASE}/items?limit=1000`;
+  if (roomId) url += "&room_id=" + encodeURIComponent(roomId);
+  if (catId) url += "&category_id=" + encodeURIComponent(catId);
+  if (searchTerm) url += "&search=" + encodeURIComponent(searchTerm);
+
+  const table = get("itemsTable");
+  if (!table) return [];
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error("Items " + res.status);
+    const data = await res.json();
+    var items = Array.isArray(data) ? data : [];
+    renderItems(items);
+    return items;
+  } catch (err) {
+    console.warn("Load items failed:", err);
+    demoMode = true;
+    setStatus("Demo mode — backend unreachable (404). Filter, Add, Delete, Search, and New List work locally.");
+    var items = DEMO_ITEMS.slice();
+    if (roomId) items = items.filter(function (i) { return String(i.room_id) === String(roomId); });
+    if (catId) items = items.filter(function (i) { return String(i.category_id) === String(catId); });
+    if (searchTerm) {
+      var q = searchTerm.toLowerCase();
+      items = items.filter(function (i) { return (i.name || "").toLowerCase().indexOf(q) !== -1; });
+    }
+    renderItems(items);
+    return items;
+  }
+}
+
+function renderItems(items) {
+  var table = get("itemsTable");
+  if (!table) return;
+  table.innerHTML = "";
+  var borderCl = "#C89F9C";
+  items.forEach(function (item) {
+    table.innerHTML +=
+      "<tr class=\"border-b transition hover:bg-[#EED7C5]\" style=\"border-color:" + borderCl + ";\">" +
+      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\"><input type=\"checkbox\" class=\"select-item\" data-id=\"" + item.item_id + "\" /></td>" +
+      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.name || "") + "</td>" +
+      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.quantity != null ? item.quantity : "") + "</td>" +
+      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (roomMap[item.room_id] || "—") + "</td>" +
+      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (categoryMap[item.category_id] || "—") + "</td>" +
+      "<td class=\"p-3\">" + (item.purchase_date || "—") + "</td>" +
+      "</tr>";
+  });
+  updateStats(items);
 }
 
 function handleAddRoomChange() {
@@ -194,71 +264,6 @@ function handleAddCategoryChange() {
     .catch(function () { sel.value = ""; loadCategories(); });
 }
 
-function showApiError(message) {
-  const table = get("itemsTable");
-  if (table) {
-    table.innerHTML = "<tr><td colspan=\"6\" class=\"p-6 text-center\" style=\"color: #B36A5E;\">" + message + "</td></tr>";
-  }
-  updateStats([]);
-}
-
-async function loadItems(searchTerm) {
-  if (typeof searchTerm !== "string") searchTerm = "";
-  const roomSelect = get("roomFilter");
-  const catSelect = get("categoryFilter");
-  const roomId = roomSelect ? roomSelect.value : "";
-  const catId = catSelect ? catSelect.value : "";
-
-  var url = API_BASE + "/items?limit=1000";
-  if (roomId) url += "&room_id=" + encodeURIComponent(roomId);
-  if (catId) url += "&category_id=" + encodeURIComponent(catId);
-  if (searchTerm) url += "&search=" + encodeURIComponent(searchTerm);
-
-  const table = get("itemsTable");
-  if (!table) return [];
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Items " + res.status);
-    const data = await res.json();
-    var items = Array.isArray(data) ? data : [];
-    renderItems(items);
-    return items;
-  } catch (err) {
-    console.warn("Load items failed:", err);
-    demoMode = true;
-    setStatus("Demo mode — backend unreachable (404). Filter, Add, Delete, Search, and New List work locally.");
-    var items = DEMO_ITEMS.slice();
-    if (roomId) items = items.filter(function (i) { return String(i.room_id) === String(roomId); });
-    if (catId) items = items.filter(function (i) { return String(i.category_id) === String(catId); });
-    if (searchTerm) {
-      var q = searchTerm.toLowerCase();
-      items = items.filter(function (i) { return (i.name || "").toLowerCase().indexOf(q) !== -1; });
-    }
-    renderItems(items);
-    return items;
-  }
-}
-
-function renderItems(items) {
-  var table = get("itemsTable");
-  if (!table) return;
-  table.innerHTML = "";
-  var borderCl = "#C89F9C";
-  items.forEach(function (item) {
-    table.innerHTML +=
-      "<tr class=\"border-b transition hover:bg-[#EED7C5]\" style=\"border-color:" + borderCl + ";\">" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\"><input type=\"checkbox\" class=\"select-item\" data-id=\"" + item.item_id + "\" /></td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.name || "") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.quantity != null ? item.quantity : "") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (roomMap[item.room_id] || "—") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (categoryMap[item.category_id] || "—") + "</td>" +
-      "<td class=\"p-3\">" + (item.purchase_date || "—") + "</td>" +
-      "</tr>";
-  });
-  updateStats(items);
-}
-
 window.addEventListener("DOMContentLoaded", function () {
   var filterControls = get("filterControls");
   if (filterControls) filterControls.classList.add("hidden");
@@ -308,7 +313,7 @@ function openAddModal() {
 
 function closeAddModal() {
   hideModal("add-modal");
-  var msg = get("thank-you-message");
+  const msg = get("thank-you-message");
   if (msg) msg.style.display = "none";
 }
 
@@ -368,9 +373,9 @@ async function handleAddItemSubmit(event) {
 
 function updateStats(items) {
   if (!items || !Array.isArray(items)) items = [];
-  var total = items.length;
-  var rooms = total ? new Set(items.map(function (i) { return i.room_id; })).size : 0;
-  var categories = total ? new Set(items.map(function (i) { return i.category_id; })).size : 0;
+  const total = items.length;
+  const rooms = total ? new Set(items.map(function (i) { return i.room_id; })).size : 0;
+  const categories = total ? new Set(items.map(function (i) { return i.category_id; })).size : 0;
   var mostRecent = "—";
   if (total) {
     try {
@@ -393,12 +398,12 @@ function closeNewListModal() {
 }
 
 function createList() {
-  var titleEl = get("newListTitle");
-  var title = titleEl ? titleEl.value.trim() : "";
+  const titleEl = get("newListTitle");
+  const title = titleEl ? titleEl.value.trim() : "";
   if (!title) return;
-  var container = get("listsContainer");
+  const container = get("listsContainer");
   if (!container) return;
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.className = "p-3 rounded border";
   div.style.backgroundColor = "#EED7C5";
   div.style.borderColor = "#C89F9C";
@@ -409,13 +414,13 @@ function createList() {
 }
 
 function openDeleteModal() {
-  var checkboxes = document.querySelectorAll(".select-item:checked");
-  var count = checkboxes.length;
+  const checkboxes = document.querySelectorAll(".select-item:checked");
+  const count = checkboxes.length;
   if (count === 0) {
     alert("Please select at least one item to delete.");
     return;
   }
-  var countEl = get("delete-count");
+  const countEl = get("delete-count");
   if (countEl) countEl.textContent = count;
   showModal("delete-modal");
 }

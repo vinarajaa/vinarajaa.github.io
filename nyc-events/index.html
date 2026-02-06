@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>NYC Events</title>
+  <script defer src="events.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/style.css">
+  <style>
+    :root.db-page { --db-cream: #EEE2DF; --db-peach: #EED7C5; --db-rose: #C89F9C; --db-terracotta: #C97C5D; --db-brick: #B36A5E; --db-text: #270f03; }
+    .db-action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
+    .db-action-btn:active { transform: translateY(0); }
+    .db-modal input, .db-modal textarea, .db-modal select {
+      background-color: #FAF6F4;
+      color: #1a0a02;
+      border-color: #C89F9C;
+    }
+    .db-modal input::placeholder, .db-modal textarea::placeholder { color: #C89F9C; opacity: 0.9; }
+    .db-modal-overlay { overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem; }
+    .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
+  </style>
+</head>
+<body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
+  <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
+    <header class="text-center py-10 border-b" style="border-color: #C89F9C;">
+      <h1 class="text-4xl font-bold tracking-tight" style="color: #B36A5E;">NYC Events</h1>
+      <p class="mt-2 text-sm" style="color: #C89F9C;">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
+    </header>
+
+    <div class="flex flex-wrap justify-start items-center gap-3 my-6 py-4 px-4 rounded-2xl" style="background-color: #EED7C5; border: 1px solid #C89F9C;">
+      <button type="button" onclick="toggleEventFilters()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Filter</button>
+      <div id="eventFilterControls" class="hidden flex-wrap items-center gap-3">
+        <input type="date" id="filterDateFrom" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="From" />
+        <input type="date" id="filterDateTo" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="To" />
+        <select id="filterNeighborhood" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
+        <select id="filterPlatform" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
+        <select id="filterPrice" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
+          <option value="">Any price</option>
+          <option value="free">Free</option>
+          <option value="paid">Paid</option>
+        </select>
+        <button type="button" onclick="applyEventFilters()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
+      </div>
+      <button type="button" onclick="openAddEventModal(null)" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add event (form)</button>
+      <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>
+    </div>
+
+    <div class="rounded-2xl overflow-hidden border" style="background-color: #EEE2DF; border-color: #C89F9C; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.2);">
+      <div class="overflow-auto" style="max-height: 520px;">
+        <table class="w-full text-left text-sm" style="background-color: #EEE2DF;">
+          <thead class="sticky top-0 z-10 text-white font-semibold border-b" style="background-color: #B36A5E; border-color: #C89F9C;">
+            <tr class="uppercase text-xs tracking-wide">
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Title</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Date</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Time</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Neighborhood</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Price</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Platform</th>
+              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Link</th>
+              <th class="p-3">Delete</th>
+            </tr>
+          </thead>
+          <tbody id="eventsTable" class="text-[#270f03] font-normal"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <p id="events-status" class="text-center text-sm py-2" style="color: #C89F9C;" aria-live="polite">Loading…</p>
+  </div>
+
+  <!-- Add event (full form) -->
+  <div id="add-event-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
+    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeAddEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">Add event</h2>
+      <form id="addEventForm" onsubmit="return handleAddEventSubmit(event)">
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Title <span style="color: #B36A5E;">*</span></label>
+        <input type="text" name="title" placeholder="Event name" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Date <span style="color: #B36A5E;">*</span></label>
+        <input type="date" name="date" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Time</label>
+        <input type="text" name="time" placeholder="e.g. 19:00 or 7:00 PM" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Neighborhood</label>
+        <input type="text" name="neighborhood" placeholder="e.g. Brooklyn, Manhattan" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Price</label>
+        <input type="text" name="price" placeholder="e.g. Free, $20" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Link <span style="color: #B36A5E;">*</span></label>
+        <input type="url" name="link" placeholder="https://..." class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Platform</label>
+        <select name="platform" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
+          <option value="Dice">Dice</option>
+          <option value="Manual">Manual</option>
+        </select>
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Description</label>
+        <textarea name="description" placeholder="Optional" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input"></textarea>
+        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #C97C5D;">Add event</button>
+      </form>
+      <div id="add-event-success" class="hidden mt-4 text-sm" style="color: #B36A5E;">✅ Event added.</div>
+    </div>
+  </div>
+
+  <!-- Add by URL (opens same form with URL + platform prefilled) -->
+  <div id="add-by-url-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
+    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeAddByUrlModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">Add event by URL</h2>
+      <p class="text-sm mb-4" style="color: #270f03;">Paste the event URL and platform. Then fill the rest in the next form.</p>
+      <form id="addByUrlForm" onsubmit="return handleAddByUrlSubmit(event)">
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Event URL <span style="color: #B36A5E;">*</span></label>
+        <input type="url" name="url" id="add-by-url-input" placeholder="https://dice.fm/..." class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
+        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Platform</label>
+        <select name="platform" id="add-by-url-platform" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input">
+          <option value="Dice">Dice</option>
+          <option value="Manual">Manual</option>
+        </select>
+        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #C97C5D;">Continue to form</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Delete confirm -->
+  <div id="delete-event-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
+    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeDeleteEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">Delete event</h2>
+      <p class="mb-6">Delete <span id="delete-event-title"></span>?</p>
+      <div class="flex gap-3">
+        <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Cancel</button>
+        <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold text-white transition" style="background-color: #B36A5E;">Delete</button>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
