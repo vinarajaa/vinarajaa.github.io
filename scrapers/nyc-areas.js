@@ -38,24 +38,30 @@ const ZIP_TO_AREA = {
 
 /**
  * Extract only the street-address line from a string that may contain junk (refund text, "Lineup", "Venue", etc.).
- * Also removes duplicate ", City, ST" at the end (e.g. "..., Brooklyn, NY 11217, Brooklyn, NY" -> "..., Brooklyn, NY 11217").
+ * Prefers the LAST match so "24 hours of buying...Venue...52-19 Flushing Ave, Maspeth, NY 11378" returns only the address.
+ * Also removes duplicate ", City, ST" at the end.
  */
 function normalizeAddressLine(str) {
   if (!str || typeof str !== "string") return null;
   var s = str.replace(/\s+/g, " ").trim();
   var patterns = [
-    /\d+[^,]*(?:,[^,]+)*,\s*New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?/i,
-    /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*(?:,\s*[^,]+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?))/i,
-    /\d+\s+[\w\s.\-]+(?:,\s*[^,]+)+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?)/i,
-    /\d+[\s\w.\-]+(?:,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?)/i
+    /\d+[^,]*(?:,[^,]+)*,\s*New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?/gi,
+    /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*(?:,\s*[^,]+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?))/gi,
+    /\d+\s+[\w\s.\-]+(?:,\s*[^,]+)+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?)/gi,
+    /\d+[\s\w.\-]+(?:,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?)/gi
   ];
+  var best = null;
   for (var i = 0; i < patterns.length; i++) {
-    var matches = s.match(patterns[i]);
-    if (matches && matches[0]) {
-      s = matches[0].trim();
-      break;
+    var re = new RegExp(patterns[i].source, patterns[i].flags);
+    var m;
+    while ((m = re.exec(s)) !== null) {
+      var cand = m[0].trim();
+      if (cand.length >= 15 && cand.length <= 300 && /\d{5}/.test(cand)) {
+        if (!best || m.index >= best.index) best = { index: m.index, value: cand };
+      }
     }
   }
+  if (best) s = best.value;
   if (s.length < 15 || s.length > 300) return null;
   if (!/\d{5}/.test(s)) return null;
   var trailing = s.match(/,\s*([^,]+),\s*([A-Z]{2})\s*$/);
