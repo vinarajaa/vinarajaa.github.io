@@ -331,10 +331,25 @@ async function scrapeDiceNy() {
       const html = await res.text();
       let events = extractEventsFromHtml(html, url);
       if (events.length === 0) continue;
+
+      function hasStreetAddress(ev) {
+        const a = (ev.address || "").trim();
+        return a.length > 10 && /\d{5}/.test(a);
+      }
+      const needAddress = events.filter(function (e) { return !hasStreetAddress(e); });
       const needTime = events.filter(function (e) { return !e.time; });
-      const maxFetch = 10;
-      for (let i = 0; i < Math.min(needTime.length, maxFetch); i++) {
-        const ev = needTime[i];
+      const needDetails = [];
+      const seen = new Set();
+      needAddress.forEach(function (e) {
+        if (!seen.has(e.link)) { seen.add(e.link); needDetails.push(e); }
+      });
+      needTime.forEach(function (e) {
+        if (!seen.has(e.link)) { seen.add(e.link); needDetails.push(e); }
+      });
+
+      const maxFetch = 25;
+      for (let i = 0; i < Math.min(needDetails.length, maxFetch); i++) {
+        const ev = needDetails[i];
         const details = await fetchEventDetails(ev.link);
         if (details) {
           if (details.time) ev.time = details.time;
