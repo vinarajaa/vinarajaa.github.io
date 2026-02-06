@@ -164,6 +164,47 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
+/** Extract address string from a venue-like object (various API shapes). */
+function venueAddressFromObj(v) {
+  if (!v || typeof v !== "object") return null;
+  const s = v.localized_address_display || v.formatted_address || v.full_address || (typeof v.address === "string" ? v.address : null);
+  if (s && /\d{5}/.test(s)) return s.trim().slice(0, 300);
+  const parts = [
+    v.address_line_1 || (v.address && v.address.address_line_1) || (v.address && v.address.street),
+    v.city || (v.address && v.address.city),
+    v.region || (v.address && v.address.region) || (v.address && v.address.state),
+    v.postal_code || (v.address && v.address.postal_code)
+  ].filter(Boolean);
+  if (parts.length >= 2) return parts.join(", ").slice(0, 300);
+  return null;
+}
+
+/** Recursively find venue address in __NEXT_DATA__ (event.venue or nested). */
+function findVenueAddressInJson(obj, depth) {
+  if (depth > 10) return null;
+  if (!obj) return null;
+  if (Array.isArray(obj)) {
+    for (let i = 0; i < obj.length; i++) {
+      const r = findVenueAddressInJson(obj[i], depth + 1);
+      if (r) return r;
+    }
+    return null;
+  }
+  if (typeof obj === "object") {
+    const addr = venueAddressFromObj(obj);
+    if (addr) return addr;
+    if (obj.venue) {
+      const a = venueAddressFromObj(obj.venue);
+      if (a) return a;
+    }
+    for (const k in obj) {
+      const r = findVenueAddressInJson(obj[k], depth + 1);
+      if (r) return r;
+    }
+  }
+  return null;
+}
+
 /** Fetch event detail page and extract time, venue, address, and price from Venue section and __NEXT_DATA__ */
 async function fetchEventDetails(link) {
   try {
@@ -179,35 +220,50 @@ async function fetchEventDetails(link) {
     $('script#__NEXT_DATA__').each(function () {
       try {
         const data = JSON.parse($(this).html());
-        const event = data.props?.pageProps?.event || data.props?.pageProps?.initialEvent || data.event || data.props?.event;
+        const event = data.props && (data.props.pageProps && data.props.pageProps.event || data.props.pageProps && data.props.pageProps.initialEvent) || data.event || (data.props && data.props.event);
         if (!event) return;
         if (event.start && typeof event.start === "string" && event.start.includes("T")) {
           const t = event.start.slice(11, 16);
           if (t !== "00:00") time = t;
         }
         if (event.doors_open) time = time || String(event.doors_open).slice(0, 50);
-        if (event.event_times?.[0]) time = time || String(event.event_times[0]).slice(0, 50);
-        if (event.venue?.name) venue = event.venue.name.slice(0, 200);
+        if (event.event_times && event.event_times[0]) time = time || String(event.event_times[0]).slice(0, 50);
+        if (event.venue && event.venue.name) venue = event.venue.name.slice(0, 200);
         if (event.venue_name) venue = venue || String(event.venue_name).slice(0, 200);
         const v = event.venue;
-        if (v && (v.address || v.address_line_1 || (v.address && typeof v.address === "object"))) {
-          const a = v.address;
-          const addr = typeof a === "string" ? a : [
-            v.address_line_1 || (a && a.address_line_1),
-            v.city || (a && a.city),
-            v.region || (a && a.region),
-            v.postal_code || (a && a.postal_code)
-          ].filter(Boolean).join(", ");
-          if (addr && /\d{5}/.test(addr)) address = addr.slice(0, 300);
+        if (v) {
+          const addr = venueAddressFromObj(v) || findVenueAddressInJson(data, 0);
+          if (addr) address = addr;
         }
         if (event.price_display) price = String(event.price_display).slice(0, 100);
         if (event.free && !price) price = "Free";
       } catch (_) {}
     });
 
+    const venueAddrRe = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+    const venueAddrRe2 = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd)[^,]*,\s*[^,]+,\s*NY\s*\d{5}/i;
+
     if (!address) {
-      const venueAddrRe = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
-      const venueAddrRe2 = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St)[^,]*,\s*(?:Brooklyn|New York|Queens|Bronx)[^,]*,\s*NY\s*\d{5}/i;
+      $("button[aria-label*='opy'], button[aria-label*='lipboard'], [class*='copy'], [data-testid*='copy']").each(function () {
+        if (address) return;
+        const btn = $(this);
+        const prev = btn.prev();
+        const parent = btn.parent();
+        const text = (prev.length ? prev.text() : parent.text()).replace(/\s+/g, " ").trim();
+        const m = text.match(venueAddrRe) || text.match(venueAddrRe2);
+        if (m && m[0]) address = m[0].slice(0, 300);
+      });
+    }
+    if (!address) {
+      $("p, span, div").each(function () {
+        if (address) return false;
+        const t = $(this).clone().children().remove().end().text().replace(/\s+/g, " ").trim();
+        if (t.length < 20 || t.length > 350) return;
+        const m = t.match(venueAddrRe) || t.match(venueAddrRe2);
+        if (m && m[0] && $(this).closest("[class*='venue'], [class*='Venue'], [class*='location']").length) address = m[0].slice(0, 300);
+      });
+    }
+    if (!address) {
       $("h1, h2, h3, h4, h5, h6, strong, [class*='venue'], [class*='Venue']").each(function () {
         if (address) return;
         const el = $(this);
@@ -220,12 +276,10 @@ async function fetchEventDetails(link) {
       });
     }
     if (!address) {
-      const venueAddrRe = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
-      const venueAddrRe2 = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St)[^,]*,\s*(?:Brooklyn|New York|Queens|Bronx)[^,]*,\s*NY\s*\d{5}/i;
       const bodyText = $("body").text();
       const venueIdx = bodyText.search(/\bVenue\b/i);
       if (venueIdx >= 0) {
-        const afterVenue = bodyText.slice(venueIdx, venueIdx + 600);
+        const afterVenue = bodyText.slice(venueIdx, venueIdx + 700);
         const m = afterVenue.match(venueAddrRe) || afterVenue.match(venueAddrRe2);
         if (m && m[0]) address = m[0].trim().replace(/\s+/g, " ").slice(0, 300);
       }
