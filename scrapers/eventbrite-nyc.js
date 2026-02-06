@@ -281,6 +281,25 @@ async function fetchEventbriteEventDetails(link) {
     let addressStr = null;
     let venueName = null;
 
+    // Eventbrite Location module: venue name in addressText, address in addressAdditionalLine (and siblings)
+    const locationAddressText = $("[class*='Location-module__addressText']").first();
+    if (locationAddressText.length) {
+      const v = locationAddressText.text().trim();
+      if (v) venueName = v.slice(0, 200);
+    }
+    const locationAddressLines = $("[class*='Location-module__addressAdditionalLine']");
+    if (locationAddressLines.length) {
+      const lines = [];
+      locationAddressLines.each(function () {
+        const t = $(this).text().trim();
+        if (t) lines.push(t);
+      });
+      if (lines.length) {
+        const combined = lines.join(", ").trim();
+        addressStr = (/\d{5}/.test(combined) ? (normalizeAddressLine(combined) || combined) : combined).slice(0, 300);
+      }
+    }
+
     // 0) Location section: find heading "Location" and extract address from that block (venue name + address lines)
     $("h1, h2, h3, h4, h5, h6, strong, [class*='location'], [class*='Location']").each(function () {
       if (addressStr) return;
