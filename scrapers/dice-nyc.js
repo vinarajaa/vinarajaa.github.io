@@ -74,7 +74,16 @@ function extractEventsFromHtml(html, baseUrl) {
       }
       const t = $(this).text().trim();
       if (t && !dateStr && /^\d{4}-\d{2}-\d{2}|[A-Za-z]{3}\s+\d{1,2}|[\d/.-]+/.test(t)) dateStr = t;
+      if (t && !timeStr) {
+        const timeInText = t.match(/(\d{1,2}:\d{2}\s*[AP]M)/i) || t.match(/(\d{1,2}:\d{2})/);
+        if (timeInText) timeStr = timeInText[1].trim().slice(0, 50);
+      }
     });
+    if (!timeStr && card.length) {
+      const cardText = card.text().replace(/\s+/g, " ");
+      const timeMatch = cardText.match(/(\d{1,2}:\d{2}\s*[AP]M)/i) || cardText.match(/\b(\d{1,2}:\d{2})\b/);
+      if (timeMatch) timeStr = timeMatch[1].trim().slice(0, 50);
+    }
     card.find("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location']").each(function () {
       const t = $(this).text().trim();
       if (t && !venueStr) venueStr = t.slice(0, 200);
@@ -118,8 +127,12 @@ function extractEventsFromHtml(html, baseUrl) {
           else if (ev.start) date = new Date(ev.start).toISOString().slice(0, 10);
           if (!date) return;
           let time = null;
-          if (ev.start_time) time = ev.start_time;
-          else if (ev.start && typeof ev.start === "string" && ev.start.includes("T")) time = ev.start.slice(11, 16);
+          if (ev.start_time) time = String(ev.start_time).slice(0, 50);
+          else if (ev.time) time = String(ev.time).slice(0, 50);
+          else if (ev.start && typeof ev.start === "string" && ev.start.includes("T")) {
+            const t = ev.start.slice(11, 16);
+            if (t !== "00:00") time = t;
+          }
           const venue = ev.venue?.name || ev.venue_name || ev.location || null;
           const price = ev.price || ev.price_display || (ev.free ? "Free" : null);
           events.push({
@@ -139,6 +152,56 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
+/** Fetch event detail page and extract time (and optionally venue/price) from __NEXT_DATA__ or HTML */
+async function fetchEventDetails(link) {
+  try {
+    const res = await fetch(link, { headers: DICE_FETCH_HEADERS });
+    if (!res.ok) return null;
+    const html = await res.text();
+    const $ = cheerio.load(html);
+    let time = null;
+    let venue = null;
+    let price = null;
+    $('script#__NEXT_DATA__').each(function () {
+      try {
+        const data = JSON.parse($(this).html());
+        const event = data.props?.pageProps?.event || data.props?.pageProps?.initialEvent || data.event || data.props?.event;
+        if (!event) return;
+        if (event.start && typeof event.start === "string" && event.start.includes("T")) {
+          const t = event.start.slice(11, 16);
+          if (t !== "00:00") time = t;
+        }
+        if (event.doors_open) time = time || String(event.doors_open).slice(0, 50);
+        if (event.event_times?.[0]) time = time || String(event.event_times[0]).slice(0, 50);
+        if (event.venue?.name) venue = event.venue.name.slice(0, 200);
+        if (event.venue_name) venue = venue || String(event.venue_name).slice(0, 200);
+        if (event.price_display) price = String(event.price_display).slice(0, 100);
+        if (event.free && !price) price = "Free";
+      } catch (_) {}
+    });
+    if (!time) {
+      $("[datetime]").each(function () {
+        const dt = $(this).attr("datetime");
+        if (dt) {
+          const d = new Date(dt);
+          if (!isNaN(d.getTime())) {
+            const t = d.toTimeString().slice(0, 5);
+            if (t !== "00:00") time = t;
+          }
+        }
+      });
+    }
+    if (!time) {
+      const bodyText = $("body").text().replace(/\s+/g, " ");
+      const m = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/(\d{1,2}:\d{2})\s*(?:[AP]\.?M\.?|p\.m\.|a\.m\.)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
+      if (m) time = m[1].trim().slice(0, 50);
+    }
+    return { time, venue, price };
+  } catch (_) {
+    return null;
+  }
+}
+
 const DICE_FETCH_HEADERS = {
   "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
   "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
@@ -146,6 +209,10 @@ const DICE_FETCH_HEADERS = {
   "Accept-Encoding": "gzip, deflate, br",
   "Referer": "https://dice.fm/"
 };
+
+function sleep(ms) {
+  return new Promise(function (resolve) { setTimeout(resolve, ms); });
+}
 
 async function scrapeDiceNy() {
   let lastError;
@@ -157,8 +224,21 @@ async function scrapeDiceNy() {
         continue;
       }
       const html = await res.text();
-      const events = extractEventsFromHtml(html, url);
-      if (events.length > 0) return events;
+      let events = extractEventsFromHtml(html, url);
+      if (events.length === 0) continue;
+      const needTime = events.filter(function (e) { return !e.time; });
+      const maxFetch = 10;
+      for (let i = 0; i < Math.min(needTime.length, maxFetch); i++) {
+        const ev = needTime[i];
+        const details = await fetchEventDetails(ev.link);
+        if (details) {
+          if (details.time) ev.time = details.time;
+          if (details.venue && !ev.neighborhood) ev.neighborhood = details.venue;
+          if (details.price && !ev.price) ev.price = details.price;
+        }
+        await sleep(80);
+      }
+      return events;
     } catch (e) {
       lastError = e;
     }

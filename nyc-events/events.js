@@ -14,6 +14,18 @@ var DEMO_EVENTS = [
 
 function get(id) { return document.getElementById(id); }
 
+var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+function formatDateDisplay(val) {
+  if (!val) return "—";
+  var s = String(val).slice(0, 10);
+  var parts = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (!parts) return s || "—";
+  var d = new Date(parseInt(parts[1], 10), parseInt(parts[2], 10) - 1, parseInt(parts[3], 10));
+  if (isNaN(d.getTime())) return s;
+  return DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+}
+
 function setStatus(text) {
   var el = get("events-status");
   if (el) el.textContent = text;
@@ -70,7 +82,7 @@ function renderEventsTable(list) {
     return;
   }
   tbody.innerHTML = list.map(function (e) {
-    var date = e.date ? (String(e.date).slice(0, 10) || "—") : "—";
+    var date = formatDateDisplay(e.date);
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
     var price = (e.price || "—");
@@ -152,11 +164,11 @@ function hideModal(id) {
 async function triggerPullFromDice() {
   var base = eventsApiUrl();
   if (!base) {
-    setStatus("Set EVENTS_API_URL to enable Pull from Dice.");
+    setStatus("Set EVENTS_API_URL to enable pull.");
     return;
   }
   var scrapeUrl = (EVENTS_API_URL || "").replace(/\/$/, "") + "/api/scrape";
-  setStatus("Pulling from Dice…");
+  setStatus("Pulling from Dice & Eventbrite…");
   try {
     var res = await fetch(scrapeUrl, { method: "POST", headers: { "Content-Type": "application/json" } });
     var data = await res.json().catch(function () { return {}; });

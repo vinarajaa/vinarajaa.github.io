@@ -1,5 +1,5 @@
 /**
- * POST /api/scrape – run Dice NYC scraper and insert events into the DB.
+ * POST /api/scrape – run Dice + Eventbrite NYC scrapers and insert events into the DB.
  * Called by the "Pull from Dice" button on the site.
  */
 const { neon } = require("@neondatabase/serverless");
@@ -34,9 +34,14 @@ module.exports = async function handler(req, res) {
 
   try {
     const { scrapeDiceNy } = require("../scrapers/dice-nyc.js");
-    const events = await scrapeDiceNy();
-    if (!events || events.length === 0) {
-      res.status(200).json({ ok: true, scraped: 0, inserted: 0, message: "No events parsed from Dice." });
+    const { scrapeEventbriteNy } = require("../scrapers/eventbrite-nyc.js");
+    const [diceEvents, eventbriteEvents] = await Promise.all([
+      scrapeDiceNy().catch(() => []),
+      scrapeEventbriteNy().catch(() => [])
+    ]);
+    const events = [...(diceEvents || []), ...(eventbriteEvents || [])];
+    if (events.length === 0) {
+      res.status(200).json({ ok: true, scraped: 0, inserted: 0, message: "No events parsed from Dice or Eventbrite." });
       return;
     }
 
