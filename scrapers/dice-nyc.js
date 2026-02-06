@@ -284,6 +284,12 @@ async function fetchEventDetails(link) {
         if (m && m[0]) address = m[0].trim().replace(/\s+/g, " ").slice(0, 300);
       }
     }
+    if (!address) {
+      const bodyText = $("body").text().replace(/\s+/g, " ");
+      const broadRe = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+      const m = bodyText.match(broadRe);
+      if (m && m[0]) address = m[0].trim().slice(0, 300);
+    }
     if (!time) {
       $("[datetime]").each(function () {
         const dt = $(this).attr("datetime");
@@ -347,7 +353,7 @@ async function scrapeDiceNy() {
         if (!seen.has(e.link)) { seen.add(e.link); needDetails.push(e); }
       });
 
-      const maxFetch = 25;
+      const maxFetch = 45;
       for (let i = 0; i < Math.min(needDetails.length, maxFetch); i++) {
         const ev = needDetails[i];
         const details = await fetchEventDetails(ev.link);
@@ -364,7 +370,7 @@ async function scrapeDiceNy() {
           }
           if (details.price && !ev.price) ev.price = details.price;
         }
-        await sleep(80);
+        await sleep(90);
       }
       return events;
     } catch (e) {
