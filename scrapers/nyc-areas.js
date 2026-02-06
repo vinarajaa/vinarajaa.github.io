@@ -130,41 +130,29 @@ function findAreaInText(text) {
  * Normalize for display: area only, no "New York" or "Brooklyn".
  * Returns { address, neighborhood }.
  * - address: full venue/address line (stored as-is, up to 300 chars).
- * - neighborhood: derived area name only (e.g. "Williamsburg", "Murray Hill"), or cleaned venue name without borough, or null.
- * When raw contains a NYC zip (e.g. "10016"), neighborhood is taken from zip map so "415 5th Ave New York, NY 10016" → area "Murray Hill".
+ * - neighborhood: only set when (1) raw contains a NYC zip that is in our ZIP_TO_AREA map, or (2) raw contains a known NYC area name from NYC_AREAS. Otherwise null (UI shows a dash).
+ * Invalid/missing zip or zip not in our map → neighborhood null.
  */
 function deriveAddressAndArea(venueOrAddressStr) {
   const raw = (venueOrAddressStr && String(venueOrAddressStr).trim()) || "";
   const address = raw.slice(0, 300) || null;
 
-  // If we have a street-style address with NYC zip, use zip to set area (so address stays full, area is neighborhood)
+  // Any 5-digit zip in string: only set neighborhood if it's in our map (otherwise dash)
   const zipMatch = raw.match(/\b(100\d{2}|101\d{2}|102\d{2}|111\d{2}|112\d{2}|113\d{2}|104\d{2}|103\d{2})\b/);
   if (zipMatch) {
-    const areaFromZip = getAreaFromZip(zipMatch[1]);
+    const zip = zipMatch[1];
+    const areaFromZip = getAreaFromZip(zip);
     if (areaFromZip) return { address, neighborhood: areaFromZip };
     return { address, neighborhood: null };
   }
 
+  // No zip or zip not matched: only use known NYC area names (Williamsburg, Flatiron, etc.), never borough-only or venue text
   const area = findAreaInText(raw);
   if (area) {
     return { address, neighborhood: area };
   }
 
-  const withoutBorough = stripBoroughPrefix(raw);
-  if (withoutBorough) {
-    return { address, neighborhood: withoutBorough.slice(0, 200) };
-  }
-
-  if (raw) {
-    const cleaned = raw
-      .replace(/\b(New York City?|NYC|Brooklyn|Manhattan|Queens|Bronx|Staten Island)\b/gi, "")
-      .replace(/\s*·\s*$/g, "")
-      .replace(/\s{2,}/g, " ")
-      .trim()
-      .slice(0, 200);
-    if (cleaned) return { address, neighborhood: cleaned };
-  }
-
+  // No valid zip in map and no known area name → area stays empty (dash in UI)
   return { address, neighborhood: null };
 }
 
