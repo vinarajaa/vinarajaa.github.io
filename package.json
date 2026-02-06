@@ -1,0 +1,8 @@
+{
+  "name": "vinarajaa.github.io",
+  "private": true,
+  "description": "Portfolio and NYC Events (Vercel API)",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.9.0"
+  }
+}

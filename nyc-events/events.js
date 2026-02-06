@@ -1,7 +1,9 @@
-// NYC Events – Supabase backend (or demo mode when not configured)
-// Set SUPABASE_URL and SUPABASE_ANON_KEY in NYC_EVENTS_SETUP.md; leave empty for demo.
-const SUPABASE_URL = "";  // e.g. https://xxxx.supabase.co
-const SUPABASE_ANON_KEY = "";
+// NYC Events – Vercel API only (or demo mode when not configured)
+// Set EVENTS_API_URL to your Vercel deployment; leave empty for demo. See NYC_EVENTS_SETUP.md.
+const EVENTS_API_URL = "https://vinarajaa-github-io.vercel.app";  // e.g. https://your-project.vercel.app
+// Optional (for the “Pull from Dice” modal link)
+const GITHUB_REPO = ""; // e.g. "vinarajaa/vinarajaa.github.io"
+const GITHUB_WORKFLOW_FILE = "scrape-nyc-events.yml";
 
 let eventsData = [];
 let demoMode = false;
@@ -17,25 +19,20 @@ function setStatus(text) {
   if (el) el.textContent = text;
 }
 
-function getSupabaseHeaders() {
-  return {
-    "Content-Type": "application/json",
-    "apikey": SUPABASE_ANON_KEY,
-    "Authorization": "Bearer " + SUPABASE_ANON_KEY,
-    "Prefer": "return=representation"
-  };
+function eventsApiUrl() {
+  var base = (EVENTS_API_URL || "").replace(/\/$/, "");
+  return base ? base + "/api/events" : null;
 }
 
 async function fetchEvents() {
-  if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  var url = eventsApiUrl();
+  if (!url) {
     demoMode = true;
     eventsData = DEMO_EVENTS.map(function (e) { return { ...e }; });
     return;
   }
   try {
-    const res = await fetch(SUPABASE_URL + "/rest/v1/events?select=*&order=date.asc", {
-      headers: getSupabaseHeaders()
-    });
+    const res = await fetch(url, { headers: { "Content-Type": "application/json" } });
     if (!res.ok) throw new Error("Events " + res.status);
     const data = await res.json();
     eventsData = Array.isArray(data) ? data : [];
@@ -115,7 +112,7 @@ function populateFilterDropdowns() {
 function applyEventFilters() {
   var list = applyClientFilters();
   renderEventsTable(list);
-  setStatus(demoMode ? "Demo mode – " + list.length + " event(s). Configure Supabase to use the real backend." : list.length + " event(s).");
+  setStatus(demoMode ? "Demo mode – " + list.length + " event(s). Set EVENTS_API_URL to use the Vercel backend." : list.length + " event(s).");
 }
 
 function toggleEventFilters() {
@@ -150,6 +147,27 @@ function hideModal(id) {
     el.classList.remove("flex");
     el.setAttribute("aria-hidden", "true");
   }
+}
+
+function openPullFromDiceModal() {
+  var link = get("pull-dice-actions-link");
+  var hint = get("pull-dice-actions-hint");
+  if (link) {
+    if (GITHUB_REPO) {
+      link.href = "https://github.com/" + GITHUB_REPO + "/actions/workflows/" + GITHUB_WORKFLOW_FILE;
+      link.textContent = "Open GitHub Actions workflow";
+      if (hint) hint.style.display = "none";
+    } else {
+      link.href = "#";
+      link.textContent = "Configure GITHUB_REPO to enable this link";
+      if (hint) hint.style.display = "block";
+    }
+  }
+  showModal("pull-dice-modal");
+}
+
+function closePullFromDiceModal() {
+  hideModal("pull-dice-modal");
 }
 
 function openAddEventModal(prefill) {
@@ -210,9 +228,9 @@ function handleAddEventSubmit(ev) {
     setStatus("Demo mode – event added locally.");
     return false;
   }
-  fetch(SUPABASE_URL + "/rest/v1/events", {
+  fetch(eventsApiUrl(), {
     method: "POST",
-    headers: getSupabaseHeaders(),
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload)
   }).then(function (res) {
     if (res.ok) {
@@ -220,7 +238,8 @@ function handleAddEventSubmit(ev) {
     }
     throw new Error(res.status + " " + res.statusText);
   }).then(function (rows) {
-    if (rows && rows[0]) eventsData.push(rows[0]);
+    var row = Array.isArray(rows) ? rows[0] : rows;
+    if (row) eventsData.push(row);
     populateFilterDropdowns();
     applyEventFilters();
     get("add-event-success").classList.remove("hidden");
@@ -263,9 +282,9 @@ function confirmDeleteEvent() {
     closeDeleteEventModal();
     return;
   }
-  fetch(SUPABASE_URL + "/rest/v1/events?id=eq." + encodeURIComponent(deleteEventId), {
+  fetch(eventsApiUrl() + "?id=" + encodeURIComponent(deleteEventId), {
     method: "DELETE",
-    headers: getSupabaseHeaders()
+    headers: { "Content-Type": "application/json" }
   }).then(function (res) {
     if (!res.ok) throw new Error(res.status + " " + res.statusText);
     eventsData = eventsData.filter(function (e) { return e.id !== deleteEventId; });

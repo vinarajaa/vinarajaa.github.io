@@ -1,12 +1,16 @@
 /**
  * Dice.fm NYC events scraper.
- * Fetches https://dice.fm/browse/new-york and parses event cards into our schema.
- * Requires: SUPABASE_URL, SUPABASE_ANON_KEY (or SUPABASE_SERVICE_ROLE_KEY) in env.
+ * Fetches Dice.fm NYC and parses event cards into our schema.
+ * Requires: EVENTS_API_URL (your Vercel deployment, e.g. https://your-project.vercel.app) in env.
  */
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
 
-const DICE_NYC_URL = "https://dice.fm/browse/new-york";
+const DICE_NYC_URLS = [
+  "https://dice.fm/browse/new-york?lng=en-US",
+  "https://dice.fm/browse/new-york",
+  "https://dice.fm/browse/new_york-5bbf4db0f06331478e9b2c59?lng=en-US"
+];
 const PLATFORM = "Dice";
 
 function getEnv(name) {
@@ -128,37 +132,47 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
+const DICE_FETCH_HEADERS = {
+  "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+  "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
+  "Accept-Language": "en-US,en;q=0.9",
+  "Accept-Encoding": "gzip, deflate, br",
+  "Referer": "https://dice.fm/"
+};
+
 async function scrapeDiceNy() {
-  const res = await fetch(DICE_NYC_URL, {
-    headers: { "User-Agent": "Mozilla/5.0 (compatible; NYC-Events-Scraper/1.0)" }
-  });
-  if (!res.ok) throw new Error("Dice fetch " + res.status);
-  const html = await res.text();
-  return extractEventsFromHtml(html, DICE_NYC_URL);
+  let lastError;
+  for (const url of DICE_NYC_URLS) {
+    try {
+      const res = await fetch(url, { headers: DICE_FETCH_HEADERS });
+      if (!res.ok) {
+        lastError = new Error("Dice fetch " + res.status + " for " + url);
+        continue;
+      }
+      const html = await res.text();
+      const events = extractEventsFromHtml(html, url);
+      if (events.length > 0) return events;
+    } catch (e) {
+      lastError = e;
+    }
+  }
+  throw lastError || new Error("Dice fetch failed for all URLs");
 }
 
-async function pushToSupabase(events) {
-  const url = getEnv("SUPABASE_URL").replace(/\/$/, "") + "/rest/v1/events";
-  const key = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_ANON_KEY;
-  if (!key) throw new Error("Missing SUPABASE_ANON_KEY or SUPABASE_SERVICE_ROLE_KEY");
-  const headers = {
-    "Content-Type": "application/json",
-    "apikey": key,
-    "Authorization": "Bearer " + key,
-    "Prefer": "return=minimal"
-  };
+async function pushToEventsApi(events) {
+  const base = getEnv("EVENTS_API_URL").replace(/\/$/, "");
+  const url = base + "/api/events";
+  const headers = { "Content-Type": "application/json" };
   let inserted = 0;
   let skipped = 0;
   for (const ev of events) {
     try {
-      const r = await fetch(url, {
-        method: "POST",
-        headers,
-        body: JSON.stringify(ev)
-      });
-      if (r.ok) inserted++;
-      else if (r.status === 409) skipped++; // duplicate link
-      else console.warn("POST failed", r.status, await r.text());
+      const r = await fetch(url, { method: "POST", headers, body: JSON.stringify(ev) });
+      if (r.ok) {
+        const data = await r.json().catch(() => null);
+        if (Array.isArray(data) ? data.length : data) inserted++;
+        else skipped++;
+      } else skipped++;
     } catch (e) {
       console.warn("Error inserting", ev.link, e.message);
     }
@@ -174,11 +188,16 @@ async function main() {
     console.log("No events parsed. Dice may use client-side rendering; check NYC_EVENTS_SETUP.md for Puppeteer option.");
     return;
   }
+  if (process.env.DRY_RUN === "1" || process.env.DRY_RUN === "true") {
+    console.log("DRY_RUN: not pushing to API. Sample events:");
+    events.slice(0, 5).forEach((e, i) => console.log(" ", i + 1, e.title, e.date, e.link));
+    return;
+  }
   try {
-    const result = await pushToSupabase(events);
+    const result = await pushToEventsApi(events);
     console.log("Inserted:", result.inserted, "Skipped (duplicate):", result.skipped);
   } catch (e) {
-    console.error("Supabase push failed:", e.message);
+    console.error("Events API push failed:", e.message);
     process.exit(1);
   }
 }
