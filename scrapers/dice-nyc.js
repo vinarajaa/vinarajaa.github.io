@@ -25,8 +25,15 @@ function normalizeDate(str) {
   const match = trimmed.match(/(\d{4})-(\d{2})-(\d{2})/);
   if (match) return match[0];
   const d = new Date(trimmed);
-  if (!isNaN(d.getTime())) return d.toISOString().slice(0, 10);
-  return null;
+  if (isNaN(d.getTime())) return null;
+  // "Fri 6 Feb" etc. often parse as year 2001 when no year given; fix to current/next year
+  const now = new Date();
+  let year = d.getFullYear();
+  if (year < now.getFullYear()) {
+    d.setFullYear(now.getFullYear());
+    if (d < now) d.setFullYear(now.getFullYear() + 1);
+  }
+  return d.toISOString().slice(0, 10);
 }
 
 function normalizeTime(str) {
@@ -203,4 +210,4 @@ async function main() {
 }
 
 if (require.main === module) main();
-module.exports = { main };
+module.exports = { main, scrapeDiceNy };
