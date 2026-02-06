@@ -5,7 +5,7 @@
  */
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
-const { deriveAddressAndArea } = require("./nyc-areas.js");
+const { deriveAddressAndArea, normalizeAddressLine } = require("./nyc-areas.js");
 
 const DICE_NYC_URLS = [
   "https://dice.fm/browse/new-york?lng=en-US",
@@ -214,7 +214,7 @@ function findAddressStringInJson(obj, depth) {
   if (depth > 15) return null;
   if (typeof obj === "string") {
     const s = obj.trim();
-    if (s.length >= 15 && s.length <= 300 && /,\s*NY\s*\d{5}/.test(s) && /\d+/.test(s) && !/^https?:\/\//i.test(s)) return s;
+    if (s.length >= 15 && s.length <= 400 && (/,?\s*NY\s*\d{5}/.test(s) || /New York City,?\s*New York\s*\d{5}/.test(s)) && /\d+/.test(s) && !/^https?:\/\//i.test(s)) return s;
     return null;
   }
   if (Array.isArray(obj)) {
@@ -233,22 +233,25 @@ function findAddressStringInJson(obj, depth) {
   return null;
 }
 
-/** Extract first NYC-style address from text (number + street, City, NY zip). Handles newline-separated lines. */
+/** Extract first NYC-style address from text (number + street, City, NY zip or New York City, New York zip, United States). */
 function extractAddressFromText(text) {
   if (!text || typeof text !== "string") return null;
   const normalized = text.replace(/\s+/g, " ").trim();
-  var re = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+  var re = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*(?:,\s*[^,]+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?))/i;
   var m = normalized.match(re);
-  if (m && m[0]) return m[0].trim().slice(0, 300);
-  re = /\d+\s+[\w\s.\-]+,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+  if (m && m[0]) return normalizeAddressLine(m[0]) || m[0].trim().slice(0, 300);
+  re = /\d+\s+[\w\s.\-]+(?:,\s*[^,]+,\s*(?:NY\s*\d{5}(?:\s*,?\s*USA)?|New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?))/i;
   m = normalized.match(re);
-  if (m && m[0]) return m[0].trim().slice(0, 300);
+  if (m && m[0]) return normalizeAddressLine(m[0]) || m[0].trim().slice(0, 300);
+  re = /\d+[\s\w.\-]+,\s*[^,]+,\s*New York City,?\s*New York\s*\d{5}(?:\s*,?\s*United States)?/i;
+  m = normalized.match(re);
+  if (m && m[0]) return normalizeAddressLine(m[0]) || m[0].trim().slice(0, 300);
   re = /([^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?)/i;
   m = normalized.match(re);
   if (m && m[1]) {
     var addr = m[1].trim();
     var numMatch = addr.match(/^(\d+[\s\w.\-]*)/);
-    if (numMatch && addr.length >= 15 && addr.length <= 300) return addr.slice(0, 300);
+    if (numMatch && addr.length >= 15 && addr.length <= 300) return normalizeAddressLine(addr) || addr.slice(0, 300);
   }
   return null;
 }
@@ -285,8 +288,9 @@ async function fetchEventDetails(link) {
         }
         if (!address) {
           const anyAddr = findAddressStringInJson(data, 0);
-          if (anyAddr) address = anyAddr.slice(0, 300);
+          if (anyAddr) address = normalizeAddressLine(anyAddr) || anyAddr.slice(0, 300);
         }
+        if (address) address = normalizeAddressLine(address) || address;
         if (event.price_display) price = String(event.price_display).slice(0, 100);
         if (event.free && !price) price = "Free";
       } catch (_) {}
@@ -294,14 +298,14 @@ async function fetchEventDetails(link) {
 
     if (!address) {
       var candidate = extractAddressFromText($("body").text());
-      if (candidate) address = candidate;
+      if (candidate) address = normalizeAddressLine(candidate) || candidate;
     }
     if (!address) {
       var bodyText = $("body").text();
       var parts = bodyText.split(/\bVenue\b/i);
       for (var p = 1; p < parts.length; p++) {
         candidate = extractAddressFromText(parts[p].slice(0, 1000));
-        if (candidate) { address = candidate; break; }
+        if (candidate) { address = normalizeAddressLine(candidate) || candidate; break; }
       }
     }
     if (!address) {
@@ -311,7 +315,7 @@ async function fetchEventDetails(link) {
         var text = btn.prev().text();
         if (!text || text.length < 15) text = btn.parent().text();
         candidate = extractAddressFromText(text);
-        if (candidate) address = candidate;
+        if (candidate) address = normalizeAddressLine(candidate) || candidate;
       });
     }
     if (!address) {
@@ -321,7 +325,7 @@ async function fetchEventDetails(link) {
         candidate = extractAddressFromText(t);
         if (candidate) {
           var inVenue = $(this).closest("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location']").length;
-          if (inVenue || candidate.length > 25) address = candidate;
+          if (inVenue || candidate.length > 25) address = normalizeAddressLine(candidate) || candidate;
         }
       });
     }
@@ -333,7 +337,7 @@ async function fetchEventDetails(link) {
         if (!/Venue/i.test(labelText)) return;
         const block = el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']").length ? el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']") : el.parent().parent();
         candidate = extractAddressFromText(block.text());
-        if (candidate) address = candidate;
+        if (candidate) address = normalizeAddressLine(candidate) || candidate;
       });
     }
     if (!time) {
@@ -405,7 +409,9 @@ async function scrapeDiceNy() {
         if (!details) return;
         if (details.time) ev.time = details.time;
         if (details.address && /\d{5}/.test(details.address)) {
-          const out = deriveAddressAndArea(details.address);
+          var addr = normalizeAddressLine(details.address);
+          if (!addr) addr = details.address;
+          const out = deriveAddressAndArea(addr);
           if (out.address) ev.address = out.address;
           if (out.neighborhood) ev.neighborhood = out.neighborhood;
         } else if (details.venue && !ev.neighborhood) {

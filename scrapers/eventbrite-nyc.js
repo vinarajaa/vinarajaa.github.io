@@ -4,7 +4,7 @@
  */
 const fetch = require("node-fetch");
 const cheerio = require("cheerio");
-const { deriveAddressAndArea } = require("./nyc-areas.js");
+const { deriveAddressAndArea, normalizeAddressLine } = require("./nyc-areas.js");
 
 const EVENTBRITE_NYC_URLS = [
   "https://www.eventbrite.com/d/ny--new-york/all-events/",
@@ -208,7 +208,8 @@ function extractEventsFromHtml(html, baseUrl) {
           addr.region || addr.state,
           addr.postal_code
         ].filter(Boolean);
-        const fullAddress = addrParts.length ? addrParts.join(", ") : null;
+        var fullAddress = addrParts.length ? addrParts.join(", ") : null;
+        if (fullAddress) fullAddress = normalizeAddressLine(fullAddress) || fullAddress;
         const venueOrAddress = fullAddress || [addr.city || addr.region, venue].filter(Boolean).join(" · ") || venue;
         const cleaned = (venueOrAddress && String(venueOrAddress).replace(/\bPromoted\b/gi, "").replace(/\s{2,}/g, " ").trim()) || null;
         const { address, neighborhood } = deriveAddressAndArea(cleaned);
@@ -428,6 +429,7 @@ async function fetchEventbriteEventDetails(link) {
       }
     }
 
+    if (addressStr) addressStr = normalizeAddressLine(addressStr) || addressStr;
     return addressStr ? { address: addressStr, venueName: venueName } : null;
   } catch (_) {
     return null;
