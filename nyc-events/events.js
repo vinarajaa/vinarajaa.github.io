@@ -17,12 +17,20 @@ function get(id) { return document.getElementById(id); }
 var DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 var MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 function formatDateDisplay(val) {
-  if (!val) return "—";
-  var s = String(val).slice(0, 10);
-  var parts = s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-  if (!parts) return s || "—";
-  var d = new Date(parseInt(parts[1], 10), parseInt(parts[2], 10) - 1, parseInt(parts[3], 10));
-  if (isNaN(d.getTime())) return s;
+  if (val == null || val === "") return "—";
+  var d;
+  if (val instanceof Date) {
+    d = val;
+  } else {
+    var s = String(val).trim();
+    var parts = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+    if (parts) {
+      d = new Date(parseInt(parts[1], 10), parseInt(parts[2], 10) - 1, parseInt(parts[3], 10));
+    } else {
+      d = new Date(s);
+    }
+  }
+  if (isNaN(d.getTime())) return "—";
   return DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
 }
 
