@@ -167,8 +167,12 @@ function extractEventsFromHtml(html, baseUrl) {
 /** Extract address string from a venue-like object (various API shapes). */
 function venueAddressFromObj(v) {
   if (!v || typeof v !== "object") return null;
-  const s = v.localized_address_display || v.formatted_address || v.full_address || (typeof v.address === "string" ? v.address : null);
+  const s = v.localized_address_display || v.formatted_address || v.full_address || v.display_address || (typeof v.address === "string" ? v.address : null);
   if (s && /\d{5}/.test(s)) return s.trim().slice(0, 300);
+  if (v.address_lines && Array.isArray(v.address_lines)) {
+    const joined = v.address_lines.filter(Boolean).join(", ").trim();
+    if (joined && /\d{5}/.test(joined)) return joined.slice(0, 300);
+  }
   const parts = [
     v.address_line_1 || (v.address && v.address.address_line_1) || (v.address && v.address.street),
     v.city || (v.address && v.address.city),
@@ -210,7 +214,7 @@ function findAddressStringInJson(obj, depth) {
   if (depth > 15) return null;
   if (typeof obj === "string") {
     const s = obj.trim();
-    if (s.length >= 20 && s.length <= 300 && /,\s*NY\s*\d{5}/.test(s) && /\d+/.test(s)) return s;
+    if (s.length >= 15 && s.length <= 300 && /,\s*NY\s*\d{5}/.test(s) && /\d+/.test(s) && !/^https?:\/\//i.test(s)) return s;
     return null;
   }
   if (Array.isArray(obj)) {
@@ -225,6 +229,26 @@ function findAddressStringInJson(obj, depth) {
       const r = findAddressStringInJson(obj[k], depth + 1);
       if (r) return r;
     }
+  }
+  return null;
+}
+
+/** Extract first NYC-style address from text (number + street, City, NY zip). Handles newline-separated lines. */
+function extractAddressFromText(text) {
+  if (!text || typeof text !== "string") return null;
+  const normalized = text.replace(/\s+/g, " ").trim();
+  var re = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+  var m = normalized.match(re);
+  if (m && m[0]) return m[0].trim().slice(0, 300);
+  re = /\d+\s+[\w\s.\-]+,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+  m = normalized.match(re);
+  if (m && m[0]) return m[0].trim().slice(0, 300);
+  re = /([^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?)/i;
+  m = normalized.match(re);
+  if (m && m[1]) {
+    var addr = m[1].trim();
+    var numMatch = addr.match(/^(\d+[\s\w.\-]*)/);
+    if (numMatch && addr.length >= 15 && addr.length <= 300) return addr.slice(0, 300);
   }
   return null;
 }
@@ -268,30 +292,36 @@ async function fetchEventDetails(link) {
       } catch (_) {}
     });
 
-    const venueAddrRe = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
-    const venueAddrRe2 = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd)[^,]*,\s*[^,]+,\s*NY\s*\d{5}/i;
-    var anyNyZipRe = /\d+\s+[\w\s.\-]+,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
-
+    if (!address) {
+      var candidate = extractAddressFromText($("body").text());
+      if (candidate) address = candidate;
+    }
+    if (!address) {
+      var bodyText = $("body").text();
+      var parts = bodyText.split(/\bVenue\b/i);
+      for (var p = 1; p < parts.length; p++) {
+        candidate = extractAddressFromText(parts[p].slice(0, 1000));
+        if (candidate) { address = candidate; break; }
+      }
+    }
     if (!address) {
       $("button[aria-label*='opy'], button[aria-label*='lipboard'], [class*='copy'], [data-testid*='copy']").each(function () {
         if (address) return;
         const btn = $(this);
         var text = btn.prev().text();
         if (!text || text.length < 15) text = btn.parent().text();
-        text = String(text).replace(/\s+/g, " ").trim();
-        var m = text.match(venueAddrRe) || text.match(venueAddrRe2) || text.match(anyNyZipRe);
-        if (m && m[0]) address = m[0].slice(0, 300);
+        candidate = extractAddressFromText(text);
+        if (candidate) address = candidate;
       });
     }
     if (!address) {
       $("p, span, div").each(function () {
         if (address) return;
-        const t = $(this).clone().children().remove().end().text().replace(/\s+/g, " ").trim();
-        if (t.length < 20 || t.length > 350) return;
-        var m = t.match(venueAddrRe) || t.match(venueAddrRe2) || t.match(anyNyZipRe);
-        if (m && m[0]) {
+        const t = $(this).clone().children().remove().end().text();
+        candidate = extractAddressFromText(t);
+        if (candidate) {
           var inVenue = $(this).closest("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location']").length;
-          if (inVenue || m[0].length > 25) address = m[0].slice(0, 300);
+          if (inVenue || candidate.length > 25) address = candidate;
         }
       });
     }
@@ -300,32 +330,11 @@ async function fetchEventDetails(link) {
         if (address) return;
         const el = $(this);
         const labelText = el.clone().children().remove().end().text().trim();
-        if (!/^Venue\b/i.test(labelText)) return;
+        if (!/Venue/i.test(labelText)) return;
         const block = el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']").length ? el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']") : el.parent().parent();
-        const blockText = block.text();
-        var addrMatch = blockText.match(venueAddrRe) || blockText.match(venueAddrRe2) || blockText.match(anyNyZipRe);
-        if (addrMatch && addrMatch[0]) address = addrMatch[0].trim().replace(/\s+/g, " ").slice(0, 300);
+        candidate = extractAddressFromText(block.text());
+        if (candidate) address = candidate;
       });
-    }
-    if (!address) {
-      const bodyText = $("body").text();
-      const venueIdx = bodyText.search(/\bVenue\b/i);
-      if (venueIdx >= 0) {
-        const afterVenue = bodyText.slice(venueIdx, venueIdx + 900);
-        var m = afterVenue.match(venueAddrRe) || afterVenue.match(venueAddrRe2) || afterVenue.match(anyNyZipRe);
-        if (m && m[0]) address = m[0].trim().replace(/\s+/g, " ").slice(0, 300);
-      }
-    }
-    if (!address) {
-      const bodyText = $("body").text().replace(/\s+/g, " ");
-      const broadRe = /\d+[\s\w.\-]*(?:Avenue|Ave|Street|St|Blvd|Boulevard|Road|Rd|Drive|Dr|Place|Pl|Way|Lane|Ln|Court|Ct)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
-      var m = bodyText.match(broadRe);
-      if (m && m[0]) address = m[0].trim().slice(0, 300);
-    }
-    if (!address) {
-      const bodyText = $("body").text().replace(/\s+/g, " ");
-      var m = bodyText.match(anyNyZipRe);
-      if (m && m[0]) address = m[0].trim().slice(0, 300);
     }
     if (!time) {
       $("[datetime]").each(function () {
@@ -390,23 +399,34 @@ async function scrapeDiceNy() {
         if (!seen.has(e.link)) { seen.add(e.link); needDetails.push(e); }
       });
 
-      const maxFetch = 60;
-      for (let i = 0; i < Math.min(needDetails.length, maxFetch); i++) {
-        const ev = needDetails[i];
-        const details = await fetchEventDetails(ev.link);
-        if (details) {
-          if (details.time) ev.time = details.time;
-          if (details.address) {
-            const out = deriveAddressAndArea(details.address);
-            if (out.address) ev.address = out.address;
-            if (out.neighborhood) ev.neighborhood = out.neighborhood;
-          } else if (details.venue && (!ev.address || !ev.neighborhood)) {
-            const out = deriveAddressAndArea(details.venue);
-            if (out.address && !ev.address) ev.address = out.address;
-            if (out.neighborhood && !ev.neighborhood) ev.neighborhood = out.neighborhood;
-          }
-          if (details.price && !ev.price) ev.price = details.price;
+      const maxFetchFirst = 60;
+      var fetched = new Set();
+      function applyDetails(ev, details) {
+        if (!details) return;
+        if (details.time) ev.time = details.time;
+        if (details.address && /\d{5}/.test(details.address)) {
+          const out = deriveAddressAndArea(details.address);
+          if (out.address) ev.address = out.address;
+          if (out.neighborhood) ev.neighborhood = out.neighborhood;
+        } else if (details.venue && !ev.neighborhood) {
+          const out = deriveAddressAndArea(details.venue);
+          if (out.neighborhood) ev.neighborhood = out.neighborhood;
         }
+        if (details.price && !ev.price) ev.price = details.price;
+      }
+      for (var i = 0; i < Math.min(needDetails.length, maxFetchFirst); i++) {
+        const ev = needDetails[i];
+        fetched.add(ev.link);
+        const details = await fetchEventDetails(ev.link);
+        applyDetails(ev, details);
+        await sleep(90);
+      }
+      var stillNeedAddress = events.filter(function (e) { return !hasStreetAddress(e) && !fetched.has(e.link); });
+      var maxFetchSecond = 40;
+      for (var j = 0; j < Math.min(stillNeedAddress.length, maxFetchSecond); j++) {
+        const ev = stillNeedAddress[j];
+        const details = await fetchEventDetails(ev.link);
+        applyDetails(ev, details);
         await sleep(90);
       }
       return events;
