@@ -41,3 +41,22 @@ EVENTS_API_URL=https://your-project.vercel.app node test-db.js
 ```
 
 This fetches from `GET /api/events` and prints count + sample rows.
+
+### 3. Debug one event (see parsed data)
+
+To see exactly what we parse from a single Dice or Eventbrite event page:
+
+```bash
+cd scrapers
+node debug-one-event.js "https://dice.fm/event/your-event-id"
+# or
+node debug-one-event.js "https://www.eventbrite.com/e/event-name-tickets-123456"
+```
+
+Output: `time`, `venue`, `address`, `price` (Dice) or `address`, `venueName` (Eventbrite).
+
+To also save the raw HTML to `debug-event.html` for inspection:
+
+```bash
+DEBUG_SAVE_HTML=1 node debug-one-event.js "https://dice.fm/event/..."
+```

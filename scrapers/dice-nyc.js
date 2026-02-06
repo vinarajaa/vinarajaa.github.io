@@ -296,6 +296,18 @@ async function fetchEventDetails(link) {
       } catch (_) {}
     });
 
+    // Dice event page: Venue block with EventDetailsVenue__Address (span) and venue name in h2
+    const venueAddressEl = $("[class*='EventDetailsVenue__Address']");
+    if (venueAddressEl.length) {
+      const raw = (venueAddressEl.find("span").first().text() || venueAddressEl.text()).trim();
+      if (raw && /\d{5}/.test(raw)) address = normalizeAddressLine(raw) || raw;
+    }
+    const venueWrapper = $("[class*='EventDetailsVenue__Wrapper'], [class*='EventDetailsVenue__Info']");
+    if (venueWrapper.length && !venue) {
+      const h2 = venueWrapper.find("h2").first().text().trim();
+      if (h2) venue = h2.slice(0, 200);
+    }
+
     if (!address) {
       var candidate = extractAddressFromText($("body").text());
       if (candidate) address = normalizeAddressLine(candidate) || candidate;
@@ -487,4 +499,4 @@ async function main() {
 }
 
 if (require.main === module) main();
-module.exports = { main, scrapeDiceNy };
+module.exports = { main, scrapeDiceNy, fetchEventDetails };

@@ -518,4 +518,4 @@ async function main() {
 }
 
 if (require.main === module) main();
-module.exports = { main, scrapeEventbriteNy };
+module.exports = { main, scrapeEventbriteNy, fetchEventbriteEventDetails };
