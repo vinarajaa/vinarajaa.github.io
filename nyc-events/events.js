@@ -90,7 +90,17 @@ function renderEventsTable(list) {
     return;
   }
   tbody.innerHTML = list.map(function (e) {
-    var date = formatDateDisplay(e.date);
+    var dateVal = e.date;
+    var date = "—";
+    if (dateVal != null && dateVal !== "") {
+      var s = String(dateVal).trim();
+      var parts = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+      if (parts) {
+        var d = new Date(parseInt(parts[1], 10), parseInt(parts[2], 10) - 1, parseInt(parts[3], 10));
+        if (!isNaN(d.getTime())) date = DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+        else date = s.slice(0, 10);
+      } else date = s.slice(0, 10) || "—";
+    }
     var time = (e.time || "—");
     var neighborhood = (e.neighborhood || "—");
     var price = (e.price || "—");
