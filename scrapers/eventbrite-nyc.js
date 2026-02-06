@@ -276,6 +276,44 @@ async function fetchEventbriteEventDetails(link) {
     let addressStr = null;
     let venueName = null;
 
+    // 0) Location section: find heading "Location" and extract address from that block (venue name + address lines)
+    $("h1, h2, h3, h4, h5, h6, strong, [class*='location'], [class*='Location']").each(function () {
+      if (addressStr) return;
+      const el = $(this);
+      const labelText = el.clone().children().remove().end().text().trim();
+      if (!/^Location\b/i.test(labelText)) return;
+      const block = el.closest("section, div, [class*='location'], [class*='Location'], [class*='event-detail']").length ? el.closest("section, div, [class*='location'], [class*='Location'], [class*='event-detail']") : el.parent().parent();
+      const blockText = block.text().replace(/\s+/g, " ").trim();
+      const nyZip = blockText.match(/(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^,]*,?\s*(?:New York|Brooklyn|Queens|Bronx|Manhattan),?\s*NY\s*\d{5})/i)
+        || blockText.match(/(\d+\s+[\w\.\s\-]+(?:Avenue|Ave|Street|St)[^,]*,?\s*(?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i)
+        || blockText.match(/((?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/);
+      if (nyZip && nyZip[1]) {
+        addressStr = nyZip[1].trim().slice(0, 300);
+        const nameMatch = blockText.match(/Location\s*([^\d]+?)(?:\d+|$)/i);
+        if (nameMatch && nameMatch[1]) venueName = nameMatch[1].trim().slice(0, 200);
+      }
+      if (!addressStr) {
+        const streetLine = blockText.match(/(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)\s*)/i);
+        const cityLine = blockText.match(/((?:New York|Brooklyn|Queens|Bronx|Manhattan),?\s*NY\s*\d{5})/i);
+        if (streetLine && cityLine) addressStr = (streetLine[1].trim() + " " + cityLine[1].trim()).slice(0, 300);
+      }
+    });
+    if (!addressStr) {
+      const bodyText = $("body").text();
+      const locIdx = bodyText.search(/\bLocation\b/i);
+      if (locIdx >= 0) {
+        const afterLocation = bodyText.slice(locIdx, locIdx + 800);
+        let m = afterLocation.match(/(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl)[^·]*?,?\s*(?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i)
+          || afterLocation.match(/(\d+\s+[\w\.\s\-]+?,?\s*(?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i);
+        if (m && m[1]) addressStr = m[1].trim().slice(0, 300);
+        if (!addressStr) {
+          const street = afterLocation.match(/(\d+[\s\w\.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl)\s*)/i);
+          const city = afterLocation.match(/((?:New York|Brooklyn|Queens|Bronx|Manhattan),?\s*NY\s*\d{5})/i);
+          if (street && city) addressStr = (street[1].trim() + " " + city[1].trim()).slice(0, 300);
+        }
+      }
+    }
+
     // 1) JSON-LD Event with location.address (or @graph with Event + Place)
     $('script[type="application/ld+json"]').each(function () {
       if (addressStr) return;

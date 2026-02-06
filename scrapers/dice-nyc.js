@@ -164,7 +164,7 @@ function extractEventsFromHtml(html, baseUrl) {
   return events;
 }
 
-/** Fetch event detail page and extract time (and optionally venue/price) from __NEXT_DATA__ or HTML */
+/** Fetch event detail page and extract time, venue, address, and price from Venue section and __NEXT_DATA__ */
 async function fetchEventDetails(link) {
   try {
     const res = await fetch(link, { headers: DICE_FETCH_HEADERS });
@@ -173,7 +173,9 @@ async function fetchEventDetails(link) {
     const $ = cheerio.load(html);
     let time = null;
     let venue = null;
+    let address = null;
     let price = null;
+
     $('script#__NEXT_DATA__').each(function () {
       try {
         const data = JSON.parse($(this).html());
@@ -187,10 +189,47 @@ async function fetchEventDetails(link) {
         if (event.event_times?.[0]) time = time || String(event.event_times[0]).slice(0, 50);
         if (event.venue?.name) venue = event.venue.name.slice(0, 200);
         if (event.venue_name) venue = venue || String(event.venue_name).slice(0, 200);
+        const v = event.venue;
+        if (v && (v.address || v.address_line_1 || (v.address && typeof v.address === "object"))) {
+          const a = v.address;
+          const addr = typeof a === "string" ? a : [
+            v.address_line_1 || (a && a.address_line_1),
+            v.city || (a && a.city),
+            v.region || (a && a.region),
+            v.postal_code || (a && a.postal_code)
+          ].filter(Boolean).join(", ");
+          if (addr && /\d{5}/.test(addr)) address = addr.slice(0, 300);
+        }
         if (event.price_display) price = String(event.price_display).slice(0, 100);
         if (event.free && !price) price = "Free";
       } catch (_) {}
     });
+
+    if (!address) {
+      const venueAddrRe = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+      const venueAddrRe2 = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St)[^,]*,\s*(?:Brooklyn|New York|Queens|Bronx)[^,]*,\s*NY\s*\d{5}/i;
+      $("h1, h2, h3, h4, h5, h6, strong, [class*='venue'], [class*='Venue']").each(function () {
+        if (address) return;
+        const el = $(this);
+        const labelText = el.clone().children().remove().end().text().trim();
+        if (!/^Venue\b/i.test(labelText)) return;
+        const block = el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']").length ? el.closest("section, div, [class*='venue'], [class*='Venue'], [class*='location']") : el.parent().parent();
+        const blockText = block.text();
+        const addrMatch = blockText.match(venueAddrRe) || blockText.match(venueAddrRe2);
+        if (addrMatch && addrMatch[0]) address = addrMatch[0].trim().replace(/\s+/g, " ").slice(0, 300);
+      });
+    }
+    if (!address) {
+      const venueAddrRe = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St|Boulevard|Blvd|Road|Rd|Drive|Dr|Place|Pl|Way)[^,]*,\s*[^,]+,\s*NY\s*\d{5}(?:\s*,?\s*USA)?/i;
+      const venueAddrRe2 = /\d+[\s\w.\-]+(?:Avenue|Ave|Street|St)[^,]*,\s*(?:Brooklyn|New York|Queens|Bronx)[^,]*,\s*NY\s*\d{5}/i;
+      const bodyText = $("body").text();
+      const venueIdx = bodyText.search(/\bVenue\b/i);
+      if (venueIdx >= 0) {
+        const afterVenue = bodyText.slice(venueIdx, venueIdx + 600);
+        const m = afterVenue.match(venueAddrRe) || afterVenue.match(venueAddrRe2);
+        if (m && m[0]) address = m[0].trim().replace(/\s+/g, " ").slice(0, 300);
+      }
+    }
     if (!time) {
       $("[datetime]").each(function () {
         const dt = $(this).attr("datetime");
@@ -208,7 +247,7 @@ async function fetchEventDetails(link) {
       const m = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/(\d{1,2}:\d{2})\s*(?:[AP]\.?M\.?|p\.m\.|a\.m\.)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
       if (m) time = m[1].trim().slice(0, 50);
     }
-    return { time, venue, price };
+    return { time, venue, address, price };
   } catch (_) {
     return null;
   }
@@ -245,12 +284,14 @@ async function scrapeDiceNy() {
         const details = await fetchEventDetails(ev.link);
         if (details) {
           if (details.time) ev.time = details.time;
-          if (details.venue) {
-            if (!ev.address || !ev.neighborhood) {
-              const out = deriveAddressAndArea(details.venue);
-              if (out.address && !ev.address) ev.address = out.address;
-              if (out.neighborhood && !ev.neighborhood) ev.neighborhood = out.neighborhood;
-            }
+          if (details.address) {
+            const out = deriveAddressAndArea(details.address);
+            if (out.address) ev.address = out.address;
+            if (out.neighborhood) ev.neighborhood = out.neighborhood;
+          } else if (details.venue && (!ev.address || !ev.neighborhood)) {
+            const out = deriveAddressAndArea(details.venue);
+            if (out.address && !ev.address) ev.address = out.address;
+            if (out.neighborhood && !ev.neighborhood) ev.neighborhood = out.neighborhood;
           }
           if (details.price && !ev.price) ev.price = details.price;
         }
