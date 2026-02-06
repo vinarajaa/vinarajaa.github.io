@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Interactive Timeline | Vina Raja</title>
+  <link rel="stylesheet" href="/assets/css/style.css" />
+  <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
+  <style>
+    .timeline-page {
+      min-height: 100vh;
+      background: linear-gradient(180deg, #fde5c0 0%, #ffe9cf 30%, #f5e6d3 100%);
+      padding: var(--nav-height, 80px) 1.5rem 4rem;
+      font-family: 'Worksans', Arial, sans-serif;
+    }
+    .timeline-header {
+      text-align: center;
+      margin-bottom: 3rem;
+      max-width: 40rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .timeline-back {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: #333;
+      text-decoration: none;
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      padding: 0.5rem 0;
+    }
+    .timeline-back:hover {
+      text-decoration: underline;
+    }
+    .timeline-title {
+      font-family: Anton, Arial, sans-serif;
+      font-size: clamp(2rem, 5vw, 3rem);
+      text-transform: uppercase;
+      color: #24281f;
+      margin: 0 0 0.5rem;
+    }
+    .timeline-subtitle {
+      font-size: 1.1rem;
+      color: rgba(36, 40, 31, 0.75);
+      margin: 0;
+    }
+    .timeline-w {
+      max-width: 36rem;
+      margin: 0 auto;
+      position: relative;
+    }
+    .timeline-line {
+      position: absolute;
+      left: 1rem;
+      top: 0;
+      bottom: 0;
+      width: 3px;
+      background: linear-gradient(180deg, #00c5c5, #ca9dfe, #ff812d);
+      border-radius: 3px;
+    }
+    .timeline-item {
+      position: relative;
+      padding-left: 3.5rem;
+      padding-bottom: 3rem;
+    }
+    .timeline-item:last-child {
+      padding-bottom: 1rem;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 0;
+      top: 0.25rem;
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      background: #00c5c5;
+      border: 3px solid #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      z-index: 1;
+    }
+    .timeline-item:nth-child(2) .timeline-dot { background: #ca9dfe; }
+    .timeline-item:nth-child(3) .timeline-dot { background: #ff812d; }
+    .timeline-item:nth-child(4) .timeline-dot { background: #f5c939; }
+    .timeline-item:nth-child(5) .timeline-dot { background: #7ae66a; }
+    .timeline-item:nth-child(6) .timeline-dot { background: #f897b4; }
+    .timeline-card {
+      background: #fff;
+      border-radius: var(--rounded-1, 12px);
+      padding: 1.25rem 1.5rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+      outline: 1px solid rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .timeline-card:hover {
+      transform: translateX(4px);
+      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    }
+    .timeline-date {
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #666;
+      margin-bottom: 0.35rem;
+    }
+    .timeline-card h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #24281f;
+      margin: 0 0 0.5rem;
+    }
+    .timeline-card p {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: rgba(36, 40, 31, 0.85);
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+  <main class="timeline-page">
+    <header class="timeline-header">
+      <a href="/" class="timeline-back">← Back to home</a>
+      <h1 class="timeline-title">Interactive Timeline</h1>
+      <p class="timeline-subtitle">A scrollable snapshot of my background — education, experience, and milestones.</p>
+    </header>
+
+    <div class="timeline-w">
+      <div class="timeline-line" aria-hidden="true"></div>
+
+      <article class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-card">
+          <div class="timeline-date">2024 – Present</div>
+          <h3>Software Engineer</h3>
+          <p>Building intuitive, data-driven digital solutions. Add your role, company, and highlights here.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-card">
+          <div class="timeline-date">2022 – 2024</div>
+          <h3>Previous role or education</h3>
+          <p>Describe your position, key projects, or degree. This is a placeholder you can replace with real content.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-card">
+          <div class="timeline-date">2020 – 2022</div>
+          <h3>Earlier experience</h3>
+          <p>Another milestone — internships, first job, or continued education. Customize to match your story.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-card">
+          <div class="timeline-date">2018 – 2020</div>
+          <h3>Education or career start</h3>
+          <p>University, bootcamp, or early projects. Fill in dates and details to make this yours.</p>
+        </div>
+      </article>
+
+      <article class="timeline-item">
+        <span class="timeline-dot"></span>
+        <div class="timeline-card">
+          <div class="timeline-date">Before 2018</div>
+          <h3>Earlier background</h3>
+          <p>High school, side projects, or anything that shaped your path. Add as many entries as you like.</p>
+        </div>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    (function() {
+      var path = window.location.pathname.replace(/^\//, "").replace(/\/$/, "");
+      var routes = {
+        "database": "/pages/database/database.html",
+        "ai-chatbots": "/pages/ai-chatbots.html",
+        "website-crash-monitoring": "/pages/website-crash-monitoring.html",
+        "apps": "/pages/apps.html",
+        "techstack": "/pages/techstack.html",
+        "junkyard": "/pages/junkyard.html"
+      };
+      var target = routes[path];
+      if (target) {
+        window.location.replace(target);
+      }
+    })();
+  </script>
+  <style>
+    body { font-family: sans-serif; text-align: center; padding: 3rem; }
+    a { color: #007bff; }
+  </style>
+</head>
+<body>
+  <p>Page not found. <a href="/">Go home</a>.</p>
+</body>
+</html>

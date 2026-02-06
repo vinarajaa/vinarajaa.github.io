@@ -1,0 +1,14 @@
+{
+  "name": "nyc-events-scrapers",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Scrapers for NYC events (Dice.fm and more)",
+  "scripts": {
+    "run": "node run.js",
+    "dice": "node dice-nyc.js"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "node-fetch": "^2.7.0"
+  }
+}
