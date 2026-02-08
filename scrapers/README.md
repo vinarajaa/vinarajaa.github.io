@@ -55,8 +55,12 @@ node debug-one-event.js "https://www.eventbrite.com/e/event-name-tickets-123456"
 
 Output: `time`, `venue`, `address`, `price` (Dice) or `address`, `venueName` (Eventbrite).
 
-To also save the raw HTML to `debug-event.html` for inspection:
+HTML is always saved to `debug-event.html`. CrowdVolt is also supported:
 
 ```bash
-DEBUG_SAVE_HTML=1 node debug-one-event.js "https://dice.fm/event/..."
+node debug-one-event.js "https://www.crowdvolt.com/event/event-slug"
 ```
+
+### 4. CrowdVolt (Puppeteer)
+
+CrowdVolt’s homepage loads its event list with JavaScript, so the scraper uses **Puppeteer** to render the page before parsing. Install dependencies with `npm install` (adds `puppeteer`). NYC-only events are kept (slug or venue contains NYC, Brooklyn, Queens, etc.).

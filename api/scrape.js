@@ -1,6 +1,6 @@
 /**
- * POST /api/scrape – run Dice + Eventbrite NYC scrapers and insert events into the DB.
- * Called by the "Pull from Dice" button on the site.
+ * POST /api/scrape – run Dice + Eventbrite + CrowdVolt NYC scrapers and insert events into the DB.
+ * Called by the "Pull from Dice & Eventbrite" button on the site.
  */
 const { neon } = require("@neondatabase/serverless");
 
@@ -35,13 +35,15 @@ module.exports = async function handler(req, res) {
   try {
     const { scrapeDiceNy } = require("../scrapers/dice-nyc.js");
     const { scrapeEventbriteNy } = require("../scrapers/eventbrite-nyc.js");
-    const [diceEvents, eventbriteEvents] = await Promise.all([
+    const { scrapeCrowdvoltNy } = require("../scrapers/crowdvolt-nyc.js");
+    const [diceEvents, eventbriteEvents, crowdvoltEvents] = await Promise.all([
       scrapeDiceNy().catch(() => []),
-      scrapeEventbriteNy().catch(() => [])
+      scrapeEventbriteNy().catch(() => []),
+      scrapeCrowdvoltNy().catch(() => [])
     ]);
-    const events = [...(diceEvents || []), ...(eventbriteEvents || [])];
+    const events = [...(diceEvents || []), ...(eventbriteEvents || []), ...(crowdvoltEvents || [])];
     if (events.length === 0) {
-      res.status(200).json({ ok: true, scraped: 0, inserted: 0, message: "No events parsed from Dice or Eventbrite." });
+      res.status(200).json({ ok: true, scraped: 0, inserted: 0, message: "No events parsed from Dice, Eventbrite, or CrowdVolt." });
       return;
     }
 
@@ -57,7 +59,17 @@ module.exports = async function handler(req, res) {
         const row = await sql`
           INSERT INTO events (title, date, time, address, neighborhood, venue, image_url, price, link, platform, description)
           VALUES (${title}, ${date}, ${ev.time || null}, ${ev.address || null}, ${ev.neighborhood || null}, ${ev.venue || null}, ${ev.image_url || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
-          ON CONFLICT (link) DO NOTHING
+          ON CONFLICT (link) DO UPDATE SET
+            title = EXCLUDED.title,
+            date = EXCLUDED.date,
+            time = COALESCE(EXCLUDED.time, events.time),
+            address = COALESCE(EXCLUDED.address, events.address),
+            neighborhood = COALESCE(EXCLUDED.neighborhood, events.neighborhood),
+            venue = COALESCE(EXCLUDED.venue, events.venue),
+            image_url = COALESCE(EXCLUDED.image_url, events.image_url),
+            price = COALESCE(EXCLUDED.price, events.price),
+            platform = EXCLUDED.platform,
+            description = COALESCE(EXCLUDED.description, events.description)
           RETURNING id
         `;
         if (row && row[0]) inserted++;

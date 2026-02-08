@@ -45,7 +45,7 @@ function titleFromEventUrl(href) {
   return slug.replace(/\b\w/g, function (c) { return c.toUpperCase(); }).slice(0, 300);
 }
 
-function extractEventsFromHtml(html, baseUrl) {
+function extractEventsFromHtml(html, baseUrl, onProgress) {
   const $ = cheerio.load(html);
   const events = [];
   const seen = new Set();
@@ -178,6 +178,7 @@ function extractEventsFromHtml(html, baseUrl) {
       link: href,
       platform: PLATFORM
     });
+    if (onProgress) onProgress(events.length);
   });
 
   // Try embedded JSON (Eventbrite may use Next.js or similar)
@@ -229,6 +230,7 @@ function extractEventsFromHtml(html, baseUrl) {
           link: link.startsWith("http") ? link : "https://www.eventbrite.com" + (link.startsWith("/") ? link : "/e/" + link),
           platform: PLATFORM
         });
+        if (onProgress) onProgress(events.length);
       });
     } catch (_) {}
   });
@@ -470,7 +472,8 @@ const FETCH_HEADERS = {
   "Referer": "https://www.eventbrite.com/"
 };
 
-async function scrapeEventbriteNy() {
+async function scrapeEventbriteNy(opts) {
+  const onProgress = opts && opts.onProgress ? function (c, d) { opts.onProgress("Eventbrite", c, d); } : null;
   let lastError;
   for (const url of EVENTBRITE_NYC_URLS) {
     try {
@@ -480,7 +483,7 @@ async function scrapeEventbriteNy() {
         continue;
       }
       const html = await res.text();
-      let events = extractEventsFromHtml(html, url);
+      let events = extractEventsFromHtml(html, url, onProgress);
       if (events.length === 0) continue;
 
       // For events that only have "City · Venue" (no street address), fetch detail page to get full address
@@ -491,6 +494,7 @@ async function scrapeEventbriteNy() {
       const maxFetch = 40;
       for (let i = 0; i < Math.min(needAddress.length, maxFetch); i++) {
         const ev = needAddress[i];
+        if (onProgress) onProgress(events.length, "details " + (i + 1) + "/" + Math.min(needAddress.length, maxFetch));
         const details = await fetchEventbriteEventDetails(ev.link);
         if (details) {
           if (details.venueName) ev.venue = String(details.venueName).slice(0, 200);
@@ -511,9 +515,9 @@ async function scrapeEventbriteNy() {
   throw lastError || new Error("Eventbrite fetch failed for all URLs");
 }
 
-async function main() {
+async function main(opts) {
   console.log("Scraping Eventbrite NYC...");
-  const events = await scrapeEventbriteNy();
+  const events = await scrapeEventbriteNy(opts || {});
   console.log("Found", events.length, "events");
   if (events.length === 0) return;
   if (process.env.DRY_RUN === "1" || process.env.DRY_RUN === "true") {

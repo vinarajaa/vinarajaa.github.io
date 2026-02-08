@@ -42,7 +42,7 @@
         </select>
         <button type="button" onclick="applyEventFilters()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
       </div>
-      <button type="button" onclick="triggerPullFromDice()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Pull from Dice & Eventbrite</button>
+      <button type="button" onclick="triggerPullFromDice()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Pull from Dice, Eventbrite & CrowdVolt</button>
       <button type="button" onclick="openAddEventModal(null)" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add event (form)</button>
       <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>
     </div>
@@ -99,6 +99,7 @@
         <select name="platform" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
           <option value="Dice">Dice</option>
           <option value="Eventbrite">Eventbrite</option>
+          <option value="Crowdvolt">CrowdVolt</option>
           <option value="Manual">Manual</option>
         </select>
         <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Description</label>
@@ -122,6 +123,7 @@
         <select name="platform" id="add-by-url-platform" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input">
           <option value="Dice">Dice</option>
           <option value="Eventbrite">Eventbrite</option>
+          <option value="Crowdvolt">CrowdVolt</option>
           <option value="Manual">Manual</option>
         </select>
         <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #C97C5D;">Continue to form</button>

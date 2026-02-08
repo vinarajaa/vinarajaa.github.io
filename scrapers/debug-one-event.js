@@ -7,13 +7,13 @@
  *   node debug-one-event.js "https://www.eventbrite.com/e/xxxx"
  *   DEBUG_EVENT_URL="https://..." node debug-one-event.js
  *
- * Supports either Dice or Eventbrite; HTML is always saved to debug-event.html (in current directory).
+ * Supports Dice, Eventbrite, or CrowdVolt; HTML is always saved to debug-event.html (in current directory).
  */
 
 const url = process.env.DEBUG_EVENT_URL || process.argv[2];
 if (!url) {
   console.error("Usage: node debug-one-event.js <event-url>");
-  console.error("  Event URL can be Dice (dice.fm) or Eventbrite (eventbrite.com).");
+  console.error("  Event URL can be Dice (dice.fm), Eventbrite (eventbrite.com), or CrowdVolt (crowdvolt.com).");
   console.error("  Or: DEBUG_EVENT_URL=<url> node debug-one-event.js");
   process.exit(1);
 }
@@ -32,6 +32,11 @@ const HEADERS = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
     "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
     "Referer": "https://www.eventbrite.com/"
+  },
+  crowdvolt: {
+    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Referer": "https://www.crowdvolt.com/"
   }
 };
 
@@ -40,14 +45,16 @@ const OUT_FILE = "debug-event.html";
 async function main() {
   const isDice = url.includes("dice.fm");
   const isEventbrite = url.includes("eventbrite.com");
-  if (!isDice && !isEventbrite) {
-    console.error("URL must be from dice.fm or eventbrite.com");
+  const isCrowdvolt = url.includes("crowdvolt.com");
+  if (!isDice && !isEventbrite && !isCrowdvolt) {
+    console.error("URL must be from dice.fm, eventbrite.com, or crowdvolt.com");
     process.exit(1);
   }
 
-  const platform = isDice ? "dice" : "eventbrite";
+  const platform = isDice ? "dice" : isEventbrite ? "eventbrite" : "crowdvolt";
   const headers = HEADERS[platform];
-  console.log("Fetching " + (isDice ? "Dice" : "Eventbrite") + " event:", url);
+  const platformName = isDice ? "Dice" : isEventbrite ? "Eventbrite" : "CrowdVolt";
+  console.log("Fetching " + platformName + " event:", url);
 
   const res = await fetch(url, { headers });
   const html = await res.text();
@@ -59,9 +66,12 @@ async function main() {
   if (isDice) {
     const { fetchEventDetails } = require("./dice-nyc.js");
     details = await fetchEventDetails(url);
-  } else {
+  } else if (isEventbrite) {
     const { fetchEventbriteEventDetails } = require("./eventbrite-nyc.js");
     details = await fetchEventbriteEventDetails(url);
+  } else {
+    const { fetchCrowdvoltEventDetails } = require("./crowdvolt-nyc.js");
+    details = await fetchCrowdvoltEventDetails(url);
   }
 
   console.log("\n--- Parsed data ---");

@@ -42,7 +42,7 @@ function normalizeTime(str) {
   return str.trim() || null;
 }
 
-function extractEventsFromHtml(html, baseUrl) {
+function extractEventsFromHtml(html, baseUrl, onProgress) {
   const $ = cheerio.load(html);
   const events = [];
   const seen = new Set();
@@ -110,6 +110,7 @@ function extractEventsFromHtml(html, baseUrl) {
       link: href,
       platform: PLATFORM
     });
+    if (onProgress) onProgress(events.length);
   });
 
   // Fallback: look for __NEXT_DATA__ or similar JSON in script tags (Dice may use Next.js)
@@ -158,6 +159,7 @@ function extractEventsFromHtml(html, baseUrl) {
             link,
             platform: PLATFORM
           });
+          if (onProgress) onProgress(events.length);
         });
       }
     } catch (_) {}
@@ -404,7 +406,8 @@ function sleep(ms) {
   return new Promise(function (resolve) { setTimeout(resolve, ms); });
 }
 
-async function scrapeDiceNy() {
+async function scrapeDiceNy(opts) {
+  const onProgress = opts && opts.onProgress ? function (c, d) { opts.onProgress("Dice", c, d); } : null;
   let lastError;
   for (const url of DICE_NYC_URLS) {
     try {
@@ -414,7 +417,7 @@ async function scrapeDiceNy() {
         continue;
       }
       const html = await res.text();
-      let events = extractEventsFromHtml(html, url);
+      let events = extractEventsFromHtml(html, url, onProgress);
       if (events.length === 0) continue;
 
       function hasStreetAddress(ev) {
@@ -454,6 +457,7 @@ async function scrapeDiceNy() {
       for (var i = 0; i < Math.min(needDetails.length, maxFetchFirst); i++) {
         const ev = needDetails[i];
         fetched.add(ev.link);
+        if (onProgress) onProgress(events.length, "details " + (i + 1) + "/" + Math.min(needDetails.length, maxFetchFirst));
         const details = await fetchEventDetails(ev.link);
         applyDetails(ev, details);
         await sleep(90);
@@ -495,9 +499,9 @@ async function pushToEventsApi(events) {
   return { inserted, skipped };
 }
 
-async function main() {
+async function main(opts) {
   console.log("Scraping Dice.fm NYC...");
-  const events = await scrapeDiceNy();
+  const events = await scrapeDiceNy(opts || {});
   console.log("Found", events.length, "events");
   if (events.length === 0) {
     console.log("No events parsed. Dice may use client-side rendering; check NYC_EVENTS_SETUP.md for Puppeteer option.");

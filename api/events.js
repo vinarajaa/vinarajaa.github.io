@@ -39,7 +39,17 @@ async function handlePost(sql, body) {
       const row = await sql`
         INSERT INTO events (title, date, time, address, neighborhood, venue, image_url, price, link, platform, description)
         VALUES (${title}, ${date}, ${ev.time || null}, ${ev.address || null}, ${ev.neighborhood || null}, ${ev.venue || null}, ${ev.image_url || null}, ${ev.price || null}, ${link}, ${platform}, ${ev.description || null})
-        ON CONFLICT (link) DO NOTHING
+        ON CONFLICT (link) DO UPDATE SET
+          title = EXCLUDED.title,
+          date = EXCLUDED.date,
+          time = COALESCE(EXCLUDED.time, events.time),
+          address = COALESCE(EXCLUDED.address, events.address),
+          neighborhood = COALESCE(EXCLUDED.neighborhood, events.neighborhood),
+          venue = COALESCE(EXCLUDED.venue, events.venue),
+          image_url = COALESCE(EXCLUDED.image_url, events.image_url),
+          price = COALESCE(EXCLUDED.price, events.price),
+          platform = EXCLUDED.platform,
+          description = COALESCE(EXCLUDED.description, events.description)
         RETURNING id, title, date, time, address, neighborhood, venue, image_url, price, link, platform, description, created_at
       `;
       if (row && row[0]) inserted.push(row[0]);
