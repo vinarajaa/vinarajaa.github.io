@@ -269,6 +269,7 @@ async function fetchEventDetails(link) {
     let venue = null;
     let address = null;
     let price = null;
+    let image_url = null;
 
     $('script#__NEXT_DATA__').each(function () {
       try {
@@ -295,8 +296,22 @@ async function fetchEventDetails(link) {
         if (address) address = normalizeAddressLine(address) || address;
         if (event.price_display) price = String(event.price_display).slice(0, 100);
         if (event.free && !price) price = "Free";
+        const img = event.image_url || event.image || event.hero_image || (event.picture && event.picture.url) || (event.images && event.images[0] && event.images[0].url);
+        if (img && typeof img === "string" && img.startsWith("http")) image_url = img.trim().slice(0, 500);
       } catch (_) {}
     });
+
+    // Flyer: link rel="preload" as="image" imagesrcset (first URL from dice-media.imgix.net)
+    if (!image_url) {
+      const preload = $('link[rel="preload"][as="image"]').attr("imagesrcset");
+      if (preload && typeof preload === "string") {
+        const first = preload.split(",")[0];
+        if (first) {
+          const url = first.replace(/\s+1x$/i, "").trim();
+          if (url && url.indexOf("dice-media.imgix.net") >= 0) image_url = url.slice(0, 500);
+        }
+      }
+    }
 
     // Dice event page: Venue block with EventDetailsVenue__Address (span) and venue name in h2
     const venueAddressEl = $("[class*='EventDetailsVenue__Address']");
@@ -371,7 +386,7 @@ async function fetchEventDetails(link) {
       const m = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/(\d{1,2}:\d{2})\s*(?:[AP]\.?M\.?|p\.m\.|a\.m\.)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
       if (m) time = m[1].trim().slice(0, 50);
     }
-    return { time, venue, address, price };
+    return { time, venue, address, price, image_url };
   } catch (_) {
     return null;
   }
@@ -423,6 +438,7 @@ async function scrapeDiceNy() {
         if (!details) return;
         if (details.time) ev.time = details.time;
         if (details.venue) ev.venue = String(details.venue).slice(0, 200);
+        if (details.image_url) ev.image_url = String(details.image_url).slice(0, 500);
         if (details.address && /\d{5}/.test(details.address)) {
           var addr = normalizeAddressLine(details.address);
           if (!addr) addr = details.address;

@@ -95,7 +95,7 @@ function renderEventsTable(list) {
   var tbody = get("eventsTable");
   if (!tbody) return;
   if (!list || list.length === 0) {
-    tbody.innerHTML = "<tr><td colspan=\"10\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
+    tbody.innerHTML = "<tr><td colspan=\"11\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
     return;
   }
   tbody.innerHTML = list.map(function (e) {
@@ -118,7 +118,13 @@ function renderEventsTable(list) {
     var platform = (e.platform || "—");
     var link = (e.link || "#");
     var title = (e.title || "Untitled").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    var imgCell = "—";
+    if (e.image_url && e.image_url.indexOf("http") === 0) {
+      var safeImg = (e.image_url || "").replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
+      imgCell = "<a href=\"" + safeImg + "\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"" + safeImg + "\" alt=\"\" class=\"rounded object-cover\" style=\"width:48px;height:48px;\"></a>";
+    }
     return "<tr class=\"border-b\" style=\"border-color: #C89F9C;\">" +
+      "<td class=\"p-2\" style=\"border-color: rgba(0,0,0,0.06);\">" + imgCell + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + title + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + date + "</td>" +
       "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + time + "</td>" +
