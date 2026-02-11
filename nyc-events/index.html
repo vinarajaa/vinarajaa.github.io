@@ -7,7 +7,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;0,9..144,700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
@@ -23,8 +23,8 @@
       --glass-border: rgba(234, 99, 140, 0.35);
       --glass-highlight: rgba(255, 255, 255, 0.06);
     }
-    body.db-page { font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.5; letter-spacing: 0.01em; color: #FFD9DA; }
-    .db-page-header h1 { font-family: 'Fraunces', serif; font-weight: 700; letter-spacing: -0.02em; }
+    body.db-page { font-family: 'IBM Plex Mono', 'SF Mono', Consolas, monospace; line-height: 1.5; letter-spacing: 0.02em; color: #FFD9DA; }
+    .db-page-header h1 { font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
     .db-page-header p { letter-spacing: 0.02em; }
     .db-action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .db-action-btn:active { transform: translateY(0); }
@@ -47,6 +47,8 @@
     .db-page-header h1 {
       color: #FFD9DA;
       text-shadow: 0 0 24px rgba(234, 99, 140, 0.2);
+      font-weight: 400;
+      text-transform: uppercase;
     }
     .db-page-header p {
       color: #EA638C;
@@ -112,8 +114,8 @@
       padding: 0.5rem 0.75rem 0.625rem;
     }
     .event-card__title {
-      font-family: 'Fraunces', serif;
-      font-weight: 600;
+      font-weight: 400;
+      text-transform: uppercase;
       font-size: 0.9375rem;
       line-height: 1.4;
       color: #FFD9DA;
@@ -405,7 +407,7 @@
       background: linear-gradient(135deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
     }
     .event-detail-modal__body { padding: 1.25rem; }
-    .event-detail-modal__title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: #FFD9DA; margin: 0 0 0.75rem; line-height: 1.3; }
+    .event-detail-modal__title { font-size: 1.25rem; font-weight: 400; text-transform: uppercase; color: #FFD9DA; margin: 0 0 0.75rem; line-height: 1.3; }
     .event-detail-modal__meta { font-size: 0.8125rem; color: #EA638C; margin-bottom: 0.75rem; }
     .event-detail-modal__meta span { display: block; }
     .event-detail-modal__description { font-size: 0.875rem; color: #FFD9DA; line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
@@ -436,7 +438,7 @@
       border: 1px solid var(--glass-border);
       box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 16px 48px rgba(0, 0, 0, 0.4);
     }
-    .db-modal--glass h2 { color: #EA638C !important; }
+    .db-modal--glass h2 { color: #EA638C !important; font-weight: 400 !important; text-transform: uppercase; letter-spacing: 0.06em; }
     .db-modal--glass p, .db-modal--glass label { color: #FFD9DA !important; }
     .db-modal-overlay .db-modal-content {
       transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -460,14 +462,21 @@
       transform: translateY(0);
     }
 
-    /* Homepage section (above browse) */
+    /* Homepage section: full viewport, full width */
     .home-section {
-      padding: 2rem 0 3rem;
+      min-height: 100vh;
+      padding: 2rem 0 4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
     .home-section .content-wrap {
-      max-width: 36rem;
-      margin-left: auto;
-      margin-right: auto;
+      width: 100%;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    @media (min-width: 768px) {
+      .home-section .content-wrap { padding-left: 3rem; padding-right: 3rem; }
     }
     .home-search {
       width: 100%;
@@ -482,12 +491,12 @@
     }
     .home-search::placeholder { color: #EA638C; opacity: 0.7; }
     .home-section-title {
-      font-family: 'Fraunces', serif;
       font-size: 0.875rem;
-      font-weight: 600;
+      font-weight: 400;
+      text-transform: uppercase;
       color: #EA638C;
       margin-bottom: 0.75rem;
-      letter-spacing: 0.02em;
+      letter-spacing: 0.08em;
     }
     .home-date-btns {
       display: flex;
@@ -532,7 +541,9 @@
       padding: 1rem 1.5rem;
       border-radius: 1rem;
       font-size: 1.0625rem;
-      font-weight: 700;
+      font-weight: 400;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
       text-align: center;
       background: #EA638C;
       color: #FFD9DA;
@@ -552,14 +563,14 @@
 <body class="db-page" style="background-color: #0a0a0c; color: #FFD9DA;">
   <header class="db-page-header text-center py-10 border-b" style="border-color: rgba(234, 99, 140, 0.4);">
     <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
-      <h1 class="text-4xl font-bold tracking-tight">NYC Events</h1>
+      <h1 class="text-4xl tracking-tight">NYC Events</h1>
       <p class="mt-2 text-sm">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
     </div>
   </header>
 
   <section class="home-section" aria-label="Quick access">
-    <div class="content-wrap px-6 md:px-12">
-      <input type="search" class="home-search" placeholder="Search events…" aria-label="Search events" id="homeSearch" />
+    <div class="content-wrap">
+      <input type="search" class="home-search" placeholder="try singles events or Thursday" aria-label="Search events" id="homeSearch" />
       <h2 class="home-section-title">View by date</h2>
       <div class="home-date-btns" role="group" aria-label="View by date">
         <button type="button" class="home-date-btn" data-date="today">Today</button>
@@ -688,7 +699,7 @@
   <div id="add-event-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
     <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeAddEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4">Add event</h2>
+      <h2 class="text-xl mb-4">Add event</h2>
       <form id="addEventForm" onsubmit="return handleAddEventSubmit(event)">
         <label class="block mb-1 text-sm font-medium" style="color: #30343F;">Title <span style="color: #89023E;">*</span></label>
         <input type="text" name="title" placeholder="Event name" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
@@ -725,7 +736,7 @@
   <div id="add-by-url-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
     <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeAddByUrlModal()">×</button>
-      <h2 class="text-xl font-bold mb-4">Add event by URL</h2>
+      <h2 class="text-xl mb-4">Add event by URL</h2>
       <p class="text-sm mb-4">Paste the event URL and platform. Then fill the rest in the next form.</p>
       <form id="addByUrlForm" onsubmit="return handleAddByUrlSubmit(event)">
         <label class="block mb-1 text-sm font-medium" style="color: #30343F;">Event URL <span style="color: #89023E;">*</span></label>
@@ -746,7 +757,7 @@
   <div id="delete-event-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
     <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeDeleteEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4">Delete event</h2>
+      <h2 class="text-xl mb-4">Delete event</h2>
       <p class="mb-6">Delete <span id="delete-event-title"></span>?</p>
       <div class="flex gap-3">
         <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="color: #30343F; background-color: rgba(234, 99, 140, 0.5);">Cancel</button>
@@ -759,7 +770,7 @@
   <div id="pull-dice-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
     <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closePullFromDiceModal()">×</button>
-      <h2 class="text-xl font-bold mb-2">Pull from Dice</h2>
+      <h2 class="text-xl mb-2">Pull from Dice</h2>
       <p class="text-sm mb-4">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
 
       <div class="rounded-xl p-4 border mb-4" style="border-color: rgba(234, 99, 140, 0.5); background-color: #FFD9DA;">
