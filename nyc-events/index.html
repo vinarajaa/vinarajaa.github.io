@@ -33,35 +33,60 @@
     }
     .db-modal input::placeholder, .db-modal textarea::placeholder { color: #8AA8A1; opacity: 0.8; }
     header.db-page-header {
-      background: transparent;
+      background: rgba(203, 203, 212, 0.5);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-radius: 0 0 1.25rem 1.25rem;
     }
-    .db-modal-overlay { background: rgba(5, 6, 9, 0.5); overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem; }
+    .db-page-header h1 {
+      text-shadow: 0 2px 4px rgba(136, 90, 137, 0.12), 0 4px 12px rgba(136, 90, 137, 0.06);
+    }
+    .db-modal-overlay { background: rgba(136, 90, 137, 0.35); overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
     .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
 
+    #eventsGridWrap {
+      background: rgba(203, 203, 212, 0.5);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+
+    /* 3D grid context */
     .events-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 1.5rem;
       padding: 1rem 0;
+      perspective: 1400px;
     }
     .event-card {
       position: relative;
       border-radius: 1.25rem;
       overflow: hidden;
-      background: #D1B490;
-      border: 1px solid #8AA8A1;
-      box-shadow: 0 2px 12px rgba(136, 90, 137, 0.12);
-      transition: box-shadow 0.3s ease, transform 0.35s ease, border-color 0.2s ease;
+      background: rgba(209, 180, 144, 0.75);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(138, 168, 161, 0.6);
+      box-shadow:
+        0 1px 2px rgba(136, 90, 137, 0.06),
+        0 4px 8px rgba(136, 90, 137, 0.08),
+        0 12px 24px rgba(136, 90, 137, 0.1);
+      transform-style: preserve-3d;
+      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease, border-color 0.2s ease;
     }
     .event-card:hover {
-      box-shadow: 0 8px 32px rgba(136, 90, 137, 0.2);
-      border-color: #885A89;
+      transform: translateY(-10px) translateZ(20px) rotateX(3deg);
+      box-shadow:
+        0 4px 8px rgba(136, 90, 137, 0.1),
+        0 12px 24px rgba(136, 90, 137, 0.14),
+        0 24px 48px rgba(136, 90, 137, 0.2);
+      border-color: rgba(136, 90, 137, 0.8);
     }
     .event-card__image-wrap {
       position: relative;
       aspect-ratio: 16/10;
-      background: #8AA8A1;
+      background: rgba(138, 168, 161, 0.9);
       overflow: hidden;
+      transform: translateZ(0);
     }
     .event-card__image {
       width: 100%;
@@ -154,10 +179,12 @@
       gap: 0.75rem 1rem;
       padding: 0.875rem 1.25rem;
       margin: 1.5rem 0;
-      background: #D1B490;
-      border: 1px solid #8AA8A1;
+      background: rgba(209, 180, 144, 0.7);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(138, 168, 161, 0.5);
       border-radius: 1rem;
-      box-shadow: none;
+      box-shadow: 0 4px 24px rgba(136, 90, 137, 0.08);
     }
     .events-nav__filters {
       display: flex;
@@ -184,35 +211,38 @@
       border-radius: 0.5rem;
       font-size: 0.875rem;
       font-weight: 600;
-      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
       border: none;
       cursor: pointer;
+      transform-style: preserve-3d;
+      box-shadow: 0 2px 4px rgba(136, 90, 137, 0.12);
     }
-    .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-1px); }
+    .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-2px) translateZ(4px); box-shadow: 0 4px 12px rgba(136, 90, 137, 0.18); }
+    .events-nav .db-nav-btn:active { transform: translateY(0) translateZ(0); box-shadow: 0 1px 2px rgba(136, 90, 137, 0.15); }
     .events-nav .db-nav-btn--filter {
-      background: #F5D0C5;
+      background: rgba(203, 203, 212, 0.8);
       color: #885A89;
-      border: 1px solid #8AA8A1;
+      border: 1px solid rgba(138, 168, 161, 0.6);
     }
     .events-nav .db-nav-btn--primary {
-      background: #8AA8A1;
-      color: #F5D0C5;
+      background: rgba(238, 123, 48, 0.95);
+      color: #CBCBD4;
     }
     .events-nav .db-nav-btn--accent {
-      background: #885A89;
-      color: #F5D0C5;
+      background: rgba(136, 90, 137, 0.9);
+      color: #CBCBD4;
     }
     .events-nav .db-nav-btn--secondary {
-      background: rgba(119, 73, 54, 0.35);
+      background: rgba(138, 168, 161, 0.4);
       color: #885A89;
-      border: 1px solid rgba(158, 25, 70, 0.5);
+      border: 1px solid rgba(138, 168, 161, 0.6);
     }
     .events-nav select, .events-nav input[type="date"], .events-nav input[type="text"] {
       padding: 0.4rem 0.6rem;
       border-radius: 0.5rem;
       font-size: 0.8125rem;
-      border: 1px solid #8AA8A1;
-      background: #F5D0C5;
+      border: 1px solid rgba(138, 168, 161, 0.6);
+      background: rgba(203, 203, 212, 0.75);
       color: #885A89;
     }
     .events-nav__static {
@@ -256,10 +286,12 @@
       margin-top: 0.25rem;
       min-width: 10rem;
       padding: 0.5rem;
-      background: #D1B490;
+      background: rgba(209, 180, 144, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 0.5rem;
-      border: 1px solid #8AA8A1;
-      box-shadow: 0 8px 24px rgba(5, 6, 9, 0.15);
+      border: 1px solid rgba(138, 168, 161, 0.5);
+      box-shadow: 0 8px 32px rgba(136, 90, 137, 0.2);
       z-index: 20;
       display: none;
     }
@@ -290,10 +322,12 @@
       left: 0;
       margin-top: 0.5rem;
       padding: 1rem;
-      background: #D1B490;
+      background: rgba(209, 180, 144, 0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
       border-radius: 0.75rem;
-      border: 1px solid #8AA8A1;
-      box-shadow: 0 8px 24px rgba(5, 6, 9, 0.15);
+      border: 1px solid rgba(138, 168, 161, 0.5);
+      box-shadow: 0 8px 32px rgba(136, 90, 137, 0.2);
       z-index: 20;
       display: none;
       min-width: 18rem;
@@ -306,9 +340,9 @@
     .event-detail-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(5, 6, 9, 0.5);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      background: rgba(136, 90, 137, 0.35);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       z-index: 100;
       display: flex;
       align-items: center;
@@ -316,25 +350,33 @@
       padding: 1.5rem;
       opacity: 0;
       visibility: hidden;
-      transition: opacity 0.25s ease, visibility 0.25s ease;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     .event-detail-modal-overlay.is-open {
       opacity: 1;
       visibility: visible;
     }
     .event-detail-modal {
-      background: #D1B490;
+      background: rgba(209, 180, 144, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: 1rem;
-      border: 2px solid #8AA8A1;
-      box-shadow: 0 24px 48px rgba(136, 90, 137, 0.25);
+      border: 1px solid rgba(138, 168, 161, 0.6);
+      box-shadow:
+        0 8px 16px rgba(136, 90, 137, 0.12),
+        0 24px 48px rgba(136, 90, 137, 0.22);
       max-width: 420px;
       width: 100%;
       max-height: calc(100vh - 3rem);
       overflow-y: auto;
-      transform: scale(0.96);
-      transition: transform 0.25s ease;
+      transform: scale(0.92) translateZ(-20px);
+      opacity: 0;
+      transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
     }
-    .event-detail-modal-overlay.is-open .event-detail-modal { transform: scale(1); }
+    .event-detail-modal-overlay.is-open .event-detail-modal {
+      transform: scale(1) translateZ(0);
+      opacity: 1;
+    }
     .event-detail-modal__image {
       width: 100%;
       aspect-ratio: 16/10;
@@ -367,6 +409,36 @@
     .event-detail-modal__actions .btn-go:hover { background: #885A89; color: #CBCBD4; }
     .event-detail-modal__actions .btn-close { background: #885A89; color: #CBCBD4; }
     .event-detail-modal__actions .btn-close:hover { background: #8AA8A1; color: #CBCBD4; }
+
+    /* Glass modals (Add event, Add by URL, Delete, Pull) */
+    .db-modal-content.db-modal--glass {
+      background: rgba(209, 180, 144, 0.88) !important;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(138, 168, 161, 0.6);
+      box-shadow: 0 8px 24px rgba(136, 90, 137, 0.15), 0 24px 48px rgba(136, 90, 137, 0.2);
+    }
+    .db-modal-overlay .db-modal-content {
+      transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    }
+
+    /* 3D-style primary buttons in modals */
+    .db-modal button[type="submit"],
+    .db-modal .btn-go,
+    .db-modal .btn-close,
+    .db-modal-content button.flex-1 {
+      box-shadow: 0 2px 6px rgba(136, 90, 137, 0.2);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .db-modal button[type="submit"]:hover,
+    .db-modal .btn-go:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(136, 90, 137, 0.25);
+    }
+    .db-modal button[type="submit"]:active,
+    .db-modal .btn-go:active {
+      transform: translateY(0);
+    }
   </style>
 </head>
 <body class="db-page" style="background-color: #CBCBD4; color: #885A89;">
@@ -453,7 +525,7 @@
       </div>
     </nav>
 
-    <div id="eventsGridWrap" class="rounded-2xl min-h-[320px]" style="background-color: #CBCBD4;">
+    <div id="eventsGridWrap" class="rounded-2xl min-h-[320px]">
       <div id="eventsGrid" class="events-grid"></div>
       <p id="eventsGridEmpty" class="hidden text-center py-12" style="color: #885A89;">No events match. Add one or adjust filters.</p>
     </div>
@@ -481,7 +553,7 @@
 
   <!-- Add event (full form) -->
   <div id="add-event-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
+    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #885A89;" onclick="closeAddEventModal()">×</button>
       <h2 class="text-xl font-bold mb-4" style="color: #885A89;">Add event</h2>
       <form id="addEventForm" onsubmit="return handleAddEventSubmit(event)">
@@ -518,7 +590,7 @@
 
   <!-- Add by URL (opens same form with URL + platform prefilled) -->
   <div id="add-by-url-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
+    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #885A89;" onclick="closeAddByUrlModal()">×</button>
       <h2 class="text-xl font-bold mb-4" style="color: #885A89;">Add event by URL</h2>
       <p class="text-sm mb-4" style="color: #885A89;">Paste the event URL and platform. Then fill the rest in the next form.</p>
@@ -552,7 +624,7 @@
 
   <!-- Pull from Dice (manual trigger instructions) -->
   <div id="pull-dice-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
+    <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: #D1B490; color: #885A89; border-color: #8AA8A1;">
       <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #885A89;" onclick="closePullFromDiceModal()">×</button>
       <h2 class="text-xl font-bold mb-2" style="color: #885A89;">Pull from Dice</h2>
       <p class="text-sm mb-4" style="color: #885A89;">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
