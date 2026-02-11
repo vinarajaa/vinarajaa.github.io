@@ -58,13 +58,9 @@
     }
     .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
 
-    /* Glass grid wrap on black */
+    /* Card section: no background, cards sit on page */
     #eventsGridWrap {
-      background: rgba(255, 217, 218, 0.04);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 1.5rem;
-      border: 1px solid var(--glass-border);
+      background: transparent;
     }
 
     /* 3D grid + taller glass cards */
@@ -205,10 +201,10 @@
       width: 100%;
       height: 100%;
     }
-    /* Liquid glass nav (full width; inner has max-width + padding) */
+    /* Nav: space below header, then padding below bar */
     .events-nav {
+      margin-top: 1.5rem;
       padding: 0 0 1rem 0;
-      margin: 0;
     }
     .events-nav .events-nav__inner {
       display: flex;
