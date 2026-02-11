@@ -67,6 +67,8 @@
     .events-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-auto-rows: minmax(0, auto);
+      align-items: start;
       gap: 1.5rem;
       padding: 1rem 0;
       perspective: 1200px;
@@ -109,10 +111,11 @@
         0 8px 24px rgba(0, 0, 0, 0.4),
         0 24px 48px rgba(234, 99, 140, 0.15);
     }
-    /* Taller card image (more length) */
+    /* Taller card image (portrait so cards aren’t flattened) */
     .event-card__image-wrap {
       position: relative;
-      aspect-ratio: 4/3;
+      aspect-ratio: 3/4;
+      min-height: 200px;
       background: linear-gradient(145deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
       overflow: hidden;
       transform: translateZ(0);
@@ -124,7 +127,7 @@
       display: block;
     }
     .event-card__title-wrap {
-      padding: 1rem 1.25rem 1.25rem;
+      padding: 1.125rem 1.25rem 1.375rem;
     }
     .event-card__title {
       font-family: 'Fraunces', serif;
