@@ -174,52 +174,77 @@ function applyClientFilters() {
   return list;
 }
 
+function escapeHtml(s) {
+  if (!s) return "";
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
 function renderEventsTable(list) {
-  var tbody = get("eventsTable");
-  if (!tbody) return;
+  var grid = get("eventsGrid");
+  var emptyEl = get("eventsGridEmpty");
+  if (!grid) return;
   if (!list || list.length === 0) {
-    tbody.innerHTML = "<tr><td colspan=\"11\" class=\"p-4 text-center\" style=\"color: #C89F9C;\">No events match. Add one or adjust filters.</td></tr>";
+    grid.innerHTML = "";
+    if (emptyEl) {
+      emptyEl.classList.remove("hidden");
+    }
     return;
   }
-  tbody.innerHTML = list.map(function (e) {
+  if (emptyEl) emptyEl.classList.add("hidden");
+  grid.innerHTML = list.map(function (e) {
     var dateVal = e.date;
-    var date = "—";
+    var dateStr = "—";
     if (dateVal != null && dateVal !== "") {
       var s = String(dateVal).trim();
       var parts = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
       if (parts) {
         var d = new Date(parseInt(parts[1], 10), parseInt(parts[2], 10) - 1, parseInt(parts[3], 10));
-        if (!isNaN(d.getTime())) date = DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
-        else date = s.slice(0, 10);
-      } else date = s.slice(0, 10) || "—";
+        if (!isNaN(d.getTime())) dateStr = DAYS[d.getDay()] + " " + MONTHS[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+        else dateStr = s.slice(0, 10);
+      } else dateStr = s.slice(0, 10) || "—";
     }
-    var time = (e.time || "—");
-    var neighborhood = (e.neighborhood || "—");
-    var venue = (e.venue || "—");
-    var address = (e.address || "—");
+    var time = e.time || "—";
+    var venue = e.venue || "—";
+    var neighborhood = e.neighborhood || "—";
     var price = formatPriceDisplay(e.price);
-    var platform = (e.platform || "—");
-    var link = (e.link || "#");
-    var title = (e.title || "Untitled").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-    var imgCell = "—";
-    if (e.image_url && e.image_url.indexOf("http") === 0) {
-      var safeImg = (e.image_url || "").replace(/"/g, "&quot;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
-      imgCell = "<a href=\"" + safeImg + "\" target=\"_blank\" rel=\"noopener noreferrer\"><img src=\"" + safeImg + "\" alt=\"\" class=\"rounded object-cover\" style=\"width:48px;height:48px;\"></a>";
-    }
-    return "<tr class=\"border-b\" style=\"border-color: #C89F9C;\">" +
-      "<td class=\"p-2\" style=\"border-color: rgba(0,0,0,0.06);\">" + imgCell + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + title + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + date + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + time + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + neighborhood + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + venue + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + address + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + price + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\">" + platform + "</td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\"><a href=\"" + link.replace(/"/g, "&quot;") + "\" target=\"_blank\" rel=\"noopener noreferrer\" class=\"underline\" style=\"color: #C97C5D;\">Open</a></td>" +
-      "<td class=\"p-3\" style=\"border-color: rgba(0,0,0,0.06);\"><button type=\"button\" onclick=\"openDeleteEventModal('" + (e.id || "").replace(/'/g, "\\'") + "','" + (e.title || "").replace(/'/g, "\\'") + "')\" class=\"text-sm font-semibold\" style=\"color: #B36A5E;\">Delete</button></td>" +
-      "</tr>";
+    var link = (e.link || "#").replace(/"/g, "&quot;");
+    var title = escapeHtml(e.title || "Untitled");
+    var id = escapeHtml(String(e.id || ""));
+    var titleAttr = escapeHtml(e.title || "Untitled");
+    var imgSrc = (e.image_url && e.image_url.indexOf("http") === 0) ? e.image_url.replace(/"/g, "&quot;") : "";
+    var imgTag = imgSrc
+      ? "<img class=\"event-card__image\" src=\"" + imgSrc + "\" alt=\"\" loading=\"lazy\">"
+      : "<div class=\"event-card__image event-card__image--placeholder\"></div>";
+    return (
+      "<article class=\"event-card\" data-event-id=\"" + id + "\">" +
+        "<div class=\"event-card__image-wrap\">" + imgTag + "</div>" +
+        "<div class=\"event-card__title-wrap\"><h3 class=\"event-card__title\">" + title + "</h3></div>" +
+        "<div class=\"event-card__overlay\">" +
+          "<div class=\"event-card__overlay-meta\">" +
+            ((dateStr !== "—" || time !== "—") ? "<span>" + escapeHtml(dateStr) + (time !== "—" ? " · " + escapeHtml(time) : "") + "</span>" : "") +
+            (venue !== "—" ? "<span>" + escapeHtml(venue) + "</span>" : "") +
+            (neighborhood !== "—" ? "<span>" + escapeHtml(neighborhood) + "</span>" : "") +
+            (price !== "—" ? "<span>" + escapeHtml(price) + "</span>" : "") +
+          "</div>" +
+          "<div class=\"event-card__overlay-actions\">" +
+            "<a href=\"" + link + "\" target=\"_blank\" rel=\"noopener noreferrer\">Get tickets</a>" +
+            "<button type=\"button\" onclick=\"openDeleteEventModal('" + id.replace(/'/g, "\\'") + "','" + titleAttr.replace(/'/g, "\\'") + "')\">Delete</button>" +
+          "</div>" +
+        "</div>" +
+      "</article>"
+    );
   }).join("");
+  if (typeof gsap !== "undefined") {
+    gsap.fromTo(".event-card", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: "power2.out" });
+    document.querySelectorAll(".event-card").forEach(function (card) {
+      card.addEventListener("mouseenter", function () {
+        gsap.to(card, { scale: 1.03, duration: 0.3, ease: "power2.out" });
+      });
+      card.addEventListener("mouseleave", function () {
+        gsap.to(card, { scale: 1, duration: 0.3, ease: "power2.out" });
+      });
+    });
+  }
 }
 
 function populateFilterDropdowns() {

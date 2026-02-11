@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <title>NYC Events</title>
-  <script defer src="events.js?v=5"></script>
+  <script defer src="events.js?v=6"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" defer></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
@@ -18,6 +19,108 @@
     .db-modal input::placeholder, .db-modal textarea::placeholder { color: #C89F9C; opacity: 0.9; }
     .db-modal-overlay { overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem; }
     .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem 0;
+    }
+    .event-card {
+      position: relative;
+      border-radius: 1rem;
+      overflow: hidden;
+      background: var(--db-peach);
+      box-shadow: 0 4px 20px rgba(179, 106, 94, 0.15);
+      transition: box-shadow 0.3s ease, transform 0.35s ease;
+    }
+    .event-card:hover {
+      box-shadow: 0 12px 40px rgba(179, 106, 94, 0.25);
+    }
+    .event-card__image-wrap {
+      position: relative;
+      aspect-ratio: 3/4;
+      background: linear-gradient(145deg, #C89F9C 0%, #B36A5E 100%);
+      overflow: hidden;
+    }
+    .event-card__image {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .event-card__title-wrap {
+      padding: 0.875rem 1rem;
+      min-height: 3.5rem;
+    }
+    .event-card__title {
+      font-weight: 600;
+      font-size: 1rem;
+      line-height: 1.3;
+      color: var(--db-text);
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .event-card__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(39, 15, 3, 0.92) 0%, rgba(39, 15, 3, 0.4) 50%, transparent 100%);
+      color: #EEE2DF;
+      padding: 1.25rem 1rem 1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      pointer-events: none;
+    }
+    .event-card:hover .event-card__overlay {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .event-card__overlay-meta {
+      font-size: 0.8125rem;
+      line-height: 1.5;
+      margin-bottom: 0.75rem;
+    }
+    .event-card__overlay-meta span { display: block; }
+    .event-card__overlay-actions {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .event-card__overlay-actions a {
+      flex: 1;
+      text-align: center;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      background: var(--db-terracotta);
+      color: #fff;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .event-card__overlay-actions a:hover { background: var(--db-brick); transform: scale(1.02); }
+    .event-card__overlay-actions button {
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      background: rgba(255,255,255,0.2);
+      color: #EEE2DF;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .event-card__overlay-actions button:hover { background: rgba(200, 159, 156, 0.6); }
+    .event-card__image--placeholder {
+      background: linear-gradient(145deg, #C89F9C 0%, #B36A5E 100%);
+      width: 100%;
+      height: 100%;
+    }
   </style>
 </head>
 <body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
@@ -69,27 +172,9 @@
       <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>
     </div>
 
-    <div class="rounded-2xl overflow-hidden border" style="background-color: #EEE2DF; border-color: #C89F9C; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.2);">
-      <div class="overflow-auto" style="max-height: 520px;">
-        <table class="w-full text-left text-sm" style="background-color: #EEE2DF;">
-          <thead class="sticky top-0 z-10 text-white font-semibold border-b" style="background-color: #B36A5E; border-color: #C89F9C;">
-            <tr class="uppercase text-xs tracking-wide">
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Image</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Title</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Date</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Time</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Area</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Venue</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Address</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Price</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Platform</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Link</th>
-              <th class="p-3">Delete</th>
-            </tr>
-          </thead>
-          <tbody id="eventsTable" class="text-[#270f03] font-normal"></tbody>
-        </table>
-      </div>
+    <div id="eventsGridWrap" class="rounded-2xl border min-h-[320px]" style="background-color: #EEE2DF; border-color: #C89F9C; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.2);">
+      <div id="eventsGrid" class="events-grid"></div>
+      <p id="eventsGridEmpty" class="hidden text-center py-12 text-[#C89F9C]">No events match. Add one or adjust filters.</p>
     </div>
 
     <p id="events-status" class="text-center text-sm py-2" style="color: #C89F9C;" aria-live="polite">Loading…</p>
