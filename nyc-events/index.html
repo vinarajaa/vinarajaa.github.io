@@ -16,17 +16,16 @@
       --electric-sapphire: #4D6CFA;
       --bg-page: #F0E6EC;
       --bg-card: #EBE0E8;
-      --bg-nav: rgba(158, 25, 70, 0.09);
-      --bg-input: rgba(255, 255, 255, 0.85);
+      --bg-input: #F5EFF5;
     }
     .db-action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .db-action-btn:active { transform: translateY(0); }
     .db-modal input, .db-modal textarea, .db-modal select {
-      background-color: var(--bg-input);
-      color: var(--charcoal);
-      border-color: var(--cherry-rose);
+      background-color: #F5EFF5;
+      color: #595457;
+      border-color: #9E1946;
     }
-    .db-modal input::placeholder, .db-modal textarea::placeholder { color: var(--cherry-rose); opacity: 0.8; }
+    .db-modal input::placeholder, .db-modal textarea::placeholder { color: #9E1946; opacity: 0.8; }
     header.db-page-header {
       background: linear-gradient(180deg, rgba(158, 25, 70, 0.06) 0%, transparent 100%);
     }
@@ -43,19 +42,19 @@
       position: relative;
       border-radius: 1rem;
       overflow: hidden;
-      background: var(--bg-card);
+      background: #EBE0E8;
       border: 1px solid rgba(158, 25, 70, 0.3);
       box-shadow: 0 4px 20px rgba(89, 84, 87, 0.15);
       transition: box-shadow 0.3s ease, transform 0.35s ease, border-color 0.2s ease;
     }
     .event-card:hover {
       box-shadow: 0 12px 40px rgba(113, 6, 39, 0.25);
-      border-color: var(--cherry-rose);
+      border-color: #9E1946;
     }
     .event-card__image-wrap {
       position: relative;
       aspect-ratio: 16/10;
-      background: linear-gradient(145deg, var(--cherry-rose) 0%, var(--dark-amaranth) 100%);
+      background: linear-gradient(145deg, #9E1946 0%, #710627 100%);
       overflow: hidden;
     }
     .event-card__image {
@@ -71,7 +70,7 @@
       font-weight: 600;
       font-size: 0.9375rem;
       line-height: 1.3;
-      color: var(--charcoal);
+      color: #595457;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
@@ -80,7 +79,7 @@
     .event-card__meta {
       font-size: 0.75rem;
       line-height: 1.4;
-      color: var(--cherry-rose);
+      color: #9E1946;
       margin-top: 0.25rem;
     }
     .event-card__overlay {
@@ -118,12 +117,12 @@
       border-radius: 0.5rem;
       font-weight: 600;
       font-size: 0.875rem;
-      background: var(--electric-sapphire);
+      background: #4D6CFA;
       color: #fff;
       text-decoration: none;
       transition: background 0.2s, transform 0.2s;
     }
-    .event-card__overlay-actions a:hover { background: var(--dark-amaranth); transform: scale(1.02); }
+    .event-card__overlay-actions a:hover { background: #710627; transform: scale(1.02); }
     .event-card__overlay-actions button {
       padding: 0.5rem 0.75rem;
       border-radius: 0.5rem;
@@ -137,7 +136,7 @@
     }
     .event-card__overlay-actions button:hover { background: rgba(158, 25, 70, 0.5); }
     .event-card__image--placeholder {
-      background: linear-gradient(145deg, var(--cherry-rose) 0%, var(--dark-amaranth) 100%);
+      background: linear-gradient(145deg, #9E1946 0%, #710627 100%);
       width: 100%;
       height: 100%;
     }
@@ -162,7 +161,7 @@
     .events-nav__divider {
       width: 1px;
       height: 1.75rem;
-      background: var(--cherry-rose);
+      background: #9E1946;
       opacity: 0.5;
       margin: 0 0.25rem;
       flex-shrink: 0;
@@ -184,30 +183,30 @@
     }
     .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-1px); }
     .events-nav .db-nav-btn--filter {
-      background: var(--bg-input);
-      color: var(--charcoal);
-      border: 1px solid var(--cherry-rose);
+      background: #F5EFF5;
+      color: #595457;
+      border: 1px solid #9E1946;
     }
     .events-nav .db-nav-btn--primary {
-      background: var(--electric-sapphire);
+      background: #4D6CFA;
       color: #fff;
     }
     .events-nav .db-nav-btn--accent {
-      background: var(--dark-amaranth);
+      background: #710627;
       color: #fff;
     }
     .events-nav .db-nav-btn--secondary {
       background: rgba(158, 25, 70, 0.22);
-      color: var(--charcoal);
+      color: #595457;
       border: 1px solid rgba(158, 25, 70, 0.5);
     }
     .events-nav select, .events-nav input[type="date"], .events-nav input[type="text"] {
       padding: 0.4rem 0.6rem;
       border-radius: 0.5rem;
       font-size: 0.8125rem;
-      border: 1px solid var(--cherry-rose);
-      background: var(--bg-input);
-      color: var(--charcoal);
+      border: 1px solid #9E1946;
+      background: #F5EFF5;
+      color: #595457;
     }
     .events-nav__static {
       display: flex;
@@ -221,7 +220,7 @@
       gap: 0;
       border-radius: 0.5rem;
       overflow: hidden;
-      border: 1px solid var(--cherry-rose);
+      border: 1px solid #9E1946;
     }
     .events-nav__time-btns .db-nav-btn {
       border-radius: 0;
@@ -230,7 +229,7 @@
     }
     .events-nav__time-btns .db-nav-btn:last-child { border-right: none; }
     .events-nav__time-btns .db-nav-btn.nav-btn--active {
-      background: var(--cherry-rose);
+      background: #9E1946;
       color: #fff;
     }
     .events-nav__filter-trigger {
@@ -250,9 +249,9 @@
       margin-top: 0.25rem;
       min-width: 10rem;
       padding: 0.5rem;
-      background: var(--bg-card);
+      background: #EBE0E8;
       border-radius: 0.5rem;
-      border: 1px solid var(--cherry-rose);
+      border: 1px solid #9E1946;
       box-shadow: 0 8px 24px rgba(89, 84, 87, 0.15);
       z-index: 20;
       display: none;
@@ -268,7 +267,7 @@
       font-weight: 500;
       border: none;
       background: none;
-      color: var(--charcoal);
+      color: #595457;
       cursor: pointer;
       text-decoration: none;
     }
@@ -284,16 +283,16 @@
       left: 0;
       margin-top: 0.5rem;
       padding: 1rem;
-      background: var(--bg-card);
+      background: #EBE0E8;
       border-radius: 0.75rem;
-      border: 1px solid var(--cherry-rose);
+      border: 1px solid #9E1946;
       box-shadow: 0 8px 24px rgba(89, 84, 87, 0.15);
       z-index: 20;
       display: none;
       min-width: 18rem;
     }
     .events-nav__filter-wrap.is-open .events-nav__filter-panel { display: block; }
-    .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--dark-amaranth); margin-bottom: 0.25rem; }
+    .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: #710627; margin-bottom: 0.25rem; }
     .events-nav__filter-panel .filter-row { margin-bottom: 0.75rem; }
     .events-nav__filter-panel .filter-row:last-of-type { margin-bottom: 0; }
     .event-card { cursor: pointer; }
@@ -317,9 +316,9 @@
       visibility: visible;
     }
     .event-detail-modal {
-      background: linear-gradient(180deg, var(--bg-card) 0%, rgba(235, 224, 232, 0.98) 100%);
+      background: linear-gradient(180deg, #EBE0E8 0%, rgba(235, 224, 232, 0.98) 100%);
       border-radius: 1rem;
-      border: 2px solid var(--cherry-rose);
+      border: 2px solid #9E1946;
       box-shadow: 0 24px 48px rgba(113, 6, 39, 0.2);
       max-width: 420px;
       width: 100%;
@@ -337,13 +336,13 @@
       border-radius: 1rem 1rem 0 0;
     }
     .event-detail-modal__image-wrap {
-      background: linear-gradient(145deg, var(--cherry-rose) 0%, var(--dark-amaranth) 100%);
+      background: linear-gradient(145deg, #9E1946 0%, #710627 100%);
     }
     .event-detail-modal__body { padding: 1.25rem; }
-    .event-detail-modal__title { font-size: 1.25rem; font-weight: 700; color: var(--charcoal); margin: 0 0 0.75rem; line-height: 1.3; }
-    .event-detail-modal__meta { font-size: 0.8125rem; color: var(--dark-amaranth); margin-bottom: 0.75rem; }
+    .event-detail-modal__title { font-size: 1.25rem; font-weight: 700; color: #595457; margin: 0 0 0.75rem; line-height: 1.3; }
+    .event-detail-modal__meta { font-size: 0.8125rem; color: #710627; margin-bottom: 0.75rem; }
     .event-detail-modal__meta span { display: block; }
-    .event-detail-modal__description { font-size: 0.875rem; color: var(--charcoal); line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
+    .event-detail-modal__description { font-size: 0.875rem; color: #595457; line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
     .event-detail-modal__actions { display: flex; gap: 0.5rem; }
     .event-detail-modal__actions a, .event-detail-modal__actions button {
       flex: 1;
@@ -357,17 +356,17 @@
       cursor: pointer;
       transition: background 0.2s;
     }
-    .event-detail-modal__actions .btn-go { background: var(--electric-sapphire); color: #fff; }
-    .event-detail-modal__actions .btn-go:hover { background: #3d5af5; color: #fff; }
-    .event-detail-modal__actions .btn-close { background: var(--cherry-rose); color: #fff; }
-    .event-detail-modal__actions .btn-close:hover { background: var(--dark-amaranth); color: #fff; }
+    .event-detail-modal__actions .btn-go { background: #4D6CFA; color: #fff; }
+    .event-detail-modal__actions .btn-go:hover { background: #710627; color: #fff; }
+    .event-detail-modal__actions .btn-close { background: #9E1946; color: #fff; }
+    .event-detail-modal__actions .btn-close:hover { background: #710627; color: #fff; }
   </style>
 </head>
-<body class="db-page" style="background-color: var(--bg-page); color: var(--charcoal); font-family: 'Worksans', Arial, sans-serif;">
+<body class="db-page" style="background-color: #F0E6EC; color: #595457; font-family: 'Worksans', Arial, sans-serif;">
   <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
-    <header class="db-page-header text-center py-10 border-b" style="border-color: var(--cherry-rose);">
-      <h1 class="text-4xl font-bold tracking-tight" style="color: var(--dark-amaranth);">NYC Events</h1>
-      <p class="mt-2 text-sm" style="color: var(--cherry-rose);">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
+    <header class="db-page-header text-center py-10 border-b" style="border-color: #9E1946;">
+      <h1 class="text-4xl font-bold tracking-tight" style="color: #710627;">NYC Events</h1>
+      <p class="mt-2 text-sm" style="color: #9E1946;">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
     </header>
 
     <nav class="events-nav" aria-label="Events filters and actions">
@@ -447,9 +446,9 @@
       </div>
     </nav>
 
-    <div id="eventsGridWrap" class="rounded-2xl border min-h-[320px]" style="background-color: var(--bg-page); border-color: var(--cherry-rose); box-shadow: 0 6px 24px rgba(89, 84, 87, 0.12);">
+    <div id="eventsGridWrap" class="rounded-2xl min-h-[320px]" style="background-color: #F0E6EC;">
       <div id="eventsGrid" class="events-grid"></div>
-      <p id="eventsGridEmpty" class="hidden text-center py-12" style="color: var(--cherry-rose);">No events match. Add one or adjust filters.</p>
+      <p id="eventsGridEmpty" class="hidden text-center py-12" style="color: #9E1946;">No events match. Add one or adjust filters.</p>
     </div>
 
   <!-- Event detail modal -->
@@ -470,99 +469,99 @@
     </div>
   </div>
 
-    <p id="events-status" class="text-center text-sm py-2" style="color: var(--cherry-rose);" aria-live="polite">Loading…</p>
+    <p id="events-status" class="text-center text-sm py-2" style="color: #9E1946;" aria-live="polite">Loading…</p>
   </div>
 
   <!-- Add event (full form) -->
   <div id="add-event-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: var(--bg-card); color: var(--charcoal); border-color: var(--cherry-rose);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: var(--dark-amaranth);" onclick="closeAddEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: var(--dark-amaranth);">Add event</h2>
+    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EBE0E8; color: #595457; border-color: #9E1946;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #710627;" onclick="closeAddEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #710627;">Add event</h2>
       <form id="addEventForm" onsubmit="return handleAddEventSubmit(event)">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Title <span style="color: var(--dark-amaranth);">*</span></label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Title <span style="color: #710627;">*</span></label>
         <input type="text" name="title" placeholder="Event name" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Date <span style="color: var(--dark-amaranth);">*</span></label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Date <span style="color: #710627;">*</span></label>
         <input type="date" name="date" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Time</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Time</label>
         <input type="text" name="time" placeholder="e.g. 19:00 or 7:00 PM" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Area</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Area</label>
         <input type="text" name="neighborhood" placeholder="e.g. Williamsburg, Flatiron, Midtown" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Venue</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Venue</label>
         <input type="text" name="venue" placeholder="e.g. REFUGE, Brooklyn Steel" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Address</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Address</label>
         <input type="text" name="address" placeholder="e.g. 123 Main St" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Price</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Price</label>
         <input type="text" name="price" placeholder="e.g. Free, $20" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Link <span style="color: var(--dark-amaranth);">*</span></label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Link <span style="color: #710627;">*</span></label>
         <input type="url" name="link" placeholder="https://..." class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Platform</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Platform</label>
         <select name="platform" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input">
           <option value="Dice">Dice</option>
           <option value="Eventbrite">Eventbrite</option>
           <option value="Crowdvolt">CrowdVolt</option>
           <option value="Manual">Manual</option>
         </select>
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Description</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Description</label>
         <textarea name="description" placeholder="Optional" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input"></textarea>
-        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: var(--electric-sapphire);">Add event</button>
+        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #4D6CFA;">Add event</button>
       </form>
-      <div id="add-event-success" class="hidden mt-4 text-sm" style="color: var(--dark-amaranth);">✅ Event added.</div>
+      <div id="add-event-success" class="hidden mt-4 text-sm" style="color: #710627;">✅ Event added.</div>
     </div>
   </div>
 
   <!-- Add by URL (opens same form with URL + platform prefilled) -->
   <div id="add-by-url-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: var(--bg-card); color: var(--charcoal); border-color: var(--cherry-rose);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: var(--dark-amaranth);" onclick="closeAddByUrlModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: var(--dark-amaranth);">Add event by URL</h2>
-      <p class="text-sm mb-4" style="color: var(--charcoal);">Paste the event URL and platform. Then fill the rest in the next form.</p>
+    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EBE0E8; color: #595457; border-color: #9E1946;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #710627;" onclick="closeAddByUrlModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #710627;">Add event by URL</h2>
+      <p class="text-sm mb-4" style="color: #595457;">Paste the event URL and platform. Then fill the rest in the next form.</p>
       <form id="addByUrlForm" onsubmit="return handleAddByUrlSubmit(event)">
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Event URL <span style="color: var(--dark-amaranth);">*</span></label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Event URL <span style="color: #710627;">*</span></label>
         <input type="url" name="url" id="add-by-url-input" placeholder="https://dice.fm/..." class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: var(--dark-amaranth);">Platform</label>
+        <label class="block mb-1 text-sm font-medium" style="color: #710627;">Platform</label>
         <select name="platform" id="add-by-url-platform" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input">
           <option value="Dice">Dice</option>
           <option value="Eventbrite">Eventbrite</option>
           <option value="Crowdvolt">CrowdVolt</option>
           <option value="Manual">Manual</option>
         </select>
-        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: var(--electric-sapphire);">Continue to form</button>
+        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #4D6CFA;">Continue to form</button>
       </form>
     </div>
   </div>
 
   <!-- Delete confirm -->
   <div id="delete-event-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: var(--bg-card); color: var(--charcoal); border-color: var(--cherry-rose);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: var(--dark-amaranth);" onclick="closeDeleteEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: var(--dark-amaranth);">Delete event</h2>
+    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EBE0E8; color: #595457; border-color: #9E1946;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #710627;" onclick="closeDeleteEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4" style="color: #710627;">Delete event</h2>
       <p class="mb-6">Delete <span id="delete-event-title"></span>?</p>
       <div class="flex gap-3">
-        <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="color: var(--charcoal); background-color: var(--cherry-rose);">Cancel</button>
-        <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold text-white transition" style="background-color: var(--dark-amaranth);">Delete</button>
+        <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="color: #595457; background-color: #9E1946;">Cancel</button>
+        <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold text-white transition" style="background-color: #710627;">Delete</button>
       </div>
     </div>
   </div>
 
   <!-- Pull from Dice (manual trigger instructions) -->
   <div id="pull-dice-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: var(--bg-card); color: var(--charcoal); border-color: var(--cherry-rose);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: var(--dark-amaranth);" onclick="closePullFromDiceModal()">×</button>
-      <h2 class="text-xl font-bold mb-2" style="color: var(--dark-amaranth);">Pull from Dice</h2>
-      <p class="text-sm mb-4" style="color: var(--charcoal);">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
+    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: #EBE0E8; color: #595457; border-color: #9E1946;">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #710627;" onclick="closePullFromDiceModal()">×</button>
+      <h2 class="text-xl font-bold mb-2" style="color: #710627;">Pull from Dice</h2>
+      <p class="text-sm mb-4" style="color: #595457;">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
 
-      <div class="rounded-xl p-4 border mb-4" style="border-color: var(--cherry-rose); background-color: var(--bg-page);">
-        <div class="font-semibold mb-2" style="color: var(--dark-amaranth);">Option A: Run locally</div>
-        <pre class="text-xs whitespace-pre-wrap" style="color: var(--charcoal); background:#FAF6F4; border: 1px solid var(--cherry-rose); padding:10px; border-radius:12px;">cd scrapers
+      <div class="rounded-xl p-4 border mb-4" style="border-color: #9E1946; background-color: #F0E6EC;">
+        <div class="font-semibold mb-2" style="color: #710627;">Option A: Run locally</div>
+        <pre class="text-xs whitespace-pre-wrap" style="color: #595457; background:#FAF6F4; border: 1px solid #9E1946; padding:10px; border-radius:12px;">cd scrapers
 npm install
 EVENTS_API_URL=https://your-project.vercel.app node run.js</pre>
       </div>
 
-      <div class="rounded-xl p-4 border" style="border-color: var(--cherry-rose); background-color: var(--bg-page);">
-        <div class="font-semibold mb-2" style="color: var(--dark-amaranth);">Option B: Run on GitHub (manual)</div>
+      <div class="rounded-xl p-4 border" style="border-color: #9E1946; background-color: #F0E6EC;">
+        <div class="font-semibold mb-2" style="color: #710627;">Option B: Run on GitHub (manual)</div>
         <p class="text-sm mb-3">Set repo secrets first, then click “Run workflow”.</p>
-        <a id="pull-dice-actions-link" href="#" target="_blank" rel="noopener noreferrer" class="underline font-semibold" style="color: var(--electric-sapphire);">Open GitHub Actions workflow</a>
-        <p id="pull-dice-actions-hint" class="text-xs mt-2" style="color: var(--cherry-rose);">If this link is blank, set `GITHUB_REPO` in `nyc-events/events.js`.</p>
+        <a id="pull-dice-actions-link" href="#" target="_blank" rel="noopener noreferrer" class="underline font-semibold" style="color: #4D6CFA;">Open GitHub Actions workflow</a>
+        <p id="pull-dice-actions-hint" class="text-xs mt-2" style="color: #9E1946;">If this link is blank, set `GITHUB_REPO` in `nyc-events/events.js`.</p>
       </div>
     </div>
   </div>
