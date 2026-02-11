@@ -272,9 +272,10 @@ function populateFilterDropdowns() {
   venues.sort();
   platforms.sort();
   var nhSelect = get("filterNeighborhood");
-  if (nhSelect) {
-    nhSelect.innerHTML = "<option value=\"\">All areas</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
-  }
+  var areaOpts = "<option value=\"\">All areas</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
+  if (nhSelect) nhSelect.innerHTML = areaOpts;
+  var homeArea = get("homeArea");
+  if (homeArea) homeArea.innerHTML = areaOpts;
   var venSelect = get("filterVenue");
   if (venSelect) {
     venSelect.innerHTML = "<option value=\"\">All venues</option>" + venues.map(function (v) { return "<option value=\"" + v.replace(/"/g, "&quot;") + "\">" + v.replace(/</g, "&lt;") + "</option>"; }).join("");

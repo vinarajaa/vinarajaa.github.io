@@ -11,6 +11,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
+    html { scroll-behavior: smooth; }
     :root.db-page {
       --soft-blush: #FFD9DA;
       --blush-rose: #EA638C;
@@ -458,6 +459,94 @@
     .db-modal .btn-go:active {
       transform: translateY(0);
     }
+
+    /* Homepage section (above browse) */
+    .home-section {
+      padding: 2rem 0 3rem;
+    }
+    .home-section .content-wrap {
+      max-width: 36rem;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .home-search {
+      width: 100%;
+      padding: 0.875rem 1.25rem;
+      border-radius: 1rem;
+      font-size: 1rem;
+      border: 1px solid rgba(234, 99, 140, 0.4);
+      background: rgba(26, 26, 30, 0.8);
+      color: #FFD9DA;
+      margin-bottom: 2rem;
+      box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.3), -6px -6px 16px rgba(255, 217, 218, 0.04);
+    }
+    .home-search::placeholder { color: #EA638C; opacity: 0.7; }
+    .home-section-title {
+      font-family: 'Fraunces', serif;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #EA638C;
+      margin-bottom: 0.75rem;
+      letter-spacing: 0.02em;
+    }
+    .home-date-btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .home-date-btns .home-date-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.75rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: 1px solid rgba(234, 99, 140, 0.4);
+      background: rgba(26, 26, 30, 0.8);
+      color: #FFD9DA;
+      cursor: pointer;
+      transition: box-shadow 0.2s, transform 0.2s;
+      box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 217, 218, 0.04);
+    }
+    .home-date-btns .home-date-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 8px 8px 18px rgba(0, 0, 0, 0.35), -5px -5px 14px rgba(255, 217, 218, 0.08);
+    }
+    .home-area-wrap {
+      width: 100%;
+      margin-bottom: 2rem;
+    }
+    .home-area-wrap select {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      font-size: 0.9375rem;
+      border: 1px solid rgba(234, 99, 140, 0.4);
+      background: rgba(26, 26, 30, 0.8);
+      color: #FFD9DA;
+      cursor: pointer;
+      box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 217, 218, 0.04);
+    }
+    .browse-all-btn {
+      display: block;
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border-radius: 1rem;
+      font-size: 1.0625rem;
+      font-weight: 700;
+      text-align: center;
+      background: #EA638C;
+      color: #FFD9DA;
+      border: none;
+      cursor: pointer;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+      box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.35), -4px -4px 14px rgba(255, 255, 255, 0.04);
+    }
+    .browse-all-btn:hover {
+      background: #c94d73;
+      transform: translateY(-2px);
+      box-shadow: 10px 10px 24px rgba(0, 0, 0, 0.4);
+    }
   </style>
 </head>
 <body class="db-page" style="background-color: #0a0a0c; color: #FFD9DA;">
@@ -468,6 +557,26 @@
     </div>
   </header>
 
+  <section class="home-section" aria-label="Quick access">
+    <div class="content-wrap px-6 md:px-12">
+      <input type="search" class="home-search" placeholder="Search events…" aria-label="Search events" id="homeSearch" />
+      <h2 class="home-section-title">View by date</h2>
+      <div class="home-date-btns" role="group" aria-label="View by date">
+        <button type="button" class="home-date-btn" data-date="today">Today</button>
+        <button type="button" class="home-date-btn" data-date="tomorrow">Tomorrow</button>
+        <button type="button" class="home-date-btn" data-date="week">This week</button>
+      </div>
+      <h2 class="home-section-title">Area</h2>
+      <div class="home-area-wrap">
+        <select id="homeArea" class="home-area-select" aria-label="Area" title="Area">
+          <option value="">All areas</option>
+        </select>
+      </div>
+      <a href="#browse-section" class="browse-all-btn" id="browseAllBtn">Browse all</a>
+    </div>
+  </section>
+
+  <section id="browse-section" aria-label="Browse all events">
   <nav class="events-nav" aria-label="Events filters and actions">
     <div class="events-nav__inner px-6 md:px-12 max-w-screen-2xl mx-auto">
       <div class="events-nav__static">
@@ -555,6 +664,7 @@
 
     <p id="events-status" class="text-center text-sm py-2" style="color: #EA638C;" aria-live="polite">Loading…</p>
   </div>
+  </section>
 
   <!-- Event detail modal -->
   <div id="eventDetailModal" class="event-detail-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="eventDetailModalTitle" onclick="closeEventModal()">
