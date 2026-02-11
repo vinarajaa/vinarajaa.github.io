@@ -192,6 +192,93 @@
       background: rgba(255,255,255,0.8);
       color: #270f03;
     }
+    .events-nav__static {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+    }
+    .events-nav__time-btns {
+      display: flex;
+      align-items: center;
+      gap: 0;
+      border-radius: 0.5rem;
+      overflow: hidden;
+      border: 1px solid rgba(200, 159, 156, 0.6);
+    }
+    .events-nav__time-btns .db-nav-btn {
+      border-radius: 0;
+      border: none;
+      border-right: 1px solid rgba(200, 159, 156, 0.4);
+    }
+    .events-nav__time-btns .db-nav-btn:last-child { border-right: none; }
+    .events-nav__time-btns .db-nav-btn.nav-btn--active {
+      background: rgba(200, 159, 156, 0.5);
+      color: #270f03;
+    }
+    .events-nav__filter-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.5rem 0.75rem;
+    }
+    .events-nav__filter-trigger svg { width: 1rem; height: 1rem; }
+    .nav-dropdown {
+      position: relative;
+    }
+    .nav-dropdown__panel {
+      position: absolute;
+      top: 100%;
+      right: 0;
+      margin-top: 0.25rem;
+      min-width: 10rem;
+      padding: 0.5rem;
+      background: #fff;
+      border-radius: 0.5rem;
+      border: 1px solid rgba(200, 159, 156, 0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      z-index: 20;
+      display: none;
+    }
+    .nav-dropdown.is-open .nav-dropdown__panel { display: block; }
+    .nav-dropdown__panel a, .nav-dropdown__panel button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 0.5rem 0.75rem;
+      border-radius: 0.35rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: none;
+      background: none;
+      color: #270f03;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .nav-dropdown__panel a:hover, .nav-dropdown__panel button:hover {
+      background: rgba(200, 159, 156, 0.2);
+    }
+    .events-nav__filter-wrap {
+      position: relative;
+    }
+    .events-nav__filter-panel {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      margin-top: 0.5rem;
+      padding: 1rem;
+      background: #fff;
+      border-radius: 0.75rem;
+      border: 1px solid rgba(200, 159, 156, 0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      z-index: 20;
+      display: none;
+      min-width: 18rem;
+    }
+    .events-nav__filter-wrap.is-open .events-nav__filter-panel { display: block; }
+    .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: #B36A5E; margin-bottom: 0.25rem; }
+    .events-nav__filter-panel .filter-row { margin-bottom: 0.75rem; }
+    .events-nav__filter-panel .filter-row:last-of-type { margin-bottom: 0; }
   </style>
 </head>
 <body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
@@ -202,49 +289,82 @@
     </header>
 
     <nav class="events-nav" aria-label="Events filters and actions">
-      <div class="events-nav__filters">
-        <button type="button" onclick="toggleEventFilters()" class="db-nav-btn db-nav-btn--filter db-action-btn">Filter</button>
-        <div id="eventFilterControls" class="hidden flex flex-wrap items-center gap-2">
-          <span class="text-xs font-medium uppercase tracking-wide" style="color: #B36A5E;">Date</span>
-          <button type="button" id="dateBtnToday" onclick="setDateFilter('today')" class="date-filter-btn db-nav-btn db-nav-btn--filter">Today</button>
-          <button type="button" id="dateBtnWeek" onclick="setDateFilter('week')" class="date-filter-btn db-nav-btn db-nav-btn--filter">This week</button>
-          <button type="button" id="dateBtnRange" onclick="setDateFilter('range')" class="date-filter-btn db-nav-btn db-nav-btn--filter">Range</button>
-          <div id="dateRangeInputs" class="hidden flex items-center gap-2">
-            <input type="date" id="filterDateFrom" placeholder="From" />
-            <input type="date" id="filterDateTo" placeholder="To" />
+      <div class="events-nav__static">
+        <button type="button" id="dateBtnToday" onclick="setDateFilter('today')" class="date-filter-btn db-nav-btn db-nav-btn--filter">Today</button>
+        <button type="button" id="dateBtnWeek" onclick="setDateFilter('week')" class="date-filter-btn db-nav-btn db-nav-btn--filter">This week</button>
+        <div class="events-nav__time-btns" role="group" aria-label="Time of day">
+          <button type="button" data-time="" onclick="setTimeFilter('')" class="db-nav-btn db-nav-btn--filter time-filter-btn nav-btn--active">Any</button>
+          <button type="button" data-time="daytime" onclick="setTimeFilter('daytime')" class="db-nav-btn db-nav-btn--filter time-filter-btn">Daytime</button>
+          <button type="button" data-time="late" onclick="setTimeFilter('late')" class="db-nav-btn db-nav-btn--filter time-filter-btn">Late night</button>
+        </div>
+        <select id="filterNeighborhood" title="Area"></select>
+      </div>
+      <input type="hidden" id="filterTimeOfDay" value="" />
+      <div class="events-nav__divider" aria-hidden="true"></div>
+      <div class="events-nav__filter-wrap" id="eventFilterWrap">
+        <button type="button" onclick="toggleEventFilters()" class="db-nav-btn db-nav-btn--filter events-nav__filter-trigger" aria-expanded="false" aria-haspopup="true" id="eventFilterTrigger">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h10M4 18h7"/></svg>
+          Filter
+        </button>
+        <div id="eventFilterControls" class="events-nav__filter-panel">
+          <div class="filter-row">
+            <label>Date range</label>
+            <div class="flex items-center gap-2 mt-1">
+              <button type="button" id="dateBtnRange" onclick="setDateFilter('range')" class="db-nav-btn db-nav-btn--filter" style="font-size:0.8rem;">Range</button>
+              <div id="dateRangeInputs" class="hidden flex items-center gap-2">
+                <input type="date" id="filterDateFrom" placeholder="From" />
+                <input type="date" id="filterDateTo" placeholder="To" />
+              </div>
+            </div>
           </div>
-          <span class="text-xs font-medium uppercase tracking-wide ml-1" style="color: #B36A5E;">Time</span>
-          <select id="filterTimeOfDay">
-            <option value="">Any</option>
-            <option value="daytime">Daytime</option>
-            <option value="late">Late night</option>
-          </select>
-          <input type="text" id="filterSearch" class="w-36" placeholder="Search" />
-          <select id="filterEventType">
-            <option value="">Type</option>
-            <option value="music">Music</option>
-            <option value="comedy">Comedy</option>
-            <option value="nightlife">Nightlife</option>
-            <option value="arts">Arts</option>
-            <option value="other">Other</option>
-          </select>
-          <select id="filterNeighborhood" title="Area"></select>
-          <select id="filterVenue"></select>
-          <select id="filterPlatform"></select>
-          <select id="filterPrice">
-            <option value="">Price</option>
-            <option value="free">Free</option>
-            <option value="paid">Paid</option>
-          </select>
-          <button type="button" onclick="applyEventFilters()" class="db-nav-btn db-nav-btn--primary">Apply</button>
+          <div class="filter-row">
+            <label>Search</label>
+            <input type="text" id="filterSearch" class="w-full mt-1" placeholder="Title or description" />
+          </div>
+          <div class="filter-row">
+            <label>Type</label>
+            <select id="filterEventType" class="w-full mt-1">
+              <option value="">All types</option>
+              <option value="music">Music</option>
+              <option value="comedy">Comedy</option>
+              <option value="nightlife">Nightlife</option>
+              <option value="arts">Arts</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <label>Venue</label>
+            <select id="filterVenue" class="w-full mt-1"></select>
+          </div>
+          <div class="filter-row">
+            <label>Platform</label>
+            <select id="filterPlatform" class="w-full mt-1"></select>
+          </div>
+          <div class="filter-row">
+            <label>Price</label>
+            <select id="filterPrice" class="w-full mt-1">
+              <option value="">Any</option>
+              <option value="free">Free</option>
+              <option value="paid">Paid</option>
+            </select>
+          </div>
+          <button type="button" onclick="applyEventFilters(); toggleEventFilters();" class="db-nav-btn db-nav-btn--primary w-full mt-2">Apply</button>
         </div>
       </div>
       <div class="events-nav__divider" aria-hidden="true"></div>
-      <div class="events-nav__actions">
-        <button type="button" onclick="deletePastEvents()" class="db-nav-btn db-nav-btn--secondary db-action-btn" title="Remove past events">Delete past</button>
-        <button type="button" onclick="triggerPullFromDice()" class="db-nav-btn db-nav-btn--accent db-action-btn">Pull events</button>
-        <button type="button" onclick="openAddEventModal(null)" class="db-nav-btn db-nav-btn--primary db-action-btn">Add event</button>
-        <button type="button" onclick="openAddByUrlModal()" class="db-nav-btn db-nav-btn--primary db-action-btn">Add by URL</button>
+      <div class="nav-dropdown" id="addDropdown">
+        <button type="button" class="db-nav-btn db-nav-btn--primary" onclick="toggleNavDropdown('addDropdown')" aria-haspopup="true" aria-expanded="false">Add &#9660;</button>
+        <div class="nav-dropdown__panel">
+          <a href="#" onclick="openAddEventModal(null); closeNavDropdown('addDropdown'); return false;">Add event</a>
+          <a href="#" onclick="openAddByUrlModal(); closeNavDropdown('addDropdown'); return false;">Add by URL</a>
+        </div>
+      </div>
+      <div class="nav-dropdown" id="manageDropdown">
+        <button type="button" class="db-nav-btn db-nav-btn--accent" onclick="toggleNavDropdown('manageDropdown')" aria-haspopup="true" aria-expanded="false">Manage &#9660;</button>
+        <div class="nav-dropdown__panel">
+          <button type="button" onclick="triggerPullFromDice(); closeNavDropdown('manageDropdown');">Pull events</button>
+          <button type="button" onclick="deletePastEvents(); closeNavDropdown('manageDropdown');">Delete past</button>
+        </div>
       </div>
     </nav>
 

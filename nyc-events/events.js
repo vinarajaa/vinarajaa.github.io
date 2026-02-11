@@ -283,11 +283,55 @@ function applyEventFilters() {
   setStatus(demoMode ? "Demo mode – " + list.length + " event(s). Set EVENTS_API_URL to use the Vercel backend." : list.length + " event(s).");
 }
 
+function setTimeFilter(value) {
+  var hidden = get("filterTimeOfDay");
+  if (hidden) hidden.value = value || "";
+  document.querySelectorAll(".time-filter-btn").forEach(function (btn) {
+    if ((btn.getAttribute("data-time") || "") === (value || "")) btn.classList.add("nav-btn--active");
+    else btn.classList.remove("nav-btn--active");
+  });
+  applyEventFilters();
+}
+
 function toggleEventFilters() {
-  var el = get("eventFilterControls");
-  if (el) {
-    el.classList.toggle("hidden");
-  }
+  var wrap = get("eventFilterWrap");
+  var trigger = get("eventFilterTrigger");
+  if (wrap) wrap.classList.toggle("is-open");
+  var isOpen = wrap && wrap.classList.contains("is-open");
+  if (trigger) trigger.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  if (isOpen) setTimeout(function () { document.addEventListener("click", closeFilterPanelOnClick); }, 0);
+  else document.removeEventListener("click", closeFilterPanelOnClick);
+}
+function closeFilterPanelOnClick(ev) {
+  var wrap = get("eventFilterWrap");
+  if (wrap && wrap.contains(ev.target)) return;
+  if (wrap) wrap.classList.remove("is-open");
+  var trigger = get("eventFilterTrigger");
+  if (trigger) trigger.setAttribute("aria-expanded", "false");
+  document.removeEventListener("click", closeFilterPanelOnClick);
+}
+
+function toggleNavDropdown(id) {
+  var el = get(id);
+  if (!el) return;
+  var isOpen = el.classList.toggle("is-open");
+  var btn = el.querySelector("button");
+  if (btn) btn.setAttribute("aria-expanded", isOpen ? "true" : "false");
+  if (isOpen) document.addEventListener("click", closeNavDropdownOnClick);
+}
+function closeNavDropdown(id) {
+  var el = get(id);
+  if (el) el.classList.remove("is-open");
+  el?.querySelector("button")?.setAttribute("aria-expanded", "false");
+  document.removeEventListener("click", closeNavDropdownOnClick);
+}
+function closeNavDropdownOnClick(ev) {
+  if (ev.target.closest(".nav-dropdown")) return;
+  document.querySelectorAll(".nav-dropdown.is-open").forEach(function (d) {
+    d.classList.remove("is-open");
+    d.querySelector("button")?.setAttribute("aria-expanded", "false");
+  });
+  document.removeEventListener("click", closeNavDropdownOnClick);
 }
 
 async function deletePastEvents() {
