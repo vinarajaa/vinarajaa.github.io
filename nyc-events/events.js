@@ -215,10 +215,14 @@ function renderEventsTable(list) {
     var imgTag = imgSrc
       ? "<img class=\"event-card__image\" src=\"" + imgSrc + "\" alt=\"\" loading=\"lazy\">"
       : "<div class=\"event-card__image event-card__image--placeholder\"></div>";
+    var metaParts = [];
+    if (neighborhood !== "—") metaParts.push(escapeHtml(neighborhood));
+    if (dateStr !== "—") metaParts.push(escapeHtml(dateStr));
+    var metaLine = metaParts.length ? "<p class=\"event-card__meta\">" + metaParts.join(" · ") + "</p>" : "";
     return (
       "<article class=\"event-card\" data-event-id=\"" + id + "\">" +
         "<div class=\"event-card__image-wrap\">" + imgTag + "</div>" +
-        "<div class=\"event-card__title-wrap\"><h3 class=\"event-card__title\">" + title + "</h3></div>" +
+        "<div class=\"event-card__title-wrap\"><h3 class=\"event-card__title\">" + title + "</h3>" + metaLine + "</div>" +
         "<div class=\"event-card__overlay\">" +
           "<div class=\"event-card__overlay-meta\">" +
             ((dateStr !== "—" || time !== "—") ? "<span>" + escapeHtml(dateStr) + (time !== "—" ? " · " + escapeHtml(time) : "") + "</span>" : "") +

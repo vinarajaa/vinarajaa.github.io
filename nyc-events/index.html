@@ -39,7 +39,7 @@
     }
     .event-card__image-wrap {
       position: relative;
-      aspect-ratio: 3/4;
+      aspect-ratio: 16/10;
       background: linear-gradient(145deg, #C89F9C 0%, #B36A5E 100%);
       overflow: hidden;
     }
@@ -50,18 +50,23 @@
       display: block;
     }
     .event-card__title-wrap {
-      padding: 0.875rem 1rem;
-      min-height: 3.5rem;
+      padding: 0.5rem 0.75rem 0.75rem;
     }
     .event-card__title {
       font-weight: 600;
-      font-size: 1rem;
+      font-size: 0.9375rem;
       line-height: 1.3;
       color: var(--db-text);
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+    }
+    .event-card__meta {
+      font-size: 0.75rem;
+      line-height: 1.4;
+      color: var(--db-rose);
+      margin-top: 0.25rem;
     }
     .event-card__overlay {
       position: absolute;
@@ -130,47 +135,127 @@
       <p class="mt-2 text-sm" style="color: #C89F9C;">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
     </header>
 
-    <div class="flex flex-wrap justify-start items-center gap-3 my-6 py-4 px-4 rounded-2xl" style="background-color: #EED7C5; border: 1px solid #C89F9C;">
-      <button type="button" onclick="toggleEventFilters()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Filter</button>
-      <div id="eventFilterControls" class="hidden flex-wrap items-center gap-3">
-        <span class="text-sm font-medium" style="color: #B36A5E;">Date</span>
-        <button type="button" id="dateBtnToday" onclick="setDateFilter('today')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">Today</button>
-        <button type="button" id="dateBtnWeek" onclick="setDateFilter('week')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">This week</button>
-        <button type="button" id="dateBtnRange" onclick="setDateFilter('range')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">Specific range</button>
-        <div id="dateRangeInputs" class="hidden flex items-center gap-2">
-          <input type="date" id="filterDateFrom" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="From" />
-          <input type="date" id="filterDateTo" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="To" />
+    .events-nav {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.75rem 1rem;
+      padding: 0.875rem 1.25rem;
+      margin: 1.5rem 0;
+      background: linear-gradient(180deg, #F5EDE9 0%, #EED7C5 100%);
+      border: 1px solid rgba(200, 159, 156, 0.5);
+      border-radius: 1rem;
+      box-shadow: 0 2px 12px rgba(179, 106, 94, 0.08);
+    }
+    .events-nav__filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem 0.75rem;
+    }
+    .events-nav__divider {
+      width: 1px;
+      height: 1.75rem;
+      background: rgba(200, 159, 156, 0.4);
+      margin: 0 0.25rem;
+      flex-shrink: 0;
+    }
+    .events-nav__actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .events-nav .db-nav-btn {
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
+      border: none;
+      cursor: pointer;
+    }
+    .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-1px); }
+    .events-nav .db-nav-btn--filter {
+      background: rgba(255,255,255,0.9);
+      color: #270f03;
+      border: 1px solid rgba(200, 159, 156, 0.6);
+    }
+    .events-nav .db-nav-btn--primary {
+      background: #C97C5D;
+      color: #fff;
+    }
+    .events-nav .db-nav-btn--accent {
+      background: #B36A5E;
+      color: #fff;
+    }
+    .events-nav .db-nav-btn--secondary {
+      background: rgba(200, 159, 156, 0.35);
+      color: #270f03;
+    }
+    .events-nav select, .events-nav input[type="date"], .events-nav input[type="text"] {
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.5rem;
+      font-size: 0.8125rem;
+      border: 1px solid rgba(200, 159, 156, 0.5);
+      background: rgba(255,255,255,0.8);
+      color: #270f03;
+    }
+  </style>
+</head>
+<body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
+  <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
+    <header class="text-center py-10 border-b" style="border-color: #C89F9C;">
+      <h1 class="text-4xl font-bold tracking-tight" style="color: #B36A5E;">NYC Events</h1>
+      <p class="mt-2 text-sm" style="color: #C89F9C;">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
+    </header>
+
+    <nav class="events-nav" aria-label="Events filters and actions">
+      <div class="events-nav__filters">
+        <button type="button" onclick="toggleEventFilters()" class="db-nav-btn db-nav-btn--filter db-action-btn">Filter</button>
+        <div id="eventFilterControls" class="hidden flex flex-wrap items-center gap-2">
+          <span class="text-xs font-medium uppercase tracking-wide" style="color: #B36A5E;">Date</span>
+          <button type="button" id="dateBtnToday" onclick="setDateFilter('today')" class="date-filter-btn db-nav-btn db-nav-btn--filter">Today</button>
+          <button type="button" id="dateBtnWeek" onclick="setDateFilter('week')" class="date-filter-btn db-nav-btn db-nav-btn--filter">This week</button>
+          <button type="button" id="dateBtnRange" onclick="setDateFilter('range')" class="date-filter-btn db-nav-btn db-nav-btn--filter">Range</button>
+          <div id="dateRangeInputs" class="hidden flex items-center gap-2">
+            <input type="date" id="filterDateFrom" placeholder="From" />
+            <input type="date" id="filterDateTo" placeholder="To" />
+          </div>
+          <span class="text-xs font-medium uppercase tracking-wide ml-1" style="color: #B36A5E;">Time</span>
+          <select id="filterTimeOfDay">
+            <option value="">Any</option>
+            <option value="daytime">Daytime</option>
+            <option value="late">Late night</option>
+          </select>
+          <input type="text" id="filterSearch" class="w-36" placeholder="Search" />
+          <select id="filterEventType">
+            <option value="">Type</option>
+            <option value="music">Music</option>
+            <option value="comedy">Comedy</option>
+            <option value="nightlife">Nightlife</option>
+            <option value="arts">Arts</option>
+            <option value="other">Other</option>
+          </select>
+          <select id="filterNeighborhood" title="Area"></select>
+          <select id="filterVenue"></select>
+          <select id="filterPlatform"></select>
+          <select id="filterPrice">
+            <option value="">Price</option>
+            <option value="free">Free</option>
+            <option value="paid">Paid</option>
+          </select>
+          <button type="button" onclick="applyEventFilters()" class="db-nav-btn db-nav-btn--primary">Apply</button>
         </div>
-        <span class="text-sm font-medium ml-1" style="color: #B36A5E;">Time</span>
-        <select id="filterTimeOfDay" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
-          <option value="">Any time</option>
-          <option value="daytime">Daytime (6AM–6PM)</option>
-          <option value="late">Late night (10PM–4AM)</option>
-        </select>
-        <input type="text" id="filterSearch" class="p-2 rounded-lg text-[#270f03] text-sm w-40" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="Search title or description" />
-        <select id="filterEventType" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
-          <option value="">All types</option>
-          <option value="music">Music</option>
-          <option value="comedy">Comedy</option>
-          <option value="nightlife">Nightlife</option>
-          <option value="arts">Arts</option>
-          <option value="other">Other</option>
-        </select>
-        <select id="filterNeighborhood" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" title="Area"></select>
-        <select id="filterVenue" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="filterPlatform" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="filterPrice" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
-          <option value="">Any price</option>
-          <option value="free">Free only</option>
-          <option value="paid">Paid</option>
-        </select>
-        <button type="button" onclick="applyEventFilters()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
       </div>
-      <button type="button" onclick="deletePastEvents()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;" title="Remove past events from the database">Delete past events</button>
-      <button type="button" onclick="triggerPullFromDice()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Pull from Dice, Eventbrite & CrowdVolt</button>
-      <button type="button" onclick="openAddEventModal(null)" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add event (form)</button>
-      <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>
-    </div>
+      <div class="events-nav__divider" aria-hidden="true"></div>
+      <div class="events-nav__actions">
+        <button type="button" onclick="deletePastEvents()" class="db-nav-btn db-nav-btn--secondary db-action-btn" title="Remove past events">Delete past</button>
+        <button type="button" onclick="triggerPullFromDice()" class="db-nav-btn db-nav-btn--accent db-action-btn">Pull events</button>
+        <button type="button" onclick="openAddEventModal(null)" class="db-nav-btn db-nav-btn--primary db-action-btn">Add event</button>
+        <button type="button" onclick="openAddByUrlModal()" class="db-nav-btn db-nav-btn--primary db-action-btn">Add by URL</button>
+      </div>
+    </nav>
 
     <div id="eventsGridWrap" class="rounded-2xl border min-h-[320px]" style="background-color: #EEE2DF; border-color: #C89F9C; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.2);">
       <div id="eventsGrid" class="events-grid"></div>
