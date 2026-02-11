@@ -22,6 +22,13 @@
       --glass-fill: rgba(255, 217, 218, 0.08);
       --glass-border: rgba(234, 99, 140, 0.35);
       --glass-highlight: rgba(255, 255, 255, 0.06);
+      /* 3D button (layered pop) */
+      --btn-radius: 0.75em;
+      --btn-raise: 0.2em;
+      --btn-raise-hover: 0.33em;
+      --btn-outline: #89023E;
+      --btn-fill: #EA638C;
+      --btn-fill-dark: #1a1a1e;
     }
     body.db-page { font-family: 'IBM Plex Mono', 'SF Mono', Consolas, monospace; line-height: 1.5; letter-spacing: 0.02em; color: #FFD9DA; }
     .db-page-header h1 { font-weight: 400; text-transform: uppercase; letter-spacing: 0.06em; }
@@ -162,27 +169,46 @@
       flex: 1;
       text-align: center;
       padding: 0.35rem 0.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
+      border-radius: 0.5em;
+      font-weight: 400;
       font-size: 0.75rem;
-      background: #EA638C;
+      background: var(--btn-fill);
       color: #FFD9DA;
+      border: 2px solid var(--btn-outline);
       text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 0.15em 0 0 var(--btn-outline);
+      transform: translateY(-0.15em);
     }
-    .event-card__overlay-actions a:hover { background: #89023E; transform: scale(1.02); }
+    .event-card__overlay-actions a:hover {
+      transform: translateY(-0.25em);
+      box-shadow: 0 0.25em 0 0 var(--btn-outline);
+    }
+    .event-card__overlay-actions a:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--btn-outline);
+    }
     .event-card__overlay-actions button {
       padding: 0.35rem 0.5rem;
-      border-radius: 0.5rem;
+      border-radius: 0.5em;
       font-size: 0.75rem;
-      font-weight: 600;
-      background: rgba(255, 217, 218, 0.25);
+      font-weight: 400;
+      background: var(--btn-fill-dark);
       color: #FFD9DA;
-      border: 1px solid var(--glass-border);
+      border: 2px solid var(--blush-rose);
       cursor: pointer;
-      transition: background 0.2s;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 0.15em 0 0 var(--blush-rose);
+      transform: translateY(-0.15em);
     }
-    .event-card__overlay-actions button:hover { background: rgba(234, 99, 140, 0.4); }
+    .event-card__overlay-actions button:hover {
+      transform: translateY(-0.25em);
+      box-shadow: 0 0.25em 0 0 var(--blush-rose);
+    }
+    .event-card__overlay-actions button:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--blush-rose);
+    }
     .event-card__image--placeholder {
       background: linear-gradient(135deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
       width: 100%;
@@ -227,35 +253,58 @@
     }
     .events-nav .db-nav-btn {
       padding: 0.5rem 1rem;
-      border-radius: 0.75rem;
+      border-radius: var(--btn-radius);
       font-size: 0.875rem;
-      font-weight: 600;
-      transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
-      border: none;
+      font-weight: 400;
+      border: 2px solid var(--btn-outline);
       cursor: pointer;
-      transform-style: preserve-3d;
-      box-shadow: 0 2px 8px rgba(137, 2, 62, 0.1);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
+      transform: translateY(calc(-1 * var(--btn-raise)));
     }
-    .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-2px) translateZ(4px); box-shadow: 0 4px 12px rgba(234, 99, 140, 0.2); }
-    .events-nav .db-nav-btn:active { transform: translateY(0) translateZ(0); box-shadow: 0 1px 2px rgba(137, 2, 62, 0.15); }
+    .events-nav .db-nav-btn:hover {
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+    }
+    .events-nav .db-nav-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--btn-outline);
+    }
     .events-nav .db-nav-btn--filter {
-      background: rgba(255, 217, 218, 0.1);
+      background: var(--btn-fill-dark);
       color: #FFD9DA;
-      border: 1px solid rgba(234, 99, 140, 0.35);
-      backdrop-filter: blur(6px);
+      border-color: var(--blush-rose);
+      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+    }
+    .events-nav .db-nav-btn--filter:hover {
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+    }
+    .events-nav .db-nav-btn--filter:active {
+      box-shadow: 0 2px 0 0 var(--blush-rose);
     }
     .events-nav .db-nav-btn--primary {
-      background: #EA638C;
+      background: var(--btn-fill);
       color: #FFD9DA;
     }
     .events-nav .db-nav-btn--accent {
-      background: #89023E;
+      background: var(--btn-outline);
       color: #FFD9DA;
     }
     .events-nav .db-nav-btn--secondary {
-      background: rgba(234, 99, 140, 0.25);
-      color: #30343F;
-      border: 1px solid rgba(234, 99, 140, 0.4);
+      background: var(--btn-fill-dark);
+      color: #FFD9DA;
+      border-color: var(--blush-rose);
+      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+    }
+    .events-nav .db-nav-btn--secondary:hover {
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+    }
+    .events-nav .db-nav-btn--secondary:active {
+      box-shadow: 0 2px 0 0 var(--blush-rose);
     }
     .events-nav select, .events-nav input[type="date"], .events-nav input[type="text"] {
       padding: 0.4rem 0.6rem;
@@ -287,8 +336,10 @@
     }
     .events-nav__time-btns .db-nav-btn:last-child { border-right: none; }
     .events-nav__time-btns .db-nav-btn.nav-btn--active {
-      background: #EA638C;
+      background: var(--btn-fill);
       color: #0a0a0c;
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--blush-rose);
     }
     .events-nav__filter-trigger {
       display: inline-flex;
@@ -415,19 +466,45 @@
     .event-detail-modal__actions a, .event-detail-modal__actions button {
       flex: 1;
       padding: 0.6rem 1rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
+      border-radius: var(--btn-radius);
+      font-weight: 400;
       font-size: 0.875rem;
       text-align: center;
       text-decoration: none;
-      border: none;
       cursor: pointer;
-      transition: background 0.2s;
     }
-    .event-detail-modal__actions .btn-go { background: #EA638C; color: #FFD9DA; }
-    .event-detail-modal__actions .btn-go:hover { background: #89023E; color: #FFD9DA; }
-    .event-detail-modal__actions .btn-close { background: #89023E; color: #FFD9DA; }
-    .event-detail-modal__actions .btn-close:hover { background: #1B2021; color: #FFD9DA; }
+    .event-detail-modal__actions .btn-go {
+      background: var(--btn-fill);
+      color: #FFD9DA;
+      border: 2px solid var(--btn-outline);
+      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .event-detail-modal__actions .btn-go:hover {
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+    }
+    .event-detail-modal__actions .btn-go:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--btn-outline);
+    }
+    .event-detail-modal__actions .btn-close {
+      background: var(--btn-fill-dark);
+      color: #FFD9DA;
+      border: 2px solid var(--blush-rose);
+      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .event-detail-modal__actions .btn-close:hover {
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+    }
+    .event-detail-modal__actions .btn-close:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--blush-rose);
+    }
 
     /* Glass modals on black */
     .db-modal-content.db-modal--glass {
@@ -444,22 +521,44 @@
       transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    /* 3D-style primary buttons in modals */
+    /* 3D layered buttons in modals */
     .db-modal button[type="submit"],
-    .db-modal .btn-go,
-    .db-modal .btn-close,
-    .db-modal-content button.flex-1 {
-      box-shadow: 0 2px 8px rgba(137, 2, 62, 0.2);
-      transition: transform 0.2s, box-shadow 0.2s;
+    .db-modal #confirm-delete-event-btn {
+      border: 2px solid var(--btn-outline);
+      background: var(--btn-fill);
+      color: #FFD9DA;
+      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
     }
     .db-modal button[type="submit"]:hover,
-    .db-modal .btn-go:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(234, 99, 140, 0.3);
+    .db-modal #confirm-delete-event-btn:hover {
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
     }
     .db-modal button[type="submit"]:active,
-    .db-modal .btn-go:active {
+    .db-modal #confirm-delete-event-btn:active {
       transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--btn-outline);
+    }
+    .db-modal .btn-cancel,
+    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn) {
+      background: var(--btn-fill-dark) !important;
+      color: #FFD9DA !important;
+      border: 2px solid var(--blush-rose) !important;
+      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise)));
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    .db-modal .btn-cancel:hover,
+    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn):hover {
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+    }
+    .db-modal .btn-cancel:active,
+    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn):active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--blush-rose);
     }
 
     /* Homepage section: full viewport, full width */
@@ -509,19 +608,24 @@
     }
     .home-date-btns .home-date-btn {
       padding: 0.5rem 1rem;
-      border-radius: 0.75rem;
+      border-radius: var(--btn-radius);
       font-size: 0.875rem;
-      font-weight: 600;
-      border: 1px solid rgba(234, 99, 140, 0.4);
-      background: rgba(26, 26, 30, 0.8);
+      font-weight: 400;
+      border: 2px solid var(--blush-rose);
+      background: var(--btn-fill-dark);
       color: #FFD9DA;
       cursor: pointer;
-      transition: box-shadow 0.2s, transform 0.2s;
-      box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 217, 218, 0.04);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
+      transform: translateY(calc(-1 * var(--btn-raise)));
     }
     .home-date-btns .home-date-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 8px 8px 18px rgba(0, 0, 0, 0.35), -5px -5px 14px rgba(255, 217, 218, 0.08);
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+    }
+    .home-date-btns .home-date-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--blush-rose);
     }
     .home-area-wrap {
       width: 100%;
@@ -542,24 +646,28 @@
       display: block;
       width: 100%;
       padding: 1rem 1.5rem;
-      border-radius: 1rem;
+      border-radius: var(--btn-radius);
       font-size: 1.0625rem;
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.06em;
       text-align: center;
-      background: #EA638C;
+      background: var(--btn-fill);
       color: #FFD9DA;
-      border: none;
+      border: 2px solid var(--btn-outline);
       cursor: pointer;
       text-decoration: none;
-      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
-      box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.35), -4px -4px 14px rgba(255, 255, 255, 0.04);
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
+      transform: translateY(calc(-1 * var(--btn-raise)));
     }
     .browse-all-btn:hover {
-      background: #c94d73;
-      transform: translateY(-2px);
-      box-shadow: 10px 10px 24px rgba(0, 0, 0, 0.4);
+      transform: translateY(calc(-1 * var(--btn-raise-hover)));
+      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+    }
+    .browse-all-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 0 0 var(--btn-outline);
     }
   </style>
 </head>
@@ -764,7 +872,7 @@
       <p class="mb-6">Delete <span id="delete-event-title"></span>?</p>
       <div class="flex gap-3">
         <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="color: #30343F; background-color: rgba(234, 99, 140, 0.5);">Cancel</button>
-        <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="background-color: #89023E; color: #FFD9DA;">Delete</button>
+        <button type="button" id="confirm-delete-event-btn" class="flex-1 py-2.5 rounded-xl font-semibold transition">Delete</button>
       </div>
     </div>
   </div>
