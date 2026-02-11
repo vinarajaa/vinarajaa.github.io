@@ -17,53 +17,57 @@
       --dark-raspberry: #89023E;
       --jet-black: #30343F;
       --carbon-black: #1B2021;
-      --bg-page: #FFD9DA;
-      --glass-fill: rgba(255, 217, 218, 0.45);
-      --glass-border: rgba(255, 217, 218, 0.7);
-      --glass-highlight: rgba(255, 217, 218, 0.35);
+      --bg-page: #0a0a0c;
+      --glass-fill: rgba(255, 217, 218, 0.08);
+      --glass-border: rgba(234, 99, 140, 0.35);
+      --glass-highlight: rgba(255, 255, 255, 0.06);
     }
-    body.db-page { font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.5; letter-spacing: 0.01em; }
+    body.db-page { font-family: 'DM Sans', system-ui, sans-serif; line-height: 1.5; letter-spacing: 0.01em; color: #FFD9DA; }
     .db-page-header h1 { font-family: 'Fraunces', serif; font-weight: 700; letter-spacing: -0.02em; }
     .db-page-header p { letter-spacing: 0.02em; }
     .db-action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
     .db-action-btn:active { transform: translateY(0); }
     .db-modal input, .db-modal textarea, .db-modal select {
-      background: rgba(255, 217, 218, 0.7);
-      color: #30343F;
-      border: 1px solid rgba(234, 99, 140, 0.35);
-      backdrop-filter: blur(8px);
+      background: rgba(26, 26, 30, 0.8);
+      color: #FFD9DA;
+      border: 1px solid rgba(234, 99, 140, 0.4);
+      backdrop-filter: blur(12px);
     }
-    .db-modal input::placeholder, .db-modal textarea::placeholder { color: #89023E; opacity: 0.7; }
-    /* Liquid glass header */
+    .db-modal input::placeholder, .db-modal textarea::placeholder { color: #EA638C; opacity: 0.8; }
+    /* Glass header on black */
     header.db-page-header {
-      background: rgba(255, 217, 218, 0.5);
-      backdrop-filter: blur(20px) saturate(1.2);
-      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      background: rgba(255, 217, 218, 0.06);
+      backdrop-filter: blur(24px) saturate(1.1);
+      -webkit-backdrop-filter: blur(24px) saturate(1.1);
       border-radius: 0 0 1.5rem 1.5rem;
       border-bottom: 1px solid var(--glass-border);
-      box-shadow: 0 4px 24px rgba(137, 2, 62, 0.06);
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
     }
     .db-page-header h1 {
-      text-shadow: 0 2px 8px rgba(48, 52, 63, 0.08);
+      color: #FFD9DA;
+      text-shadow: 0 0 24px rgba(234, 99, 140, 0.2);
+    }
+    .db-page-header p {
+      color: #EA638C;
     }
     .db-modal-overlay {
-      background: rgba(27, 32, 33, 0.25);
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem;
     }
     .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
 
-    /* Liquid glass grid wrap */
+    /* Glass grid wrap on black */
     #eventsGridWrap {
-      background: rgba(255, 217, 218, 0.35);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(255, 217, 218, 0.04);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       border-radius: 1.5rem;
       border: 1px solid var(--glass-border);
     }
 
-    /* 3D grid + thin-object cards */
+    /* 3D grid + taller glass cards */
     .events-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -75,23 +79,19 @@
       position: relative;
       border-radius: 1.5rem;
       overflow: hidden;
-      background: rgba(255, 217, 218, 0.5);
-      backdrop-filter: blur(20px) saturate(1.1);
-      -webkit-backdrop-filter: blur(20px) saturate(1.1);
-      border: 1px solid var(--glass-border);
-      /* Thin object on screen: contact + soft floating shadows */
+      background: rgba(255, 217, 218, 0.07);
+      backdrop-filter: blur(20px) saturate(1.2);
+      -webkit-backdrop-filter: blur(20px) saturate(1.2);
+      border: 1px solid rgba(234, 99, 140, 0.3);
       box-shadow:
         0 0 0 1px var(--glass-highlight) inset,
-        0 1px 3px rgba(27, 32, 33, 0.05),
-        0 6px 12px rgba(137, 2, 62, 0.07),
-        0 16px 32px rgba(48, 52, 63, 0.08),
-        0 32px 64px rgba(27, 32, 33, 0.08);
+        0 4px 16px rgba(0, 0, 0, 0.4),
+        0 12px 32px rgba(234, 99, 140, 0.08);
       transform: translateZ(6px) rotateX(2deg);
       transform-origin: center bottom;
       transform-style: preserve-3d;
       transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease, border-color 0.2s ease;
     }
-    /* Thin front edge (bottom of card) to suggest thickness */
     .event-card::before {
       content: "";
       position: absolute;
@@ -99,24 +99,23 @@
       right: 0;
       bottom: 0;
       height: 4px;
-      background: linear-gradient(180deg, transparent 0%, rgba(27, 32, 33, 0.08) 40%, rgba(137, 2, 62, 0.06) 100%);
+      background: linear-gradient(180deg, transparent 0%, rgba(234, 99, 140, 0.15) 100%);
       pointer-events: none;
       z-index: 1;
     }
     .event-card:hover {
       transform: translateY(-14px) translateZ(28px) rotateX(5deg);
+      border-color: rgba(234, 99, 140, 0.55);
       box-shadow:
         0 0 0 1px var(--glass-highlight) inset,
-        0 4px 8px rgba(27, 32, 33, 0.06),
-        0 16px 32px rgba(234, 99, 140, 0.12),
-        0 32px 64px rgba(137, 2, 62, 0.1),
-        0 56px 96px rgba(27, 32, 33, 0.14);
-      border-color: rgba(234, 99, 140, 0.5);
+        0 8px 24px rgba(0, 0, 0, 0.4),
+        0 24px 48px rgba(234, 99, 140, 0.15);
     }
+    /* Taller card image (more length) */
     .event-card__image-wrap {
       position: relative;
-      aspect-ratio: 16/10;
-      background: linear-gradient(135deg, rgba(234, 99, 140, 0.4) 0%, rgba(137, 2, 62, 0.5) 100%);
+      aspect-ratio: 4/3;
+      background: linear-gradient(145deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
       overflow: hidden;
       transform: translateZ(0);
     }
@@ -127,24 +126,24 @@
       display: block;
     }
     .event-card__title-wrap {
-      padding: 0.75rem 1rem 0.875rem;
+      padding: 1rem 1.25rem 1.25rem;
     }
     .event-card__title {
       font-family: 'Fraunces', serif;
       font-weight: 600;
-      font-size: 1rem;
-      line-height: 1.35;
-      color: #30343F;
+      font-size: 1.0625rem;
+      line-height: 1.4;
+      color: #FFD9DA;
       display: -webkit-box;
       -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
     }
     .event-card__meta {
-      font-size: 0.75rem;
-      line-height: 1.4;
-      color: #89023E;
-      margin-top: 0.25rem;
+      font-size: 0.8125rem;
+      line-height: 1.45;
+      color: #EA638C;
+      margin-top: 0.35rem;
     }
     .event-card__overlay {
       position: absolute;
@@ -215,12 +214,12 @@
       flex-wrap: wrap;
       align-items: center;
       gap: 0.75rem 1rem;
-      background: rgba(255, 217, 218, 0.5);
+      background: rgba(255, 217, 218, 0.06);
       backdrop-filter: blur(24px) saturate(1.2);
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
       border: 1px solid var(--glass-border);
       border-radius: 1.25rem;
-      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 8px 32px rgba(137, 2, 62, 0.06);
+      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 8px 32px rgba(0, 0, 0, 0.2);
       padding: 1rem 1.25rem;
     }
     .events-nav__filters {
@@ -256,9 +255,9 @@
     .events-nav .db-nav-btn:hover { opacity: 0.94; transform: translateY(-2px) translateZ(4px); box-shadow: 0 4px 12px rgba(234, 99, 140, 0.2); }
     .events-nav .db-nav-btn:active { transform: translateY(0) translateZ(0); box-shadow: 0 1px 2px rgba(137, 2, 62, 0.15); }
     .events-nav .db-nav-btn--filter {
-      background: rgba(255, 217, 218, 0.7);
-      color: #30343F;
-      border: 1px solid var(--glass-border);
+      background: rgba(255, 217, 218, 0.1);
+      color: #FFD9DA;
+      border: 1px solid rgba(234, 99, 140, 0.35);
       backdrop-filter: blur(6px);
     }
     .events-nav .db-nav-btn--primary {
@@ -278,9 +277,9 @@
       padding: 0.4rem 0.6rem;
       border-radius: 0.75rem;
       font-size: 0.8125rem;
-      border: 1px solid rgba(234, 99, 140, 0.35);
-      background: rgba(255, 217, 218, 0.7);
-      color: #30343F;
+      border: 1px solid rgba(234, 99, 140, 0.4);
+      background: rgba(26, 26, 30, 0.6);
+      color: #FFD9DA;
       backdrop-filter: blur(6px);
     }
     .events-nav__static {
@@ -304,8 +303,8 @@
     }
     .events-nav__time-btns .db-nav-btn:last-child { border-right: none; }
     .events-nav__time-btns .db-nav-btn.nav-btn--active {
-      background: #89023E;
-      color: #FFD9DA;
+      background: #EA638C;
+      color: #0a0a0c;
     }
     .events-nav__filter-trigger {
       display: inline-flex;
@@ -324,12 +323,12 @@
       margin-top: 0.25rem;
       min-width: 10rem;
       padding: 0.5rem;
-      background: rgba(255, 217, 218, 0.75);
+      background: rgba(26, 26, 30, 0.92);
       backdrop-filter: blur(24px) saturate(1.2);
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
       border-radius: 1rem;
       border: 1px solid var(--glass-border);
-      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 12px 40px rgba(137, 2, 62, 0.12);
+      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 12px 40px rgba(0, 0, 0, 0.3);
       z-index: 20;
       display: none;
     }
@@ -344,12 +343,12 @@
       font-weight: 500;
       border: none;
       background: none;
-      color: #30343F;
+      color: #FFD9DA;
       cursor: pointer;
       text-decoration: none;
     }
     .nav-dropdown__panel a:hover, .nav-dropdown__panel button:hover {
-      background: rgba(234, 99, 140, 0.2);
+      background: rgba(234, 99, 140, 0.25);
     }
     .events-nav__filter-wrap {
       position: relative;
@@ -360,25 +359,25 @@
       left: 0;
       margin-top: 0.5rem;
       padding: 1rem;
-      background: rgba(255, 217, 218, 0.75);
+      background: rgba(26, 26, 30, 0.92);
       backdrop-filter: blur(24px) saturate(1.2);
       -webkit-backdrop-filter: blur(24px) saturate(1.2);
       border-radius: 1rem;
       border: 1px solid var(--glass-border);
-      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 12px 40px rgba(137, 2, 62, 0.12);
+      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 12px 40px rgba(0, 0, 0, 0.3);
       z-index: 20;
       display: none;
       min-width: 18rem;
     }
     .events-nav__filter-wrap.is-open .events-nav__filter-panel { display: block; }
-    .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: #89023E; margin-bottom: 0.25rem; }
+    .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: #EA638C; margin-bottom: 0.25rem; }
     .events-nav__filter-panel .filter-row { margin-bottom: 0.75rem; }
     .events-nav__filter-panel .filter-row:last-of-type { margin-bottom: 0; }
     .event-card { cursor: pointer; }
     .event-detail-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(27, 32, 33, 0.3);
+      background: rgba(0, 0, 0, 0.55);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       z-index: 100;
@@ -395,12 +394,12 @@
       visibility: visible;
     }
     .event-detail-modal {
-      background: rgba(255, 217, 218, 0.7);
+      background: rgba(26, 26, 30, 0.9);
       backdrop-filter: blur(28px) saturate(1.2);
       -webkit-backdrop-filter: blur(28px) saturate(1.2);
       border-radius: 1.25rem;
       border: 1px solid var(--glass-border);
-      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 16px 48px rgba(137, 2, 62, 0.15);
+      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 16px 48px rgba(0, 0, 0, 0.5);
       max-width: 420px;
       width: 100%;
       max-height: calc(100vh - 3rem);
@@ -424,10 +423,10 @@
       background: linear-gradient(135deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
     }
     .event-detail-modal__body { padding: 1.25rem; }
-    .event-detail-modal__title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: #30343F; margin: 0 0 0.75rem; line-height: 1.3; }
-    .event-detail-modal__meta { font-size: 0.8125rem; color: #89023E; margin-bottom: 0.75rem; }
+    .event-detail-modal__title { font-family: 'Fraunces', serif; font-size: 1.25rem; font-weight: 700; color: #FFD9DA; margin: 0 0 0.75rem; line-height: 1.3; }
+    .event-detail-modal__meta { font-size: 0.8125rem; color: #EA638C; margin-bottom: 0.75rem; }
     .event-detail-modal__meta span { display: block; }
-    .event-detail-modal__description { font-size: 0.875rem; color: #30343F; line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
+    .event-detail-modal__description { font-size: 0.875rem; color: #FFD9DA; line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
     .event-detail-modal__actions { display: flex; gap: 0.5rem; }
     .event-detail-modal__actions a, .event-detail-modal__actions button {
       flex: 1;
@@ -444,16 +443,19 @@
     .event-detail-modal__actions .btn-go { background: #EA638C; color: #FFD9DA; }
     .event-detail-modal__actions .btn-go:hover { background: #89023E; color: #FFD9DA; }
     .event-detail-modal__actions .btn-close { background: #89023E; color: #FFD9DA; }
-    .event-detail-modal__actions .btn-close:hover { background: #30343F; color: #FFD9DA; }
+    .event-detail-modal__actions .btn-close:hover { background: #1B2021; color: #FFD9DA; }
 
-    /* Liquid glass modals (Add event, Add by URL, Delete, Pull) */
+    /* Glass modals on black */
     .db-modal-content.db-modal--glass {
-      background: rgba(255, 217, 218, 0.7) !important;
+      background: rgba(26, 26, 30, 0.88) !important;
+      color: #FFD9DA !important;
       backdrop-filter: blur(28px) saturate(1.2);
       -webkit-backdrop-filter: blur(28px) saturate(1.2);
       border: 1px solid var(--glass-border);
-      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 16px 48px rgba(137, 2, 62, 0.12);
+      box-shadow: 0 0 0 1px var(--glass-highlight) inset, 0 16px 48px rgba(0, 0, 0, 0.4);
     }
+    .db-modal--glass h2 { color: #EA638C !important; }
+    .db-modal--glass p, .db-modal--glass label { color: #FFD9DA !important; }
     .db-modal-overlay .db-modal-content {
       transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     }
@@ -477,11 +479,11 @@
     }
   </style>
 </head>
-<body class="db-page" style="background-color: #FFD9DA; color: #30343F;">
+<body class="db-page" style="background-color: #0a0a0c; color: #FFD9DA;">
   <header class="db-page-header text-center py-10 border-b" style="border-color: rgba(234, 99, 140, 0.4);">
     <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
-      <h1 class="text-4xl font-bold tracking-tight" style="color: #30343F;">NYC Events</h1>
-      <p class="mt-2 text-sm" style="color: #89023E;">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
+      <h1 class="text-4xl font-bold tracking-tight">NYC Events</h1>
+      <p class="mt-2 text-sm">Events in New York City — from Dice and more. Add your own or browse scraped listings.</p>
     </div>
   </header>
 
@@ -570,7 +572,7 @@
       <p id="eventsGridEmpty" class="hidden text-center py-12" style="color: #30343F;">No events match. Add one or adjust filters.</p>
     </div>
 
-    <p id="events-status" class="text-center text-sm py-2" style="color: #30343F;" aria-live="polite">Loading…</p>
+    <p id="events-status" class="text-center text-sm py-2" style="color: #EA638C;" aria-live="polite">Loading…</p>
   </div>
 
   <!-- Event detail modal -->
@@ -593,9 +595,9 @@
 
   <!-- Add event (full form) -->
   <div id="add-event-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; color: #30343F; border-color: rgba(234, 99, 140, 0.5);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #30343F;" onclick="closeAddEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: #89023E;">Add event</h2>
+    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeAddEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4">Add event</h2>
       <form id="addEventForm" onsubmit="return handleAddEventSubmit(event)">
         <label class="block mb-1 text-sm font-medium" style="color: #30343F;">Title <span style="color: #89023E;">*</span></label>
         <input type="text" name="title" placeholder="Event name" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
@@ -630,10 +632,10 @@
 
   <!-- Add by URL (opens same form with URL + platform prefilled) -->
   <div id="add-by-url-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; color: #30343F; border-color: rgba(234, 99, 140, 0.5);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #30343F;" onclick="closeAddByUrlModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: #89023E;">Add event by URL</h2>
-      <p class="text-sm mb-4" style="color: #30343F;">Paste the event URL and platform. Then fill the rest in the next form.</p>
+    <div class="modal-content db-modal-content db-modal db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeAddByUrlModal()">×</button>
+      <h2 class="text-xl font-bold mb-4">Add event by URL</h2>
+      <p class="text-sm mb-4">Paste the event URL and platform. Then fill the rest in the next form.</p>
       <form id="addByUrlForm" onsubmit="return handleAddByUrlSubmit(event)">
         <label class="block mb-1 text-sm font-medium" style="color: #30343F;">Event URL <span style="color: #89023E;">*</span></label>
         <input type="url" name="url" id="add-by-url-input" placeholder="https://dice.fm/..." class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
@@ -651,9 +653,9 @@
 
   <!-- Delete confirm -->
   <div id="delete-event-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; color: #30343F; border-color: rgba(234, 99, 140, 0.5);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #30343F;" onclick="closeDeleteEventModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: #89023E;">Delete event</h2>
+    <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closeDeleteEventModal()">×</button>
+      <h2 class="text-xl font-bold mb-4">Delete event</h2>
       <p class="mb-6">Delete <span id="delete-event-title"></span>?</p>
       <div class="flex gap-3">
         <button type="button" onclick="closeDeleteEventModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition" style="color: #30343F; background-color: rgba(234, 99, 140, 0.5);">Cancel</button>
@@ -664,10 +666,10 @@
 
   <!-- Pull from Dice (manual trigger instructions) -->
   <div id="pull-dice-modal" class="modal db-modal-overlay fixed inset-0 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: transparent; color: #30343F; border-color: rgba(234, 99, 140, 0.5);">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #30343F;" onclick="closePullFromDiceModal()">×</button>
-      <h2 class="text-xl font-bold mb-2" style="color: #30343F;">Pull from Dice</h2>
-      <p class="text-sm mb-4" style="color: #30343F;">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
+    <div class="modal-content db-modal-content db-modal--glass p-6 rounded-2xl shadow-xl max-w-lg w-full relative border my-auto db-modal" style="background-color: transparent; border-color: rgba(234, 99, 140, 0.5);">
+      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #FFD9DA;" onclick="closePullFromDiceModal()">×</button>
+      <h2 class="text-xl font-bold mb-2">Pull from Dice</h2>
+      <p class="text-sm mb-4">Because this site is static (GitHub Pages), the scraper has to run either on your machine or via GitHub Actions. This button shows the easiest options.</p>
 
       <div class="rounded-xl p-4 border mb-4" style="border-color: rgba(234, 99, 140, 0.5); background-color: #FFD9DA;">
         <div class="font-semibold mb-2" style="color: #89023E;">Option A: Run locally</div>

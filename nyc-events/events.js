@@ -115,17 +115,17 @@ function setDateFilter(mode) {
     if (toEl) toEl.value = today;
     if (rangeEl) rangeEl.classList.add("hidden");
     var btn = get("dateBtnToday");
-    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #89023E"; }
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #EA638C"; }
   } else if (mode === "week") {
     if (fromEl) fromEl.value = today;
     if (toEl) toEl.value = weekEnd;
     if (rangeEl) rangeEl.classList.add("hidden");
     var btn = get("dateBtnWeek");
-    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #89023E"; }
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #EA638C"; }
   } else {
     if (rangeEl) rangeEl.classList.remove("hidden");
     var btn = get("dateBtnRange");
-    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #89023E"; }
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #EA638C"; }
   }
   applyEventFilters();
 }
