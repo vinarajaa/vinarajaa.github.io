@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>NYC Events</title>
-  <script defer src="events.js?v=4"></script>
+  <script defer src="events.js?v=5"></script>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css">
   <style>
@@ -30,18 +30,40 @@
     <div class="flex flex-wrap justify-start items-center gap-3 my-6 py-4 px-4 rounded-2xl" style="background-color: #EED7C5; border: 1px solid #C89F9C;">
       <button type="button" onclick="toggleEventFilters()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Filter</button>
       <div id="eventFilterControls" class="hidden flex-wrap items-center gap-3">
-        <input type="date" id="filterDateFrom" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="From" />
-        <input type="date" id="filterDateTo" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="To" />
-        <select id="filterNeighborhood" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="filterVenue" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="filterPlatform" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="filterPrice" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
+        <span class="text-sm font-medium" style="color: #B36A5E;">Date</span>
+        <button type="button" id="dateBtnToday" onclick="setDateFilter('today')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">Today</button>
+        <button type="button" id="dateBtnWeek" onclick="setDateFilter('week')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">This week</button>
+        <button type="button" id="dateBtnRange" onclick="setDateFilter('range')" class="date-filter-btn rounded-lg px-3 py-2 text-sm font-medium transition" style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;">Specific range</button>
+        <div id="dateRangeInputs" class="hidden flex items-center gap-2">
+          <input type="date" id="filterDateFrom" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="From" />
+          <input type="date" id="filterDateTo" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="To" />
+        </div>
+        <span class="text-sm font-medium ml-1" style="color: #B36A5E;">Time</span>
+        <select id="filterTimeOfDay" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
+          <option value="">Any time</option>
+          <option value="daytime">Daytime (6AM–6PM)</option>
+          <option value="late">Late night (10PM–4AM)</option>
+        </select>
+        <input type="text" id="filterSearch" class="p-2 rounded-lg text-[#270f03] text-sm w-40" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" placeholder="Search title or description" />
+        <select id="filterEventType" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
+          <option value="">All types</option>
+          <option value="music">Music</option>
+          <option value="comedy">Comedy</option>
+          <option value="nightlife">Nightlife</option>
+          <option value="arts">Arts</option>
+          <option value="other">Other</option>
+        </select>
+        <select id="filterNeighborhood" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;" title="Area"></select>
+        <select id="filterVenue" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
+        <select id="filterPlatform" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
+        <select id="filterPrice" class="p-2 rounded-lg text-[#270f03] text-sm" style="border: 1px solid #C89F9C; background-color: #EEE2DF;">
           <option value="">Any price</option>
-          <option value="free">Free</option>
+          <option value="free">Free only</option>
           <option value="paid">Paid</option>
         </select>
         <button type="button" onclick="applyEventFilters()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
       </div>
+      <button type="button" onclick="deletePastEvents()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;" title="Remove past events from the database">Delete past events</button>
       <button type="button" onclick="triggerPullFromDice()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Pull from Dice, Eventbrite & CrowdVolt</button>
       <button type="button" onclick="openAddEventModal(null)" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add event (form)</button>
       <button type="button" onclick="openAddByUrlModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add by URL</button>

@@ -21,8 +21,14 @@ function getConn() {
   return neon(url);
 }
 
-async function handleGet(sql) {
-  const rows = await sql`SELECT id, title, date, time, address, neighborhood, venue, image_url, price, link, platform, description, created_at FROM events ORDER BY date ASC`;
+async function handleGet(sql, query) {
+  const includePast = query && (query.past === "1" || query.past === "true");
+  const today = new Date().toISOString().slice(0, 10);
+  if (includePast) {
+    const rows = await sql`SELECT id, title, date, time, address, neighborhood, venue, image_url, price, link, platform, description, created_at FROM events ORDER BY date ASC`;
+    return rows;
+  }
+  const rows = await sql`SELECT id, title, date, time, address, neighborhood, venue, image_url, price, link, platform, description, created_at FROM events WHERE date >= ${today} ORDER BY date ASC`;
   return rows;
 }
 
@@ -60,7 +66,13 @@ async function handlePost(sql, body) {
   return inserted;
 }
 
-async function handleDelete(sql, id) {
+async function handleDelete(sql, id, query) {
+  const deletePast = query && (query.past === "1" || query.past === "true");
+  if (deletePast) {
+    const today = new Date().toISOString().slice(0, 10);
+    const out = await sql`DELETE FROM events WHERE date < ${today} RETURNING id`;
+    return { deleted: out.length };
+  }
   if (!id) return { deleted: 0 };
   const out = await sql`DELETE FROM events WHERE id = ${id} RETURNING id`;
   return { deleted: out.length };
@@ -88,9 +100,10 @@ module.exports = async function handler(req, res) {
 
   try {
     const sql = getConn();
+    const query = req.query || (req.url && req.url.includes("?") ? Object.fromEntries(new URL(req.url, "http://x").searchParams) : {});
 
     if (req.method === "GET") {
-      const rows = await handleGet(sql);
+      const rows = await handleGet(sql, query);
       res.status(200).json(rows);
       return;
     }
@@ -102,8 +115,8 @@ module.exports = async function handler(req, res) {
     }
 
     if (req.method === "DELETE") {
-      const id = req.query.id || (req.url && req.url.includes("id=") ? new URL(req.url, "http://x").searchParams.get("id") : null);
-      const result = await handleDelete(sql, id);
+      const id = query.id || (req.url && req.url.includes("id=") ? new URL(req.url, "http://x").searchParams.get("id") : null);
+      const result = await handleDelete(sql, id, query);
       res.status(200).json(result);
       return;
     }

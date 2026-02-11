@@ -147,34 +147,120 @@ function extractEventsFromHtml(html, baseUrl, onProgress) {
   return events;
 }
 
-/** Fetch event detail page with abort on timeout so we don't hang on slow URLs. */
+const DETAIL_TIMEOUT_MS = 5000;
+const DETAIL_CONCURRENCY = parseInt(process.env.CROWDVOLT_DETAIL_CONCURRENCY || "8", 10) || 8;
+
+/** Fetch event detail page in a subprocess and kill after timeout so we never block the main process. */
 function fetchCrowdvoltEventDetailsWithTimeout(link) {
-  const timeoutMs = 6000;
-  const controller = new AbortController();
-  const timeoutId = setTimeout(function () { controller.abort(); }, timeoutMs);
+  const timeoutMs = DETAIL_TIMEOUT_MS;
+  const { spawn } = require("child_process");
+  const scriptPath = __dirname + "/crowdvolt-nyc.js";
 
-  const done = fetchCrowdvoltEventDetails(link, controller.signal)
-    .then(function (result) {
-      clearTimeout(timeoutId);
-      return result;
-    })
-    .catch(function () {
-      clearTimeout(timeoutId);
-      return null;
+  return new Promise(function (resolve) {
+    let settled = false;
+    const onDone = function (result) {
+      if (settled) return;
+      settled = true;
+      try {
+        child.kill();
+      } catch (_) {}
+      resolve(result);
+    };
+    const child = spawn(process.execPath, [scriptPath, "--fetch-one", link], {
+      stdio: ["ignore", "pipe", "pipe"],
+      cwd: __dirname
     });
-
-  // Hard cap: after 6s always return null even if abort didn't stop res.text() or parsing
-  const hardTimeout = new Promise(function (resolve) {
-    setTimeout(function () {
+    let stdout = "";
+    child.stdout.on("data", function (chunk) {
+      stdout += chunk;
+    });
+    const timer = setTimeout(function () {
+      try {
+        child.kill("SIGKILL");
+      } catch (_) {}
       console.warn("  (timeout after " + timeoutMs / 1000 + "s, skipping)");
-      resolve(null);
+      onDone(null);
     }, timeoutMs);
+    child.on("close", function (code) {
+      clearTimeout(timer);
+      if (settled) return;
+      if (code === 0 && stdout.trim()) {
+        try {
+          onDone(JSON.parse(stdout.trim()));
+          return;
+        } catch (_) {}
+      }
+      onDone(null);
+    });
+    child.on("error", function () {
+      clearTimeout(timer);
+      onDone(null);
+    });
   });
-
-  return Promise.race([done, hardTimeout]);
 }
 
 const MAX_DETAIL_HTML = 600000; // ~600KB so cheerio/parsing can't block event loop for long
+
+/** Extract venue, time, price from any HTML fragment (listing card or detail page). */
+function parseDetailsFromHtml(html) {
+  const $ = cheerio.load(html.length > MAX_DETAIL_HTML ? html.slice(0, MAX_DETAIL_HTML) : html);
+  let venueName = null;
+  let time = null;
+  let price = null;
+  const bodyText = $("body").text().replace(/\s+/g, " ").trim() || $("div").first().text().replace(/\s+/g, " ").trim();
+  const h2El = $("h2").first();
+  if (h2El.length) {
+    const h2Text = h2El.text().replace(/\s+/g, " ").trim();
+    const parts = h2Text.split(/\s*•\s*/).map(function (p) {
+      return p.trim();
+    }).filter(Boolean);
+    if (parts.length >= 2) {
+      const timePart = parts.find(function (p) {
+        return /^\d{1,2}:\d{2}\s*[AP]\.?M\.?$/i.test(p) || /^\d{1,2}[AP]\.?M\.?$/i.test(p);
+      });
+      if (timePart) time = timePart.slice(0, 50);
+      if (parts.length >= 3) venueName = parts[parts.length - 1].slice(0, 200);
+      else if (parts.length === 2 && !timePart) venueName = parts[1].slice(0, 200);
+    }
+  }
+  if (!time && bodyText) {
+    const timeM = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
+    if (timeM) time = timeM[1].trim().slice(0, 50);
+  }
+  if (!venueName && bodyText) {
+    $("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location']").each(function () {
+      const t = $(this).text().trim();
+      if (t.length > 2 && t.length < 150) {
+        venueName = t.slice(0, 200);
+        return false;
+      }
+    });
+  }
+  if (!venueName && bodyText.length > 20) {
+    const venueLike = bodyText.match(/(?:at|@|\•)\s*([A-Za-z0-9\s&'\-]+?)(?:\s+[•·]\s+|\s+\d{1,2}:\d{2}|\s+\d{1,2}[AP]M|$)/i)
+      || bodyText.match(/([A-Za-z0-9\s&'\-]+(?:Warehouse|Hall|Theater|Theatre|Club|Bar|Basement|Location))/i);
+    if (venueLike && venueLike[1].length > 2) venueName = venueLike[1].trim().slice(0, 200);
+  }
+  const priceM = bodyText.match(/\$[\d,.]+/);
+  if (priceM) price = priceM[0].slice(0, 100);
+  return { venueName: venueName || null, time: time || null, price: price || null };
+}
+
+/** For one event link, get the listing card HTML fragment from the listing page and parse details from it. */
+function getDetailsFromListingHtml(listingHtml, eventLink) {
+  if (!listingHtml || !eventLink) return null;
+  const $ = cheerio.load(listingHtml);
+  const normalized = eventLink.split("?")[0].replace(/\/$/, "");
+  const anchor = $('a[href*="/event/"]').filter(function () {
+    const href = ($(this).attr("href") || "").split("?")[0].replace(/\/$/, "");
+    const full = href.startsWith("http") ? href : "https://www.crowdvolt.com" + (href.startsWith("/") ? href : "/" + href);
+    return full === normalized || full.endsWith(normalized) || normalized.endsWith(full.split("/event/")[1] || "");
+  }).first();
+  if (!anchor.length) return null;
+  const card = anchor.closest("[class*='card'], [class*='Card'], [class*='event'], [class*='Event'], li, article, [data-testid], div");
+  const fragment = (card.length ? card : anchor.parent()).toString().slice(0, 15000);
+  return parseDetailsFromHtml(fragment);
+}
 
 async function fetchCrowdvoltEventDetails(link, signal) {
   try {
@@ -191,6 +277,43 @@ async function fetchCrowdvoltEventDetails(link, signal) {
     let price = null;
     let image_url = null;
 
+    // CrowdVolt detail layout: h2 = "Fri, February 20 • 10PM • Brooklyn Warehouse Location"
+    const h2El = $("h2").first();
+    if (h2El.length) {
+      const h2Text = h2El.text().replace(/\s+/g, " ").trim();
+      const parts = h2Text.split(/\s*•\s*/).map(function (p) {
+        return p.trim();
+      }).filter(Boolean);
+      if (parts.length >= 2) {
+        const timePart = parts.find(function (p) {
+          return /^\d{1,2}:\d{2}\s*[AP]\.?M\.?$/i.test(p) || /^\d{1,2}[AP]\.?M\.?$/i.test(p);
+        });
+        if (timePart) time = timePart.slice(0, 50);
+        if (parts.length >= 3) venueName = parts[parts.length - 1].slice(0, 200);
+        else if (parts.length === 2 && !timePart) venueName = parts[1].slice(0, 200);
+      }
+    }
+
+    // Event image: img.crowdvolt.com in src/href/url (often URL-encoded)
+    if (!image_url) {
+      const imgCrowdvolt = html.match(/https?%3A%2F%2F(?:[^"'\s]*?)?img\.crowdvolt\.com%2F([^&"'\s]+)/i)
+        || html.match(/https?:\/\/(?:[^"'\s]*?)?img\.crowdvolt\.com\/([^"'\s&]+)/i);
+      if (imgCrowdvolt) {
+        const path = imgCrowdvolt[1].replace(/%2F/g, "/").replace(/%3A/g, ":");
+        image_url = ("https://img.crowdvolt.com/" + path).split("?")[0].slice(0, 500);
+      }
+    }
+    if (!image_url) {
+      $('link[rel="preload"][as="image"]').each(function () {
+        const srcset = $(this).attr("imagesrcset") || $(this).attr("href");
+        if (srcset && srcset.indexOf("crowdvolt") >= 0) {
+          const decoded = decodeURIComponent(srcset.split("?")[0] || srcset);
+          const first = (decoded.indexOf("http") >= 0 ? decoded : "https://" + decoded.replace(/^\/+/, "")).split(",")[0].replace(/\s+\d+w$/i, "").trim();
+          if (first && first.indexOf("crowdvolt") >= 0) image_url = first.slice(0, 500);
+        }
+      });
+    }
+
     const bodyText = $("body").text().replace(/\s+/g, " ");
     const zipMatch = bodyText.match(/\b(100\d{2}|111\d{2}|112\d{2}|113\d{2}|104\d{2}|103\d{2})\b/);
     if (zipMatch) {
@@ -198,25 +321,23 @@ async function fetchCrowdvoltEventDetails(link, signal) {
         || bodyText.match(/(\d+\s+[\w.\s\-]+(?:,?\s*[^,]+)*,\s*(?:New York|Brooklyn|Queens|Bronx),?\s*NY\s*\d{5})/i);
       if (addrMatch) address = normalizeAddressLine(addrMatch[1]) || addrMatch[1].trim().slice(0, 300);
     }
-    $("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location'], [class*='address']").each(function () {
-      const t = $(this).text().trim();
-      if (t.length > 2 && t.length < 150 && !venueName) {
-        if (/\d{5}/.test(t)) {
-          if (!address) address = normalizeAddressLine(t) || t.slice(0, 300);
-        } else {
-          venueName = t.slice(0, 200);
+    if (!venueName) {
+      $("[class*='venue'], [class*='Venue'], [class*='location'], [class*='Location'], [class*='address']").each(function () {
+        const t = $(this).text().trim();
+        if (t.length > 2 && t.length < 150) {
+          if (/\d{5}/.test(t)) {
+            if (!address) address = normalizeAddressLine(t) || t.slice(0, 300);
+          } else {
+            venueName = t.slice(0, 200);
+            return false;
+          }
         }
-      }
-    });
-    $('link[rel="preload"][as="image"]').each(function () {
-      const srcset = $(this).attr("imagesrcset") || $(this).attr("href");
-      if (srcset && srcset.indexOf("http") >= 0) {
-        const first = srcset.split(",")[0].replace(/\s+1x$/i, "").trim();
-        if (first) image_url = first.slice(0, 500);
-      }
-    });
-    const timeM = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
-    if (timeM) time = timeM[1].trim().slice(0, 50);
+      });
+    }
+    if (!time) {
+      const timeM = bodyText.match(/(\d{1,2}:\d{2}\s*[AP]\.?M\.?)/i) || bodyText.match(/\b(\d{1,2}:\d{2})\b/);
+      if (timeM) time = timeM[1].trim().slice(0, 50);
+    }
     const priceM = bodyText.match(/\$[\d,.]+/);
     if (priceM) price = priceM[0].slice(0, 100);
 
@@ -341,24 +462,49 @@ async function scrapeCrowdvoltNy(opts) {
   const needDetails = allEvents.filter(function (e) {
     return !e.address || !e.time || !e.venue;
   });
-  const maxFetch = 30;
-  for (let i = 0; i < Math.min(needDetails.length, maxFetch); i++) {
-    const ev = needDetails[i];
-    if (onProgress) onProgress(allEvents.length, "details " + (i + 1) + "/" + Math.min(needDetails.length, maxFetch));
-    console.log("  → " + (i + 1) + "/" + Math.min(needDetails.length, maxFetch) + " " + ev.link);
-    const details = await fetchCrowdvoltEventDetailsWithTimeout(ev.link);
-    if (details) {
-      if (details.venueName) ev.venue = String(details.venueName).slice(0, 200);
-      if (details.address) {
-        const derived = deriveAddressAndArea(details.address);
-        ev.address = derived.address;
-        if (derived.neighborhood) ev.neighborhood = derived.neighborhood;
-      }
-      if (details.time) ev.time = details.time;
-      if (details.price && !ev.price) ev.price = details.price;
-      if (details.image_url) ev.image_url = details.image_url;
+  if (needDetails.length === 0) return allEvents;
+
+  function applyDetails(ev, details) {
+    if (!details) return;
+    if (details.venueName) ev.venue = String(details.venueName).slice(0, 200);
+    if (details.address) {
+      const derived = deriveAddressAndArea(details.address);
+      ev.address = derived.address;
+      if (derived.neighborhood) ev.neighborhood = derived.neighborhood;
     }
-    await sleep(120);
+    if (details.time) ev.time = details.time;
+    if (details.price && !ev.price) ev.price = details.price;
+    if (details.image_url) ev.image_url = details.image_url;
+  }
+
+  const concurrency = Math.min(DETAIL_CONCURRENCY, needDetails.length);
+  for (let i = 0; i < needDetails.length; i += concurrency) {
+    const batch = needDetails.slice(i, i + concurrency);
+    if (onProgress) onProgress(allEvents.length, "details " + (i + batch.length) + "/" + needDetails.length);
+    console.log("  → " + (i + 1) + "-" + (i + batch.length) + "/" + needDetails.length + " (" + batch.length + " in parallel)");
+    const results = await Promise.all(batch.map(function (ev) {
+      return fetchCrowdvoltEventDetailsWithTimeout(ev.link).then(function (d) {
+        return { ev: ev, details: d };
+      });
+    }));
+    results.forEach(function (r) {
+      applyDetails(r.ev, r.details);
+    });
+    if (i + concurrency < needDetails.length) await sleep(80);
+  }
+
+  // For any event still missing details (skipped/timeout), pull from listing HTML
+  if (html) {
+    const stillNeed = allEvents.filter(function (e) {
+      return !e.address || !e.time || !e.venue;
+    });
+    if (stillNeed.length > 0) {
+      console.log("  → filling " + stillNeed.length + " skipped from listing HTML");
+      stillNeed.forEach(function (ev) {
+        const fromListing = getDetailsFromListingHtml(html, ev.link);
+        if (fromListing) applyDetails(ev, fromListing);
+      });
+    }
   }
 
   return allEvents;
@@ -401,5 +547,20 @@ async function main(opts) {
   console.log("Inserted:", inserted, "Skipped (duplicate):", skipped);
 }
 
-if (require.main === module) main();
+if (require.main === module) {
+  const oneUrl = process.argv[2] === "--fetch-one" && process.argv[3];
+  if (oneUrl) {
+    fetchCrowdvoltEventDetails(oneUrl)
+      .then(function (out) {
+        console.log(JSON.stringify(out || null));
+        process.exit(0);
+      })
+      .catch(function () {
+        console.log("null");
+        process.exit(1);
+      });
+    return;
+  }
+  main();
+}
 module.exports = { main, scrapeCrowdvoltNy, fetchCrowdvoltEventDetails };

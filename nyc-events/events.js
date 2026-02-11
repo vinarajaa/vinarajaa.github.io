@@ -70,6 +70,65 @@ async function fetchEvents() {
   }
 }
 
+function todayYMD() {
+  var d = new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+function endOfWeekYMD() {
+  var d = new Date();
+  var day = d.getDay();
+  var add = day === 0 ? 6 : 7 - day;
+  d.setDate(d.getDate() + add);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
+/** Parse time string to 0-23 hour (best effort). */
+function parseTimeHour(timeStr) {
+  if (!timeStr || typeof timeStr !== "string") return null;
+  var s = timeStr.trim();
+  var m = s.match(/(\d{1,2})(?::(\d{2}))?\s*([AP])\.?M?/i);
+  if (m) {
+    var h = parseInt(m[1], 10);
+    if ((m[3] || "").toUpperCase() === "P" && h < 12) h += 12;
+    if ((m[3] || "").toUpperCase() === "A" && h === 12) h = 0;
+    return h;
+  }
+  m = s.match(/(\d{1,2}):(\d{2})/);
+  if (m) return parseInt(m[1], 10);
+  return null;
+}
+
+function setDateFilter(mode) {
+  var fromEl = get("filterDateFrom");
+  var toEl = get("filterDateTo");
+  var rangeEl = get("dateRangeInputs");
+  var today = todayYMD();
+  var weekEnd = endOfWeekYMD();
+  document.querySelectorAll(".date-filter-btn").forEach(function (btn) {
+    btn.classList.remove("ring-2", "ring-offset-1");
+    btn.style.boxShadow = "none";
+  });
+  if (mode === "today") {
+    if (fromEl) fromEl.value = today;
+    if (toEl) toEl.value = today;
+    if (rangeEl) rangeEl.classList.add("hidden");
+    var btn = get("dateBtnToday");
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #B36A5E"; }
+  } else if (mode === "week") {
+    if (fromEl) fromEl.value = today;
+    if (toEl) toEl.value = weekEnd;
+    if (rangeEl) rangeEl.classList.add("hidden");
+    var btn = get("dateBtnWeek");
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #B36A5E"; }
+  } else {
+    if (rangeEl) rangeEl.classList.remove("hidden");
+    var btn = get("dateBtnRange");
+    if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #B36A5E"; }
+  }
+  applyEventFilters();
+}
+
 function applyClientFilters() {
   var dateFrom = (get("filterDateFrom") || {}).value;
   var dateTo = (get("filterDateTo") || {}).value;
@@ -77,15 +136,39 @@ function applyClientFilters() {
   var venue = (get("filterVenue") || {}).value;
   var platform = (get("filterPlatform") || {}).value;
   var price = (get("filterPrice") || {}).value;
+  var search = ((get("filterSearch") || {}).value || "").trim().toLowerCase();
+  var eventType = (get("filterEventType") || {}).value;
+  var timeOfDay = (get("filterTimeOfDay") || {}).value;
   var list = eventsData.filter(function (e) {
-    if (dateFrom && e.date < dateFrom) return false;
-    if (dateTo && e.date > dateTo) return false;
+    if (dateFrom && (e.date || "") < dateFrom) return false;
+    if (dateTo && (e.date || "") > dateTo) return false;
     if (neighborhood && (e.neighborhood || "") !== neighborhood) return false;
     if (venue && (e.venue || "") !== venue) return false;
     if (platform && (e.platform || "") !== platform) return false;
     if (price === "free" && (e.price || "").toLowerCase().indexOf("free") < 0) return false;
     if (price === "paid" && !(e.price || "").trim()) return false;
     if (price === "paid" && (e.price || "").toLowerCase() === "free") return false;
+    if (search) {
+      var title = (e.title || "").toLowerCase();
+      var desc = (e.description || "").toLowerCase();
+      if (title.indexOf(search) < 0 && desc.indexOf(search) < 0) return false;
+    }
+    if (eventType) {
+      var text = ((e.title || "") + " " + (e.description || "")).toLowerCase();
+      var match = false;
+      if (eventType === "music") match = (text.indexOf("music") >= 0 || text.indexOf("concert") >= 0 || text.indexOf("dj") >= 0 || text.indexOf("live") >= 0);
+      else if (eventType === "comedy") match = text.indexOf("comedy") >= 0;
+      else if (eventType === "nightlife") match = (text.indexOf("night") >= 0 || text.indexOf("club") >= 0 || text.indexOf("party") >= 0 || text.indexOf("dance") >= 0);
+      else if (eventType === "arts") match = (text.indexOf("art") >= 0 || text.indexOf("gallery") >= 0 || text.indexOf("theater") >= 0 || text.indexOf("theatre") >= 0);
+      else if (eventType === "other") match = true;
+      if (!match) return false;
+    }
+    if (timeOfDay) {
+      var h = parseTimeHour(e.time);
+      if (h == null) return true;
+      if (timeOfDay === "daytime" && (h < 6 || h >= 18)) return false;
+      if (timeOfDay === "late" && h >= 4 && h < 22) return false;
+    }
     return true;
   });
   return list;
@@ -153,7 +236,7 @@ function populateFilterDropdowns() {
   platforms.sort();
   var nhSelect = get("filterNeighborhood");
   if (nhSelect) {
-    nhSelect.innerHTML = "<option value=\"\">All neighborhoods</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
+    nhSelect.innerHTML = "<option value=\"\">All areas</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
   }
   var venSelect = get("filterVenue");
   if (venSelect) {
@@ -175,6 +258,32 @@ function toggleEventFilters() {
   var el = get("eventFilterControls");
   if (el) {
     el.classList.toggle("hidden");
+  }
+}
+
+async function deletePastEvents() {
+  var url = eventsApiUrl();
+  if (!url) {
+    setStatus("Set EVENTS_API_URL to delete past events.");
+    return;
+  }
+  setStatus("Deleting past events…");
+  try {
+    var res = await fetch(url + "?past=1", { method: "DELETE", headers: { "Content-Type": "application/json" } });
+    var data = await res.json().catch(function () { return {}; });
+    if (!res.ok) {
+      setStatus("Delete failed: " + (data.error || res.status));
+      return;
+    }
+    var n = (data.deleted != null) ? data.deleted : 0;
+    setStatus("Deleted " + n + " past event(s). Refreshing…");
+    await fetchEvents();
+    populateFilterDropdowns();
+    applyEventFilters();
+    setStatus(eventsData.length + " event(s). Deleted " + n + " past.");
+  } catch (err) {
+    setStatus("Error: " + (err.message || "Could not delete past events."));
+    console.error(err);
   }
 }
 
