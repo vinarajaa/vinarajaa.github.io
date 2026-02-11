@@ -22,11 +22,15 @@
       --glass-fill: rgba(255, 217, 218, 0.08);
       --glass-border: rgba(234, 99, 140, 0.35);
       --glass-highlight: rgba(255, 255, 255, 0.06);
-      /* 3D button (layered pop) */
+      /* Learn-more style button (::before depth layer) */
       --btn-radius: 0.75em;
-      --btn-raise: 0.2em;
-      --btn-raise-hover: 0.33em;
-      --btn-outline: #89023E;
+      --btn-depth: 0.75em;
+      --btn-depth-hover: 0.5em;
+      --btn-border: #89023E;
+      --btn-top: #FFD9DA;
+      --btn-text: #FFD9DA;
+      --btn-depth-bg: #EA638C;
+      --btn-depth-shadow: #89023E;
       --btn-fill: #EA638C;
       --btn-fill-dark: #1a1a1e;
     }
@@ -165,49 +169,85 @@
       gap: 0.5rem;
       align-items: center;
     }
-    .event-card__overlay-actions a {
+    .event-card__overlay-actions a,
+    .event-card__overlay-actions button {
+      position: relative;
       flex: 1;
       text-align: center;
       padding: 0.35rem 0.5rem;
       border-radius: 0.5em;
       font-weight: 400;
       font-size: 0.75rem;
+      text-decoration: none;
+      cursor: pointer;
+      outline: none;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    }
+    .event-card__overlay-actions a {
+      border: 2px solid var(--dark-raspberry);
       background: var(--btn-fill);
       color: #FFD9DA;
-      border: 2px solid var(--btn-outline);
-      text-decoration: none;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 0.15em 0 0 var(--btn-outline);
-      transform: translateY(-0.15em);
     }
-    .event-card__overlay-actions a:hover {
-      transform: translateY(-0.25em);
-      box-shadow: 0 0.25em 0 0 var(--btn-outline);
+    .event-card__overlay-actions a::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--dark-raspberry);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 0.4em 0 0 var(--dark-raspberry);
+      transform: translate3d(0, 0.4em, -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
-    .event-card__overlay-actions a:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--btn-outline);
+    .event-card__overlay-actions a:hover { transform: translate(0, 0.15em); }
+    .event-card__overlay-actions a:hover::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 0.25em 0 0 var(--dark-raspberry);
+      transform: translate3d(0, 0.25em, -1em);
+    }
+    .event-card__overlay-actions a:active { transform: translate(0, 0.4em); }
+    .event-card__overlay-actions a:active::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry);
+      transform: translate3d(0, 0, -1em);
     }
     .event-card__overlay-actions button {
-      padding: 0.35rem 0.5rem;
-      border-radius: 0.5em;
-      font-size: 0.75rem;
-      font-weight: 400;
+      border: 2px solid var(--blush-rose);
       background: var(--btn-fill-dark);
       color: #FFD9DA;
-      border: 2px solid var(--blush-rose);
-      cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 0.15em 0 0 var(--blush-rose);
-      transform: translateY(-0.15em);
     }
-    .event-card__overlay-actions button:hover {
-      transform: translateY(-0.25em);
-      box-shadow: 0 0.25em 0 0 var(--blush-rose);
+    .event-card__overlay-actions button::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--blush-rose);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 0.4em 0 0 var(--blush-rose);
+      transform: translate3d(0, 0.4em, -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
-    .event-card__overlay-actions button:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--blush-rose);
+    .event-card__overlay-actions button:hover { transform: translate(0, 0.15em); }
+    .event-card__overlay-actions button:hover::before {
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 0.25em 0 0 var(--blush-rose);
+      transform: translate3d(0, 0.25em, -1em);
+    }
+    .event-card__overlay-actions button:active { transform: translate(0, 0.4em); }
+    .event-card__overlay-actions button:active::before {
+      box-shadow: 0 0 0 2px var(--blush-rose);
+      transform: translate3d(0, 0, -1em);
     }
     .event-card__image--placeholder {
       background: linear-gradient(135deg, rgba(234, 99, 140, 0.5) 0%, rgba(137, 2, 62, 0.6) 100%);
@@ -251,61 +291,94 @@
       align-items: center;
       gap: 0.5rem;
     }
+    /* Learn-more style: ::before = depth layer */
     .events-nav .db-nav-btn {
+      position: relative;
+      display: inline-block;
+      vertical-align: middle;
+      outline: none;
       padding: 0.5rem 1rem;
       border-radius: var(--btn-radius);
       font-size: 0.875rem;
       font-weight: 400;
-      border: 2px solid var(--btn-outline);
+      border: 2px solid var(--btn-border);
+      background: var(--btn-top);
+      color: var(--btn-text);
       cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
-      transform: translateY(calc(-1 * var(--btn-raise)));
+      text-decoration: none;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    }
+    .events-nav .db-nav-btn::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--btn-depth-bg);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--btn-border), 0 var(--btn-depth) 0 0 var(--btn-depth-shadow);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
     .events-nav .db-nav-btn:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+      transform: translate(0, 0.25em);
+      background: #FFE4E6;
+    }
+    .events-nav .db-nav-btn:hover::before {
+      box-shadow: 0 0 0 2px var(--btn-border), 0 var(--btn-depth-hover) 0 0 var(--btn-depth-shadow);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
     }
     .events-nav .db-nav-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--btn-outline);
+      transform: translate(0, var(--btn-depth));
+      background: #FFE4E6;
+    }
+    .events-nav .db-nav-btn:active::before {
+      box-shadow: 0 0 0 2px var(--btn-border);
+      transform: translate3d(0, 0, -1em);
     }
     .events-nav .db-nav-btn--filter {
-      background: var(--btn-fill-dark);
-      color: #FFD9DA;
-      border-color: var(--blush-rose);
-      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise)));
+      --btn-border: var(--blush-rose);
+      --btn-top: var(--btn-fill-dark);
+      --btn-text: #FFD9DA;
+      --btn-depth-bg: var(--blush-rose);
+      --btn-depth-shadow: var(--blush-rose);
     }
-    .events-nav .db-nav-btn--filter:hover {
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-    }
-    .events-nav .db-nav-btn--filter:active {
-      box-shadow: 0 2px 0 0 var(--blush-rose);
-    }
+    .events-nav .db-nav-btn--filter:hover { background: #252530; }
+    .events-nav .db-nav-btn--filter:active { background: #252530; }
     .events-nav .db-nav-btn--primary {
-      background: var(--btn-fill);
-      color: #FFD9DA;
+      --btn-border: var(--dark-raspberry);
+      --btn-top: var(--btn-fill);
+      --btn-text: #FFD9DA;
+      --btn-depth-bg: var(--dark-raspberry);
+      --btn-depth-shadow: var(--dark-raspberry);
     }
+    .events-nav .db-nav-btn--primary:hover { background: #f07a9d; }
+    .events-nav .db-nav-btn--primary:active { background: #f07a9d; }
     .events-nav .db-nav-btn--accent {
-      background: var(--btn-outline);
-      color: #FFD9DA;
+      --btn-border: var(--dark-raspberry);
+      --btn-top: var(--dark-raspberry);
+      --btn-text: #FFD9DA;
+      --btn-depth-bg: #5a0130;
+      --btn-depth-shadow: #5a0130;
     }
+    .events-nav .db-nav-btn--accent:hover { background: #a00348; }
+    .events-nav .db-nav-btn--accent:active { background: #a00348; }
     .events-nav .db-nav-btn--secondary {
-      background: var(--btn-fill-dark);
-      color: #FFD9DA;
-      border-color: var(--blush-rose);
-      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise)));
+      --btn-border: var(--blush-rose);
+      --btn-top: var(--btn-fill-dark);
+      --btn-text: #FFD9DA;
+      --btn-depth-bg: var(--blush-rose);
+      --btn-depth-shadow: var(--blush-rose);
     }
-    .events-nav .db-nav-btn--secondary:hover {
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-    }
-    .events-nav .db-nav-btn--secondary:active {
-      box-shadow: 0 2px 0 0 var(--blush-rose);
-    }
+    .events-nav .db-nav-btn--secondary:hover { background: #252530; }
+    .events-nav .db-nav-btn--secondary:active { background: #252530; }
     .events-nav select, .events-nav input[type="date"], .events-nav input[type="text"] {
       padding: 0.4rem 0.6rem;
       border-radius: 0.75rem;
@@ -336,10 +409,14 @@
     }
     .events-nav__time-btns .db-nav-btn:last-child { border-right: none; }
     .events-nav__time-btns .db-nav-btn.nav-btn--active {
+      --btn-top: var(--btn-fill);
+      --btn-text: #0a0a0c;
+      transform: translate(0, var(--btn-depth));
       background: var(--btn-fill);
-      color: #0a0a0c;
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--blush-rose);
+    }
+    .events-nav__time-btns .db-nav-btn.nav-btn--active::before {
+      box-shadow: 0 0 0 2px var(--blush-rose);
+      transform: translate3d(0, 0, -1em);
     }
     .events-nav__filter-trigger {
       display: inline-flex;
@@ -474,36 +551,78 @@
       cursor: pointer;
     }
     .event-detail-modal__actions .btn-go {
+      position: relative;
+      outline: none;
+      border: 2px solid var(--dark-raspberry);
       background: var(--btn-fill);
       color: #FFD9DA;
-      border: 2px solid var(--btn-outline);
-      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
-      transform: translateY(calc(-1 * var(--btn-raise)));
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
     }
-    .event-detail-modal__actions .btn-go:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+    .event-detail-modal__actions .btn-go::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--dark-raspberry);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 var(--btn-depth) 0 0 var(--dark-raspberry);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
-    .event-detail-modal__actions .btn-go:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--btn-outline);
+    .event-detail-modal__actions .btn-go:hover { transform: translate(0, 0.25em); background: #f07a9d; }
+    .event-detail-modal__actions .btn-go:hover::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 var(--btn-depth-hover) 0 0 var(--dark-raspberry);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
+    }
+    .event-detail-modal__actions .btn-go:active { transform: translate(0, var(--btn-depth)); }
+    .event-detail-modal__actions .btn-go:active::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry);
+      transform: translate3d(0, 0, -1em);
     }
     .event-detail-modal__actions .btn-close {
+      position: relative;
+      outline: none;
+      border: 2px solid var(--blush-rose);
       background: var(--btn-fill-dark);
       color: #FFD9DA;
-      border: 2px solid var(--blush-rose);
-      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise)));
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
     }
-    .event-detail-modal__actions .btn-close:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+    .event-detail-modal__actions .btn-close::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--blush-rose);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
-    .event-detail-modal__actions .btn-close:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--blush-rose);
+    .event-detail-modal__actions .btn-close:hover { transform: translate(0, 0.25em); background: #252530; }
+    .event-detail-modal__actions .btn-close:hover::before {
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth-hover) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
+    }
+    .event-detail-modal__actions .btn-close:active { transform: translate(0, var(--btn-depth)); }
+    .event-detail-modal__actions .btn-close:active::before {
+      box-shadow: 0 0 0 2px var(--blush-rose);
+      transform: translate3d(0, 0, -1em);
     }
 
     /* Glass modals on black */
@@ -521,44 +640,96 @@
       transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
     }
 
-    /* 3D layered buttons in modals */
+    /* Learn-more style in modals */
     .db-modal button[type="submit"],
     .db-modal #confirm-delete-event-btn {
-      border: 2px solid var(--btn-outline);
+      position: relative;
+      outline: none;
+      border: 2px solid var(--dark-raspberry);
       background: var(--btn-fill);
       color: #FFD9DA;
-      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
-      transform: translateY(calc(-1 * var(--btn-raise)));
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    }
+    .db-modal button[type="submit"]::before,
+    .db-modal #confirm-delete-event-btn::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--dark-raspberry);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 var(--btn-depth) 0 0 var(--dark-raspberry);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
     .db-modal button[type="submit"]:hover,
     .db-modal #confirm-delete-event-btn:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+      transform: translate(0, 0.25em);
+      background: #f07a9d;
+    }
+    .db-modal button[type="submit"]:hover::before,
+    .db-modal #confirm-delete-event-btn:hover::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry), 0 var(--btn-depth-hover) 0 0 var(--dark-raspberry);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
     }
     .db-modal button[type="submit"]:active,
     .db-modal #confirm-delete-event-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--btn-outline);
+      transform: translate(0, var(--btn-depth));
     }
-    .db-modal .btn-cancel,
-    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn) {
+    .db-modal button[type="submit"]:active::before,
+    .db-modal #confirm-delete-event-btn:active::before {
+      box-shadow: 0 0 0 2px var(--dark-raspberry);
+      transform: translate3d(0, 0, -1em);
+    }
+    .db-modal .btn-cancel {
+      position: relative;
+      outline: none;
+      border: 2px solid var(--blush-rose) !important;
       background: var(--btn-fill-dark) !important;
       color: #FFD9DA !important;
-      border: 2px solid var(--blush-rose) !important;
-      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise)));
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
     }
-    .db-modal .btn-cancel:hover,
-    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn):hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+    .db-modal .btn-cancel::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--blush-rose);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
-    .db-modal .btn-cancel:active,
-    .db-modal button.flex-1:first-of-type:not(#confirm-delete-event-btn):active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--blush-rose);
+    .db-modal .btn-cancel:hover {
+      transform: translate(0, 0.25em);
+      background: #252530 !important;
+    }
+    .db-modal .btn-cancel:hover::before {
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth-hover) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
+    }
+    .db-modal .btn-cancel:active {
+      transform: translate(0, var(--btn-depth));
+    }
+    .db-modal .btn-cancel:active::before {
+      box-shadow: 0 0 0 2px var(--blush-rose);
+      transform: translate3d(0, 0, -1em);
     }
 
     /* Homepage section: full viewport, full width */
@@ -607,6 +778,9 @@
       margin-bottom: 1.5rem;
     }
     .home-date-btns .home-date-btn {
+      position: relative;
+      display: inline-block;
+      outline: none;
       padding: 0.5rem 1rem;
       border-radius: var(--btn-radius);
       font-size: 0.875rem;
@@ -615,17 +789,42 @@
       background: var(--btn-fill-dark);
       color: #FFD9DA;
       cursor: pointer;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 var(--btn-raise) 0 0 var(--blush-rose);
-      transform: translateY(calc(-1 * var(--btn-raise)));
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    }
+    .home-date-btns .home-date-btn::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--blush-rose);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
     .home-date-btns .home-date-btn:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--blush-rose);
+      transform: translate(0, 0.25em);
+      background: #252530;
+    }
+    .home-date-btns .home-date-btn:hover::before {
+      box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth-hover) 0 0 var(--blush-rose);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
     }
     .home-date-btns .home-date-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--blush-rose);
+      transform: translate(0, var(--btn-depth));
+      background: #252530;
+    }
+    .home-date-btns .home-date-btn:active::before {
+      box-shadow: 0 0 0 2px var(--blush-rose);
+      transform: translate3d(0, 0, -1em);
     }
     .home-area-wrap {
       width: 100%;
@@ -643,6 +842,11 @@
       box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.3), -4px -4px 12px rgba(255, 217, 218, 0.04);
     }
     .browse-all-btn {
+      --btn-top: var(--btn-fill);
+      --btn-border: var(--dark-raspberry);
+      --btn-depth-bg: var(--dark-raspberry);
+      --btn-depth-shadow: var(--dark-raspberry);
+      position: relative;
       display: block;
       width: 100%;
       padding: 1rem 1.5rem;
@@ -652,22 +856,47 @@
       text-transform: uppercase;
       letter-spacing: 0.06em;
       text-align: center;
-      background: var(--btn-fill);
+      background: var(--btn-top);
       color: #FFD9DA;
-      border: 2px solid var(--btn-outline);
+      border: 2px solid var(--btn-border);
       cursor: pointer;
       text-decoration: none;
-      transition: transform 0.1s ease, box-shadow 0.1s ease;
-      box-shadow: 0 var(--btn-raise) 0 0 var(--btn-outline);
-      transform: translateY(calc(-1 * var(--btn-raise)));
+      -webkit-transform-style: preserve-3d;
+      transform-style: preserve-3d;
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+    }
+    .browse-all-btn::before {
+      position: absolute;
+      content: '';
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--btn-depth-bg);
+      border-radius: inherit;
+      box-shadow: 0 0 0 2px var(--btn-border), 0 var(--btn-depth) 0 0 var(--btn-depth-shadow);
+      transform: translate3d(0, var(--btn-depth), -1em);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), box-shadow 150ms cubic-bezier(0, 0, 0.58, 1);
+      pointer-events: none;
+      z-index: -1;
     }
     .browse-all-btn:hover {
-      transform: translateY(calc(-1 * var(--btn-raise-hover)));
-      box-shadow: 0 var(--btn-raise-hover) 0 0 var(--btn-outline);
+      transform: translate(0, 0.25em);
+      background: #f07a9d;
+    }
+    .browse-all-btn:hover::before {
+      box-shadow: 0 0 0 2px var(--btn-border), 0 var(--btn-depth-hover) 0 0 var(--btn-depth-shadow);
+      transform: translate3d(0, var(--btn-depth-hover), -1em);
     }
     .browse-all-btn:active {
-      transform: translateY(0);
-      box-shadow: 0 2px 0 0 var(--btn-outline);
+      transform: translate(0, var(--btn-depth));
+      background: #f07a9d;
+    }
+    .browse-all-btn:active::before {
+      box-shadow: 0 0 0 2px var(--btn-border);
+      transform: translate3d(0, 0, -1em);
     }
   </style>
 </head>
