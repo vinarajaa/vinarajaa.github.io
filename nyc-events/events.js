@@ -6,6 +6,7 @@ const GITHUB_REPO = "vinarajaa/vinarajaa.github.io";
 const GITHUB_WORKFLOW_FILE = "scrape-nyc-events.yml";
 
 let eventsData = [];
+var filteredEventsList = [];
 let demoMode = false;
 var DEMO_EVENTS = [
   { id: "demo-1", title: "Sample Show", date: "2025-02-15", time: "20:00", neighborhood: "Brooklyn", price: "$25", link: "https://dice.fm/example1", platform: "Dice", created_at: "2025-02-01T12:00:00Z" },
@@ -149,9 +150,11 @@ function applyClientFilters() {
     if (price === "paid" && !(e.price || "").trim()) return false;
     if (price === "paid" && (e.price || "").toLowerCase() === "free") return false;
     if (search) {
-      var title = (e.title || "").toLowerCase();
-      var desc = (e.description || "").toLowerCase();
-      if (title.indexOf(search) < 0 && desc.indexOf(search) < 0) return false;
+      var allText = [
+        e.title, e.description, e.venue, e.neighborhood, e.address, e.time, e.price, e.platform,
+        e.date ? formatDateDisplay(e.date) : ""
+      ].filter(Boolean).join(" ").toLowerCase();
+      if (allText.indexOf(search) < 0) return false;
     }
     if (eventType) {
       var text = ((e.title || "") + " " + (e.description || "")).toLowerCase();
@@ -191,7 +194,8 @@ function renderEventsTable(list) {
     return;
   }
   if (emptyEl) emptyEl.classList.add("hidden");
-  grid.innerHTML = list.map(function (e) {
+  filteredEventsList = list;
+  grid.innerHTML = list.map(function (e, idx) {
     var dateVal = e.date;
     var dateStr = "—";
     if (dateVal != null && dateVal !== "") {
@@ -220,7 +224,7 @@ function renderEventsTable(list) {
     if (dateStr !== "—") metaParts.push(escapeHtml(dateStr));
     var metaLine = metaParts.length ? "<p class=\"event-card__meta\">" + metaParts.join(" · ") + "</p>" : "";
     return (
-      "<article class=\"event-card\" data-event-id=\"" + id + "\">" +
+      "<article class=\"event-card\" data-event-id=\"" + id + "\" data-index=\"" + idx + "\" role=\"button\" tabindex=\"0\">" +
         "<div class=\"event-card__image-wrap\">" + imgTag + "</div>" +
         "<div class=\"event-card__title-wrap\"><h3 class=\"event-card__title\">" + title + "</h3>" + metaLine + "</div>" +
         "<div class=\"event-card__overlay\">" +
@@ -230,14 +234,18 @@ function renderEventsTable(list) {
             (neighborhood !== "—" ? "<span>" + escapeHtml(neighborhood) + "</span>" : "") +
             (price !== "—" ? "<span>" + escapeHtml(price) + "</span>" : "") +
           "</div>" +
-          "<div class=\"event-card__overlay-actions\">" +
-            "<a href=\"" + link + "\" target=\"_blank\" rel=\"noopener noreferrer\">Get tickets</a>" +
-            "<button type=\"button\" onclick=\"openDeleteEventModal('" + id.replace(/'/g, "\\'") + "','" + titleAttr.replace(/'/g, "\\'") + "')\">Delete</button>" +
-          "</div>" +
         "</div>" +
       "</article>"
     );
   }).join("");
+  document.querySelectorAll(".event-card").forEach(function (card) {
+    var idx = card.getAttribute("data-index");
+    if (idx === null) return;
+    card.addEventListener("click", function () { openEventModal(parseInt(idx, 10)); });
+    card.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openEventModal(parseInt(card.getAttribute("data-index"), 10)); }
+    });
+  });
   if (typeof gsap !== "undefined") {
     gsap.fromTo(".event-card", { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.04, ease: "power2.out" });
     document.querySelectorAll(".event-card").forEach(function (card) {
@@ -309,6 +317,63 @@ function closeFilterPanelOnClick(ev) {
   var trigger = get("eventFilterTrigger");
   if (trigger) trigger.setAttribute("aria-expanded", "false");
   document.removeEventListener("click", closeFilterPanelOnClick);
+}
+
+function openEventModal(index) {
+  var ev = filteredEventsList[index];
+  if (!ev) return;
+  var overlay = get("eventDetailModal");
+  var titleEl = get("eventDetailModalTitle");
+  var metaEl = get("eventDetailMeta");
+  var descEl = get("eventDetailDescription");
+  var imgEl = get("eventDetailImage");
+  var linkEl = get("eventDetailLink");
+  if (!overlay) return;
+  var dateStr = formatDateDisplay(ev.date);
+  var metaParts = [];
+  if (dateStr && dateStr !== "—") metaParts.push(dateStr);
+  if (ev.time) metaParts.push(ev.time);
+  if (ev.venue) metaParts.push(ev.venue);
+  if (ev.neighborhood) metaParts.push(ev.neighborhood);
+  if (ev.address) metaParts.push(ev.address);
+  if (ev.price) metaParts.push(formatPriceDisplay(ev.price));
+  if (ev.platform) metaParts.push(ev.platform);
+  if (titleEl) titleEl.textContent = ev.title || "Untitled";
+  if (metaEl) metaEl.innerHTML = metaParts.map(function (p) { return "<span>" + escapeHtml(p) + "</span>"; }).join("");
+  if (descEl) descEl.textContent = ev.description || "";
+  if (descEl) descEl.style.display = (ev.description && ev.description.trim()) ? "block" : "none";
+  var imgWrap = get("eventDetailImageWrap");
+  if (imgEl) {
+    if (ev.image_url && ev.image_url.indexOf("http") === 0) {
+      imgEl.src = ev.image_url;
+      imgEl.style.display = "block";
+      imgEl.alt = ev.title || "Event";
+      if (imgWrap) imgWrap.style.display = "block";
+    } else {
+      imgEl.style.display = "none";
+      if (imgWrap) imgWrap.style.display = "none";
+    }
+  }
+  if (linkEl) {
+    linkEl.href = ev.link || "#";
+    linkEl.style.display = (ev.link && ev.link.indexOf("http") === 0) ? "inline-block" : "none";
+  }
+  overlay.classList.add("is-open");
+  overlay.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+  document.addEventListener("keydown", eventModalKeydown);
+}
+function eventModalKeydown(e) {
+  if (e.key === "Escape") closeEventModal();
+}
+function closeEventModal() {
+  var overlay = get("eventDetailModal");
+  if (overlay) {
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+  }
+  document.body.style.overflow = "";
+  document.removeEventListener("keydown", eventModalKeydown);
 }
 
 function toggleNavDropdown(id) {
@@ -555,4 +620,6 @@ function confirmDeleteEvent() {
 
 document.addEventListener("DOMContentLoaded", function () {
   loadEvents();
+  var searchEl = get("filterSearch");
+  if (searchEl) searchEl.addEventListener("input", function () { applyEventFilters(); });
 });

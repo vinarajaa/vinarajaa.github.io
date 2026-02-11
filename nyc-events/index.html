@@ -279,6 +279,71 @@
     .events-nav__filter-panel label { display: block; font-size: 0.6875rem; text-transform: uppercase; letter-spacing: 0.05em; color: #B36A5E; margin-bottom: 0.25rem; }
     .events-nav__filter-panel .filter-row { margin-bottom: 0.75rem; }
     .events-nav__filter-panel .filter-row:last-of-type { margin-bottom: 0; }
+    .event-card { cursor: pointer; }
+    .event-detail-modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(39, 15, 3, 0.4);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.25s ease, visibility 0.25s ease;
+    }
+    .event-detail-modal-overlay.is-open {
+      opacity: 1;
+      visibility: visible;
+    }
+    .event-detail-modal {
+      background: #F5EDE9;
+      border-radius: 1rem;
+      border: 1px solid #C89F9C;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+      max-width: 420px;
+      width: 100%;
+      max-height: calc(100vh - 3rem);
+      overflow-y: auto;
+      transform: scale(0.96);
+      transition: transform 0.25s ease;
+    }
+    .event-detail-modal-overlay.is-open .event-detail-modal { transform: scale(1); }
+    .event-detail-modal__image {
+      width: 100%;
+      aspect-ratio: 16/10;
+      object-fit: cover;
+      display: block;
+      border-radius: 1rem 1rem 0 0;
+    }
+    .event-detail-modal__image-wrap {
+      background: linear-gradient(145deg, #C89F9C 0%, #B36A5E 100%);
+    }
+    .event-detail-modal__body { padding: 1.25rem; }
+    .event-detail-modal__title { font-size: 1.25rem; font-weight: 700; color: #270f03; margin: 0 0 0.75rem; line-height: 1.3; }
+    .event-detail-modal__meta { font-size: 0.8125rem; color: #B36A5E; margin-bottom: 0.75rem; }
+    .event-detail-modal__meta span { display: block; }
+    .event-detail-modal__description { font-size: 0.875rem; color: #270f03; line-height: 1.5; margin-bottom: 1rem; white-space: pre-wrap; }
+    .event-detail-modal__actions { display: flex; gap: 0.5rem; }
+    .event-detail-modal__actions a, .event-detail-modal__actions button {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border-radius: 0.5rem;
+      font-weight: 600;
+      font-size: 0.875rem;
+      text-align: center;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .event-detail-modal__actions .btn-go { background: #C97C5D; color: #fff; }
+    .event-detail-modal__actions .btn-go:hover { background: #B36A5E; }
+    .event-detail-modal__actions .btn-close { background: rgba(200, 159, 156, 0.4); color: #270f03; }
+    .event-detail-modal__actions .btn-close:hover { background: rgba(200, 159, 156, 0.6); }
   </style>
 </head>
 <body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
@@ -298,6 +363,7 @@
           <button type="button" data-time="late" onclick="setTimeFilter('late')" class="db-nav-btn db-nav-btn--filter time-filter-btn">Late night</button>
         </div>
         <select id="filterNeighborhood" title="Area"></select>
+        <input type="text" id="filterSearch" class="flex-1 min-w-[140px]" placeholder="Search keywords…" />
       </div>
       <input type="hidden" id="filterTimeOfDay" value="" />
       <div class="events-nav__divider" aria-hidden="true"></div>
@@ -316,10 +382,6 @@
                 <input type="date" id="filterDateTo" placeholder="To" />
               </div>
             </div>
-          </div>
-          <div class="filter-row">
-            <label>Search</label>
-            <input type="text" id="filterSearch" class="w-full mt-1" placeholder="Title or description" />
           </div>
           <div class="filter-row">
             <label>Type</label>
@@ -372,6 +434,24 @@
       <div id="eventsGrid" class="events-grid"></div>
       <p id="eventsGridEmpty" class="hidden text-center py-12 text-[#C89F9C]">No events match. Add one or adjust filters.</p>
     </div>
+
+  <!-- Event detail modal -->
+  <div id="eventDetailModal" class="event-detail-modal-overlay" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="eventDetailModalTitle" onclick="closeEventModal()">
+    <div class="event-detail-modal" onclick="event.stopPropagation()">
+      <div class="event-detail-modal__image-wrap" id="eventDetailImageWrap">
+        <img id="eventDetailImage" class="event-detail-modal__image" src="" alt="" />
+      </div>
+      <div class="event-detail-modal__body">
+        <h2 id="eventDetailModalTitle" class="event-detail-modal__title"></h2>
+        <div id="eventDetailMeta" class="event-detail-modal__meta"></div>
+        <div id="eventDetailDescription" class="event-detail-modal__description"></div>
+        <div class="event-detail-modal__actions">
+          <a id="eventDetailLink" href="#" target="_blank" rel="noopener noreferrer" class="btn-go">Go to event</a>
+          <button type="button" onclick="closeEventModal()" class="btn-close">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
     <p id="events-status" class="text-center text-sm py-2" style="color: #C89F9C;" aria-live="polite">Loading…</p>
   </div>
