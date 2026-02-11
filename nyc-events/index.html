@@ -778,6 +778,8 @@
       margin-bottom: 1.5rem;
     }
     .home-date-btns .home-date-btn {
+      -webkit-appearance: none;
+      appearance: none;
       position: relative;
       display: inline-block;
       outline: none;
@@ -785,13 +787,14 @@
       border-radius: var(--btn-radius);
       font-size: 0.875rem;
       font-weight: 400;
-      border: 2px solid var(--blush-rose);
-      background: var(--dark-raspberry);
-      color: var(--soft-blush);
+      border: 2px solid var(--blush-rose) !important;
+      background: var(--dark-raspberry) !important;
+      background-color: var(--dark-raspberry) !important;
+      color: var(--soft-blush) !important;
       cursor: pointer;
       -webkit-transform-style: preserve-3d;
       transform-style: preserve-3d;
-      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1);
+      transition: transform 150ms cubic-bezier(0, 0, 0.58, 1), background 150ms cubic-bezier(0, 0, 0.58, 1), background-color 150ms cubic-bezier(0, 0, 0.58, 1);
     }
     .home-date-btns .home-date-btn::before {
       position: absolute;
@@ -812,7 +815,8 @@
     }
     .home-date-btns .home-date-btn:hover {
       transform: translate(0, 0.25em);
-      background: #252530;
+      background: #a00348 !important;
+      background-color: #a00348 !important;
     }
     .home-date-btns .home-date-btn:hover::before {
       box-shadow: 0 0 0 2px var(--blush-rose), 0 var(--btn-depth-hover) 0 0 var(--blush-rose);
@@ -820,7 +824,8 @@
     }
     .home-date-btns .home-date-btn:active {
       transform: translate(0, var(--btn-depth));
-      background: #a00348;
+      background: #a00348 !important;
+      background-color: #a00348 !important;
     }
     .home-date-btns .home-date-btn:active::before {
       box-shadow: 0 0 0 2px var(--blush-rose);
