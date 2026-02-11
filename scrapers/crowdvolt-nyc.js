@@ -178,7 +178,6 @@ function fetchCrowdvoltEventDetailsWithTimeout(link) {
       try {
         child.kill("SIGKILL");
       } catch (_) {}
-      console.warn("  (timeout after " + timeoutMs / 1000 + "s, skipping)");
       onDone(null);
     }, timeoutMs);
     child.on("close", function (code) {
@@ -423,17 +422,21 @@ async function fetchListingWithPuppeteer() {
   }
 }
 
+function filterSinceDate(events, sinceDate) {
+  if (!sinceDate) return events;
+  return events.filter(function (e) { return (e.date || "") >= sinceDate; });
+}
+
 async function scrapeCrowdvoltNy(opts) {
   const allEvents = [];
   const seenLinks = new Set();
-
-  const onProgress = opts && opts.onProgress ? function (c, d) { opts.onProgress("CrowdVolt", c, d); } : null;
+  const sinceDate = (opts && opts.sinceDate) || null;
   let html = null;
   try {
     html = await fetchListingWithPuppeteer();
   } catch (_) {}
   if (html) {
-    const events = extractEventsFromHtml(html, "https://www.crowdvolt.com/", onProgress);
+    const events = extractEventsFromHtml(html, "https://www.crowdvolt.com/", null);
     for (const ev of events) {
       if (seenLinks.has(ev.link)) continue;
       seenLinks.add(ev.link);
@@ -447,7 +450,7 @@ async function scrapeCrowdvoltNy(opts) {
         const res = await fetch(listUrl, { headers: FETCH_HEADERS });
         if (!res.ok) continue;
         const h = await res.text();
-        const events = extractEventsFromHtml(h, listUrl, onProgress);
+        const events = extractEventsFromHtml(h, listUrl, null);
         for (const ev of events) {
           if (seenLinks.has(ev.link)) continue;
           seenLinks.add(ev.link);
@@ -480,8 +483,6 @@ async function scrapeCrowdvoltNy(opts) {
   const concurrency = Math.min(DETAIL_CONCURRENCY, needDetails.length);
   for (let i = 0; i < needDetails.length; i += concurrency) {
     const batch = needDetails.slice(i, i + concurrency);
-    if (onProgress) onProgress(allEvents.length, "details " + (i + batch.length) + "/" + needDetails.length);
-    console.log("  → " + (i + 1) + "-" + (i + batch.length) + "/" + needDetails.length + " (" + batch.length + " in parallel)");
     const results = await Promise.all(batch.map(function (ev) {
       return fetchCrowdvoltEventDetailsWithTimeout(ev.link).then(function (d) {
         return { ev: ev, details: d };
@@ -493,21 +494,17 @@ async function scrapeCrowdvoltNy(opts) {
     if (i + concurrency < needDetails.length) await sleep(80);
   }
 
-  // For any event still missing details (skipped/timeout), pull from listing HTML
   if (html) {
     const stillNeed = allEvents.filter(function (e) {
       return !e.address || !e.time || !e.venue;
     });
-    if (stillNeed.length > 0) {
-      console.log("  → filling " + stillNeed.length + " skipped from listing HTML");
-      stillNeed.forEach(function (ev) {
-        const fromListing = getDetailsFromListingHtml(html, ev.link);
-        if (fromListing) applyDetails(ev, fromListing);
-      });
-    }
+    stillNeed.forEach(function (ev) {
+      const fromListing = getDetailsFromListingHtml(html, ev.link);
+      if (fromListing) applyDetails(ev, fromListing);
+    });
   }
 
-  return allEvents;
+  return filterSinceDate(allEvents, sinceDate);
 }
 
 async function pushToEventsApi(events) {

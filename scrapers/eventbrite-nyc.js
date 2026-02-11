@@ -472,8 +472,14 @@ const FETCH_HEADERS = {
   "Referer": "https://www.eventbrite.com/"
 };
 
+function filterSinceDate(events, sinceDate) {
+  if (!sinceDate) return events;
+  return events.filter(function (e) { return (e.date || "") >= sinceDate; });
+}
+
 async function scrapeEventbriteNy(opts) {
   const onProgress = opts && opts.onProgress ? function (c, d) { opts.onProgress("Eventbrite", c, d); } : null;
+  const sinceDate = (opts && opts.sinceDate) || null;
   let lastError;
   for (const url of EVENTBRITE_NYC_URLS) {
     try {
@@ -507,7 +513,7 @@ async function scrapeEventbriteNy(opts) {
         await sleep(120);
       }
 
-      return events;
+      return filterSinceDate(events, sinceDate);
     } catch (e) {
       lastError = e;
     }

@@ -406,8 +406,14 @@ function sleep(ms) {
   return new Promise(function (resolve) { setTimeout(resolve, ms); });
 }
 
+function filterSinceDate(events, sinceDate) {
+  if (!sinceDate) return events;
+  return events.filter(function (e) { return (e.date || "") >= sinceDate; });
+}
+
 async function scrapeDiceNy(opts) {
   const onProgress = opts && opts.onProgress ? function (c, d) { opts.onProgress("Dice", c, d); } : null;
+  const sinceDate = (opts && opts.sinceDate) || null;
   let lastError;
   for (const url of DICE_NYC_URLS) {
     try {
@@ -470,7 +476,7 @@ async function scrapeDiceNy(opts) {
         applyDetails(ev, details);
         await sleep(90);
       }
-      return events;
+      return filterSinceDate(events, sinceDate);
     } catch (e) {
       lastError = e;
     }

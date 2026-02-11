@@ -329,11 +329,17 @@ async function triggerPullFromDice() {
       setStatus("Pull failed: " + (data.error || res.status));
       return;
     }
-    setStatus("Pulled " + (data.inserted || 0) + " new event(s). Refreshing…");
+    var msg = "Pulled " + (data.inserted || 0) + " new";
+    if (data.deleted != null && data.deleted > 0) msg += ", deleted " + data.deleted + " past";
+    msg += ". Refreshing…";
+    setStatus(msg);
     await fetchEvents();
     populateFilterDropdowns();
     applyEventFilters();
-    setStatus(eventsData.length + " event(s). Pulled " + (data.inserted || 0) + " new.");
+    msg = eventsData.length + " event(s)";
+    if (data.inserted) msg += ". Inserted " + data.inserted;
+    if (data.deleted) msg += ", deleted " + data.deleted + " past";
+    setStatus(msg);
   } catch (err) {
     setStatus("Pull failed: " + (err.message || "Network error"));
     console.error(err);
