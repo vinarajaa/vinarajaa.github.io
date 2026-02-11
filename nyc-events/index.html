@@ -72,43 +72,25 @@
       gap: 1rem;
       padding: 1rem 0;
     }
+    /* Neumorphic (soft UI) card on dark */
     .event-card {
       position: relative;
       width: 100%;
       min-width: 0;
-      border-radius: 1.5rem;
+      border-radius: 1.25rem;
       overflow: hidden;
-      background: rgba(255, 217, 218, 0.07);
-      backdrop-filter: blur(20px) saturate(1.2);
-      -webkit-backdrop-filter: blur(20px) saturate(1.2);
-      border: 1px solid rgba(234, 99, 140, 0.3);
+      background: #1a1a1e;
+      border: none;
       box-shadow:
-        0 0 0 1px var(--glass-highlight) inset,
-        0 4px 16px rgba(0, 0, 0, 0.4),
-        0 12px 32px rgba(234, 99, 140, 0.08);
-      transform: translateZ(6px) rotateX(2deg);
-      transform-origin: center bottom;
-      transform-style: preserve-3d;
-      transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease, border-color 0.2s ease;
-    }
-    .event-card::before {
-      content: "";
-      position: absolute;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      height: 4px;
-      background: linear-gradient(180deg, transparent 0%, rgba(234, 99, 140, 0.15) 100%);
-      pointer-events: none;
-      z-index: 1;
+        10px 10px 24px rgba(0, 0, 0, 0.45),
+        -8px -8px 20px rgba(255, 217, 218, 0.06);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     .event-card:hover {
-      transform: translateY(-14px) translateZ(28px) rotateX(5deg);
-      border-color: rgba(234, 99, 140, 0.55);
+      transform: translateY(-4px);
       box-shadow:
-        0 0 0 1px var(--glass-highlight) inset,
-        0 8px 24px rgba(0, 0, 0, 0.4),
-        0 24px 48px rgba(234, 99, 140, 0.15);
+        14px 14px 32px rgba(0, 0, 0, 0.5),
+        -10px -10px 28px rgba(255, 217, 218, 0.1);
     }
     /* Taller card image (portrait so cards aren’t flattened) */
     .event-card__image-wrap {
