@@ -100,15 +100,25 @@ function parseTimeHour(timeStr) {
   return null;
 }
 
+function tomorrowYMD() {
+  var d = new Date();
+  d.setDate(d.getDate() + 1);
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+
 function setDateFilter(mode) {
   var fromEl = get("filterDateFrom");
   var toEl = get("filterDateTo");
   var rangeEl = get("dateRangeInputs");
   var today = todayYMD();
+  var tomorrow = tomorrowYMD();
   var weekEnd = endOfWeekYMD();
   document.querySelectorAll(".date-filter-btn").forEach(function (btn) {
     btn.classList.remove("ring-2", "ring-offset-1");
     btn.style.boxShadow = "none";
+  });
+  document.querySelectorAll(".date-quick-btn").forEach(function (btn) {
+    btn.classList.remove("date-quick-btn--active");
   });
   if (mode === "today") {
     if (fromEl) fromEl.value = today;
@@ -116,12 +126,22 @@ function setDateFilter(mode) {
     if (rangeEl) rangeEl.classList.add("hidden");
     var btn = get("dateBtnToday");
     if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #EA638C"; }
+    var quickBtn = get("dateQuickToday");
+    if (quickBtn) quickBtn.classList.add("date-quick-btn--active");
+  } else if (mode === "tomorrow") {
+    if (fromEl) fromEl.value = tomorrow;
+    if (toEl) toEl.value = tomorrow;
+    if (rangeEl) rangeEl.classList.add("hidden");
+    var quickBtn = get("dateQuickTomorrow");
+    if (quickBtn) quickBtn.classList.add("date-quick-btn--active");
   } else if (mode === "week") {
     if (fromEl) fromEl.value = today;
     if (toEl) toEl.value = weekEnd;
     if (rangeEl) rangeEl.classList.add("hidden");
     var btn = get("dateBtnWeek");
     if (btn) { btn.classList.add("ring-2", "ring-offset-1"); btn.style.boxShadow = "0 0 0 2px #EA638C"; }
+    var quickBtn = get("dateQuickWeek");
+    if (quickBtn) quickBtn.classList.add("date-quick-btn--active");
   } else {
     if (rangeEl) rangeEl.classList.remove("hidden");
     var btn = get("dateBtnRange");
@@ -274,8 +294,8 @@ function populateFilterDropdowns() {
   var nhSelect = get("filterNeighborhood");
   var areaOpts = "<option value=\"\">All areas</option>" + neighborhoods.map(function (n) { return "<option value=\"" + n.replace(/"/g, "&quot;") + "\">" + n.replace(/</g, "&lt;") + "</option>"; }).join("");
   if (nhSelect) nhSelect.innerHTML = areaOpts;
-  var homeArea = get("homeArea");
-  if (homeArea) homeArea.innerHTML = areaOpts;
+  var viewAreaSelect = get("viewAreaSelect");
+  if (viewAreaSelect) viewAreaSelect.innerHTML = areaOpts;
   var venSelect = get("filterVenue");
   if (venSelect) {
     venSelect.innerHTML = "<option value=\"\">All venues</option>" + venues.map(function (v) { return "<option value=\"" + v.replace(/"/g, "&quot;") + "\">" + v.replace(/</g, "&lt;") + "</option>"; }).join("");
@@ -619,8 +639,56 @@ function confirmDeleteEvent() {
   closeDeleteEventModal();
 }
 
+var currentViewMode = "date";
+
+function setViewMode(view) {
+  currentViewMode = view;
+  var dateBar = get("view-date-bar");
+  var areaBar = get("view-area-bar");
+  var browseNav = get("view-browse-nav");
+  if (dateBar) dateBar.classList.toggle("view-bar--hidden", view !== "date");
+  if (areaBar) areaBar.classList.toggle("view-bar--hidden", view !== "area");
+  if (browseNav) browseNav.classList.toggle("view-bar--hidden", view !== "browse");
+  document.querySelectorAll(".view-mode-btn").forEach(function (btn) {
+    btn.classList.toggle("view-mode-btn--active", (btn.getAttribute("data-view") || "") === view);
+  });
+  if (view === "date") {
+    setDateFilter("today");
+  } else if (view === "area") {
+    var viewArea = get("viewAreaSelect");
+    var filterNh = get("filterNeighborhood");
+    if (viewArea && filterNh) viewArea.value = filterNh.value;
+    applyEventFilters();
+  } else {
+    applyEventFilters();
+  }
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   loadEvents();
   var searchEl = get("filterSearch");
   if (searchEl) searchEl.addEventListener("input", function () { applyEventFilters(); });
+  var searchBtn = get("mainSearchBtn");
+  if (searchBtn) searchBtn.addEventListener("click", function () { applyEventFilters(); });
+  document.querySelectorAll(".view-mode-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var v = btn.getAttribute("data-view");
+      if (v) setViewMode(v);
+    });
+  });
+  document.querySelectorAll(".date-quick-btn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var d = btn.getAttribute("data-date");
+      if (d) setDateFilter(d);
+    });
+  });
+  var viewAreaSelect = get("viewAreaSelect");
+  if (viewAreaSelect) {
+    viewAreaSelect.addEventListener("change", function () {
+      var filterNh = get("filterNeighborhood");
+      if (filterNh) filterNh.value = viewAreaSelect.value;
+      applyEventFilters();
+    });
+  }
+  setViewMode("date");
 });
