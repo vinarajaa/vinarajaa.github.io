@@ -3,196 +3,391 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Interactive Timeline | Vina Raja</title>
+  <title>Experience | Vina Raja</title>
   <link rel="stylesheet" href="/assets/css/style.css" />
   <link rel="icon" href="/assets/images/favicon.ico" type="image/x-icon" />
   <style>
-    .timeline-page {
+    :root {
+      --exp-purple: #4a3f6b;
+      --exp-purple-light: #7b6b9e;
+      --exp-teal: #5a9b8e;
+      --exp-bg: linear-gradient(180deg, #f5f0fa 0%, #faf8fc 50%, #fff 100%);
+      --exp-line: #d1c8dc;
+      --exp-window-bg: #2c2c2e;
+      --exp-window-border: #1c1c1e;
+    }
+    .exp-page {
       min-height: 100vh;
-      background: linear-gradient(180deg, #fde5c0 0%, #ffe9cf 30%, #f5e6d3 100%);
+      background: var(--exp-bg);
       padding: var(--nav-height, 80px) 1.5rem 4rem;
-      font-family: 'Worksans', Arial, sans-serif;
+      font-family: 'Worksans', -apple-system, BlinkMacSystemFont, sans-serif;
     }
-    .timeline-header {
-      text-align: center;
-      margin-bottom: 3rem;
-      max-width: 40rem;
-      margin-left: auto;
-      margin-right: auto;
+    /* App window frame */
+    .exp-window {
+      max-width: 56rem;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(74, 63, 107, 0.12), 0 0 0 1px rgba(0,0,0,0.06);
+      overflow: hidden;
     }
-    .timeline-back {
+    .exp-window__chrome {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--exp-window-bg);
+      border-bottom: 1px solid var(--exp-window-border);
+    }
+    .exp-window__dots {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .exp-window__dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+    .exp-window__dot--red { background: #ff5f57; }
+    .exp-window__dot--yellow { background: #febc2e; }
+    .exp-window__dot--green { background: #28c840; }
+    .exp-window__refresh {
+      width: 20px;
+      height: 20px;
+      opacity: 0.7;
+      cursor: pointer;
+    }
+    .exp-window__refresh:hover { opacity: 1; }
+    .exp-window__body {
+      padding: 2rem 2.5rem 2.5rem;
+      position: relative;
+    }
+    /* Title + subtitle */
+    .exp-header {
+      margin-bottom: 2rem;
+    }
+    .exp-back {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      color: #333;
+      color: var(--exp-purple-light);
       text-decoration: none;
-      font-size: 1rem;
-      margin-bottom: 1.5rem;
-      padding: 0.5rem 0;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
     }
-    .timeline-back:hover {
-      text-decoration: underline;
+    .exp-back:hover { text-decoration: underline; }
+    .exp-title {
+      font-size: clamp(2.25rem, 5vw, 3.25rem);
+      font-weight: 700;
+      color: var(--exp-purple);
+      margin: 0 0 0.35rem;
+      letter-spacing: -0.02em;
     }
-    .timeline-title {
-      font-family: Anton, Arial, sans-serif;
-      font-size: clamp(2rem, 5vw, 3rem);
-      text-transform: uppercase;
-      color: #24281f;
-      margin: 0 0 0.5rem;
-    }
-    .timeline-subtitle {
-      font-size: 1.1rem;
-      color: rgba(36, 40, 31, 0.75);
+    .exp-subtitle {
+      font-size: 1.05rem;
+      color: var(--exp-teal);
       margin: 0;
     }
-    .timeline-w {
-      max-width: 36rem;
-      margin: 0 auto;
+    /* Layout: title left, company panel right */
+    .exp-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1.5rem;
+    }
+    .exp-top__title { flex: 1 1 200px; }
+    /* Company panel (sub-window) */
+    .exp-panel {
+      flex: 0 1 280px;
+      background: var(--exp-window-bg);
+      border-radius: 10px;
+      padding: 0.6rem 0.6rem 0;
+      border: 1px solid var(--exp-window-border);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    .exp-panel__chrome {
+      display: flex;
+      gap: 0.4rem;
+      padding: 0.4rem 0.6rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .exp-panel__dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+    }
+    .exp-panel__dot--red { background: #ff5f57; }
+    .exp-panel__dot--yellow { background: #febc2e; }
+    .exp-panel__dot--green { background: #28c840; }
+    .exp-panel__content {
+      padding: 1rem;
+    }
+    .exp-company {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.65rem 0.5rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s ease;
+      border: 1px solid transparent;
+    }
+    .exp-company:last-child { margin-bottom: 0; }
+    .exp-company:hover {
+      background: rgba(255,255,255,0.06);
+    }
+    .exp-company.is-active {
+      background: rgba(123, 107, 158, 0.35);
+      border-color: rgba(123, 107, 158, 0.5);
+    }
+    .exp-company__icon {
+      width: 40px;
+      height: 40px;
+      flex-shrink: 0;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      color: var(--exp-purple);
+    }
+    .exp-company__label {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+    }
+    /* Horizontal timeline */
+    .exp-timeline-wrap {
+      margin: 2rem 0 2.5rem;
+    }
+    .exp-timeline {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
       position: relative;
+      padding: 0 0.5rem;
     }
-    .timeline-line {
-      position: absolute;
-      left: 1rem;
-      top: 0;
-      bottom: 0;
-      width: 3px;
-      background: linear-gradient(180deg, #00c5c5, #ca9dfe, #ff812d);
-      border-radius: 3px;
-    }
-    .timeline-item {
-      position: relative;
-      padding-left: 3.5rem;
-      padding-bottom: 3rem;
-    }
-    .timeline-item:last-child {
-      padding-bottom: 1rem;
-    }
-    .timeline-dot {
+    .exp-timeline::before {
+      content: '';
       position: absolute;
       left: 0;
-      top: 0.25rem;
-      width: 1.5rem;
-      height: 1.5rem;
-      border-radius: 50%;
-      background: #00c5c5;
-      border: 3px solid #fff;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+      right: 0;
+      top: 1.25rem;
+      height: 2px;
+      background: var(--exp-line);
+      z-index: 0;
+    }
+    .exp-year {
+      position: relative;
       z-index: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      flex: 1;
+      max-width: 6rem;
     }
-    .timeline-item:nth-child(2) .timeline-dot { background: #ca9dfe; }
-    .timeline-item:nth-child(3) .timeline-dot { background: #ff812d; }
-    .timeline-item:nth-child(4) .timeline-dot { background: #f5c939; }
-    .timeline-item:nth-child(5) .timeline-dot { background: #7ae66a; }
-    .timeline-item:nth-child(6) .timeline-dot { background: #f897b4; }
-    .timeline-item:nth-child(7) .timeline-dot { background: #6b8cce; }
-    .timeline-card {
-      background: #fff;
-      border-radius: var(--rounded-1, 12px);
-      padding: 1.25rem 1.5rem;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-      outline: 1px solid rgba(0,0,0,0.06);
-      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    .exp-year__marker {
+      width: 28px;
+      height: 28px;
+      background: #1c1c1e;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 0.5rem;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
-    .timeline-card:hover {
-      transform: translateX(4px);
-      box-shadow: 0 8px 28px rgba(0,0,0,0.1);
+    .exp-year__marker svg {
+      width: 14px;
+      height: 14px;
+      stroke: #fff;
     }
-    .timeline-date {
-      font-size: 0.8rem;
+    .exp-year:hover .exp-year__marker {
+      transform: scale(1.08);
+      background: var(--exp-purple);
+    }
+    .exp-year.is-active .exp-year__marker {
+      background: var(--exp-purple);
+    }
+    .exp-year__label {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--exp-purple);
+    }
+    /* Description area */
+    .exp-desc {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 1.25rem 0;
+      min-height: 5rem;
+    }
+    .exp-desc__role {
+      font-size: 1rem;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #666;
+      color: var(--exp-purple);
       margin-bottom: 0.35rem;
     }
-    .timeline-card h3 {
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #24281f;
-      margin: 0 0 0.5rem;
+    .exp-desc__date {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--exp-purple-light);
+      margin-bottom: 0.75rem;
     }
-    .timeline-card p {
-      font-size: 0.95rem;
-      line-height: 1.5;
+    .exp-desc__text {
+      font-size: 0.98rem;
+      line-height: 1.6;
       color: rgba(36, 40, 31, 0.85);
       margin: 0;
+    }
+    @media (max-width: 640px) {
+      .exp-window__body { padding: 1.5rem 1.25rem; }
+      .exp-timeline { flex-wrap: wrap; gap: 1rem; justify-content: flex-start; }
+      .exp-timeline::before { display: none; }
+      .exp-year { max-width: none; flex: 0 0 auto; }
     }
   </style>
 </head>
 <body>
-  <main class="timeline-page">
-    <header class="timeline-header">
-      <a href="/" class="timeline-back">← Back to home</a>
-      <h1 class="timeline-title">Interactive Timeline</h1>
-      <p class="timeline-subtitle">A scrollable snapshot of my background — education, experience, and milestones.</p>
-    </header>
+  <main class="exp-page">
+    <a href="/" class="exp-back">← Back to home</a>
 
-    <div class="timeline-w">
-      <div class="timeline-line" aria-hidden="true"></div>
-
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Aug 2025 – Present</div>
-          <h3>Rippling · Sales Development Representative</h3>
-          <p>New York, NY. Managing high-volume outbound motion (600+ calls/week) to HR, IT, and Finance leaders at mid-market and SMB companies. Consistently generating qualified pipeline through cold calls, emails, and LinkedIn outreach. Developing strong objection handling and discovery around payroll, HR systems, and software consolidation.</p>
+    <div class="exp-window">
+      <div class="exp-window__chrome">
+        <div class="exp-window__dots">
+          <span class="exp-window__dot exp-window__dot--red" aria-hidden="true"></span>
+          <span class="exp-window__dot exp-window__dot--yellow" aria-hidden="true"></span>
+          <span class="exp-window__dot exp-window__dot--green" aria-hidden="true"></span>
         </div>
-      </article>
+        <button type="button" class="exp-window__refresh" onclick="location.reload()" aria-label="Refresh">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+        </button>
+      </div>
 
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Jun 2024 – Present</div>
-          <h3>Boston University · Master of Science, Software Development</h3>
-          <p>Boston, MA (online). GPA: 3.7. Graduate studies in software development.</p>
+      <div class="exp-window__body">
+        <div class="exp-top">
+          <div class="exp-top__title exp-header">
+            <h1 class="exp-title">Experience</h1>
+            <p class="exp-subtitle">Education, roles, and milestones — click a year or a role to explore.</p>
+          </div>
+          <div class="exp-panel">
+            <div class="exp-panel__chrome">
+              <span class="exp-panel__dot exp-panel__dot--red"></span>
+              <span class="exp-panel__dot exp-panel__dot--yellow"></span>
+              <span class="exp-panel__dot exp-panel__dot--green"></span>
+            </div>
+            <div class="exp-panel__content" id="expCompanies"></div>
+          </div>
         </div>
-      </article>
 
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">May 2024 – Aug 2025</div>
-          <h3>M&amp;R Consulting (MRCC) – TechForza · Software Engineer &amp; Technical Consultant</h3>
-          <p>Irvine, CA (contracted). Developed a real-time mobile map interface in Flutter for technician dispatch, reducing service response time by 30%. Led cross-functional collaboration to optimize workflow logic, cutting processing time by 20%. Designed an address parsing tool using Python, SpaCy, and usaddress for data ingestion. Built backend services in PHP with REST APIs, Firebase, and Oracle. Partnered with stakeholders to translate technical needs into product requirements.</p>
+        <div class="exp-timeline-wrap">
+          <div class="exp-timeline" id="expTimeline" role="tablist" aria-label="Years"></div>
         </div>
-      </article>
 
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Dec 2023 – Aug 2024</div>
-          <h3>Apple · Product Specialist</h3>
-          <p>Los Angeles, CA. Delivered tailored demonstrations of Apple Vision Pro (5% sales increase in one quarter). Generated 5–10 qualified business leads weekly for Apple Business Services; 10% increase in service participation within six months. Resolved complex product issues with 100% customer satisfaction feedback.</p>
+        <div class="exp-desc" id="expDesc">
+          <p class="exp-desc__role" id="expDescRole"></p>
+          <p class="exp-desc__date" id="expDescDate"></p>
+          <p class="exp-desc__text" id="expDescText"></p>
         </div>
-      </article>
-
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Jun – Sep 2024</div>
-          <h3>RevX Wellness · Software Engineer Intern</h3>
-          <p>Newport Beach, CA. Audited and remediated 2000+ inventory SKUs in Shopify using Python (30% improvement in order data accuracy). Designed a real-time inventory analytics dashboard with Looker Studio and Google Cloud Console; decreased inventory discrepancies by 25%. Facilitated cross-functional alignment with operations, marketing, and fulfillment teams.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Jul – Oct 2023</div>
-          <h3>Vitality Robotics · Software Engineer Intern</h3>
-          <p>Research Triangle Park, NC. Built a Slack-integrated AI assistant with Flask and ChatGPT API; created monitoring dashboards via AWS Lambda and EC2 (40% faster response to alerts). Streamlined deployment with CI/CD in GitHub Actions (release turnaround from 3 days to 1.5 days). Contributed to 9+ product features on a team of 4 in an Agile environment.</p>
-        </div>
-      </article>
-
-      <article class="timeline-item">
-        <span class="timeline-dot"></span>
-        <div class="timeline-card">
-          <div class="timeline-date">Sep 2019 – Jun 2023</div>
-          <h3>UC Santa Barbara · Architecture, Architecture Emphasis</h3>
-          <p>Santa Barbara, CA. Girls Who Code, Red Cross Club, Student Council, Mentor Collective – Senior Mentor. Coursework: Computational Linguistics, Intro to CS, Machine Learning, Information Structures with Python, Prompt Engineering, Agile Software Development, Database Development, Data Structures and Algorithms.</p>
-        </div>
-      </article>
+      </div>
     </div>
   </main>
+
+  <script>
+    (function() {
+      var data = {
+        years: [
+          { year: 2025, label: '2025' },
+          { year: 2024, label: '2024' },
+          { year: 2023, label: '2023' },
+          { year: 2020, label: '2020' },
+          { year: 2019, label: '2019' }
+        ],
+        entries: [
+          { id: 'rippling', year: 2025, name: 'Rippling', icon: '💼', date: 'Aug 2025 – Present', role: 'Sales Development Representative', desc: 'New York, NY. Managing high-volume outbound motion (600+ calls/week) to HR, IT, and Finance leaders at mid-market and SMB companies. Consistently generating qualified pipeline through cold calls, emails, and LinkedIn outreach. Developing strong objection handling and discovery around payroll, HR systems, and software consolidation.' },
+          { id: 'bu', year: 2024, name: 'Boston University', icon: '🎓', date: 'Jun 2024 – Present', role: 'Master of Science, Software Development', desc: 'Boston, MA (online). GPA: 3.7. Graduate studies in software development.' },
+          { id: 'mrcc', year: 2024, name: 'M&R Consulting – TechForza', icon: '⚙️', date: 'May 2024 – Aug 2025', role: 'Software Engineer & Technical Consultant', desc: 'Irvine, CA (contracted). Developed a real-time mobile map interface in Flutter for technician dispatch, reducing service response time by 30%. Led cross-functional collaboration to optimize workflow logic, cutting processing time by 20%. Designed an address parsing tool using Python, SpaCy, and usaddress. Built backend services in PHP with REST APIs, Firebase, and Oracle.' },
+          { id: 'apple', year: 2024, name: 'Apple', icon: '🍎', date: 'Dec 2023 – Aug 2024', role: 'Product Specialist', desc: 'Los Angeles, CA. Delivered tailored demonstrations of Apple Vision Pro (5% sales increase in one quarter). Generated 5–10 qualified business leads weekly for Apple Business Services; 10% increase in service participation within six months. Resolved complex product issues with 100% customer satisfaction feedback.' },
+          { id: 'revx', year: 2024, name: 'RevX Wellness', icon: '📦', date: 'Jun – Sep 2024', role: 'Software Engineer Intern', desc: 'Newport Beach, CA. Audited and remediated 2000+ inventory SKUs in Shopify using Python (30% improvement in order data accuracy). Designed a real-time inventory analytics dashboard with Looker Studio and Google Cloud Console; decreased inventory discrepancies by 25%.' },
+          { id: 'vitality', year: 2023, name: 'Vitality Robotics', icon: '🤖', date: 'Jul – Oct 2023', role: 'Software Engineer Intern', desc: 'Research Triangle Park, NC. Built a Slack-integrated AI assistant with Flask and ChatGPT API; created monitoring dashboards via AWS Lambda and EC2 (40% faster response to alerts). Streamlined deployment with CI/CD in GitHub Actions. Contributed to 9+ product features on a team of 4 in an Agile environment.' },
+          { id: 'ucsb', year: 2019, name: 'UC Santa Barbara', icon: '🏛️', date: 'Sep 2019 – Jun 2023', role: 'Architecture, Architecture Emphasis', desc: 'Santa Barbara, CA. Girls Who Code, Red Cross Club, Student Council, Mentor Collective – Senior Mentor. Coursework: Computational Linguistics, Intro to CS, Machine Learning, Information Structures with Python, Prompt Engineering, Agile Software Development, Database Development, Data Structures and Algorithms.' }
+        ]
+      };
+
+      var selectedYear = 2025;
+      var selectedId = 'rippling';
+
+      function getEntriesForYear(y) {
+        return data.entries.filter(function(e) { return e.year === y; });
+      }
+
+      function renderTimeline() {
+        var wrap = document.getElementById('expTimeline');
+        if (!wrap) return;
+        wrap.innerHTML = data.years.map(function(y) {
+          var isActive = y.year === selectedYear;
+          return '<button type="button" class="exp-year' + (isActive ? ' is-active' : '') + '" data-year="' + y.year + '" role="tab" aria-selected="' + isActive + '">' +
+            '<span class="exp-year__marker"><svg viewBox="0 0 24 24" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>' +
+            '<span class="exp-year__label">' + y.label + '</span></button>';
+        }).join('');
+        wrap.querySelectorAll('.exp-year').forEach(function(btn) {
+          btn.addEventListener('click', function() {
+            selectedYear = parseInt(btn.getAttribute('data-year'), 10);
+            var entries = getEntriesForYear(selectedYear);
+            selectedId = entries.length ? entries[0].id : null;
+            renderTimeline();
+            renderCompanies();
+            renderDesc();
+          });
+        });
+      }
+
+      function renderCompanies() {
+        var container = document.getElementById('expCompanies');
+        if (!container) return;
+        var entries = getEntriesForYear(selectedYear);
+        container.innerHTML = entries.map(function(e) {
+          var isActive = e.id === selectedId;
+          return '<div class="exp-company' + (isActive ? ' is-active' : '') + '" data-id="' + e.id + '" role="button" tabindex="0">' +
+            '<span class="exp-company__icon">' + e.icon + '</span>' +
+            '<span class="exp-company__label">' + e.name + '</span></div>';
+        }).join('');
+        container.querySelectorAll('.exp-company').forEach(function(el) {
+          el.addEventListener('click', function() {
+            selectedId = el.getAttribute('data-id');
+            renderCompanies();
+            renderDesc();
+          });
+          el.addEventListener('keydown', function(ev) {
+            if (ev.key === 'Enter' || ev.key === ' ') { ev.preventDefault(); el.click(); }
+          });
+        });
+      }
+
+      function renderDesc() {
+        var entry = data.entries.find(function(e) { return e.id === selectedId; });
+        var roleEl = document.getElementById('expDescRole');
+        var dateEl = document.getElementById('expDescDate');
+        var textEl = document.getElementById('expDescText');
+        if (!roleEl || !dateEl || !textEl) return;
+        if (!entry) {
+          roleEl.textContent = '';
+          dateEl.textContent = '';
+          textEl.textContent = 'Select a year above, then choose a role.';
+          return;
+        }
+        roleEl.textContent = entry.name + ' · ' + entry.role;
+        dateEl.textContent = entry.date;
+        textEl.textContent = entry.desc;
+      }
+
+      renderTimeline();
+      renderCompanies();
+      renderDesc();
+    })();
+  </script>
 </body>
 </html>
