@@ -55,18 +55,18 @@
       color: var(--text-muted);
       margin: 0;
     }
-    /* Horizontal timeline: years left to right, last = What's next */
+    /* Horizontal timeline: years spread evenly, no box behind marker + label */
     .exp-timeline-wrap {
       margin: 2rem 0 2.25rem;
+      width: 100%;
     }
     .exp-timeline {
       display: flex;
       align-items: flex-start;
-      justify-content: flex-start;
-      gap: 2rem;
-      flex-wrap: wrap;
+      justify-content: space-between;
       position: relative;
-      padding: 0 0.25rem;
+      width: 100%;
+      padding: 0;
     }
     .exp-timeline::before {
       content: '';
@@ -86,7 +86,10 @@
       flex-direction: column;
       align-items: center;
       cursor: pointer;
-      flex: 0 0 auto;
+      background: none;
+      border: none;
+      padding: 0;
+      font-family: inherit;
     }
     .exp-year__marker {
       width: 32px;
@@ -107,7 +110,6 @@
     .exp-year:nth-child(2) .exp-year__marker { background: var(--accent-orange); }
     .exp-year:nth-child(3) .exp-year__marker { background: var(--accent-yellow); }
     .exp-year:nth-child(4) .exp-year__marker { background: var(--accent-lavender); }
-    .exp-year:nth-child(5) .exp-year__marker { background: var(--accent-green); }
     .exp-year:hover .exp-year__marker {
       transform: scale(1.08);
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
@@ -217,7 +219,7 @@
     }
     @media (max-width: 640px) {
       .exp-timeline::before { display: none; }
-      .exp-timeline { gap: 1rem; }
+      .exp-timeline { flex-wrap: wrap; gap: 1rem; justify-content: flex-start; }
     }
   </style>
 </head>
@@ -260,14 +262,14 @@
           { year: 'whatsnext', label: "What's next" }
         ],
         entries: [
-          { id: 'ucsb', year: 2023, name: 'UC Santa Barbara', date: 'Sep 2019 – Jun 2023', role: 'Architecture, graduated 2023', desc: 'Santa Barbara, CA. Graduated with Architecture Emphasis. Girls Who Code, Red Cross Club, Student Council, Mentor Collective – Senior Mentor. Coursework: Computational Linguistics, Intro to CS, Machine Learning, Information Structures with Python, Prompt Engineering, Agile Software Development, Database Development, Data Structures and Algorithms.' },
-          { id: 'vitality', year: 2023, name: 'Vitality Robotics', date: 'Jul – Oct 2023', role: 'Software Engineer Intern', desc: 'Research Triangle Park, NC. Built a Slack-integrated AI assistant with Flask and ChatGPT API; created monitoring dashboards via AWS Lambda and EC2 (40% faster response to alerts). Streamlined deployment with CI/CD in GitHub Actions. Contributed to 9+ product features on a team of 4 in an Agile environment.' },
-          { id: 'bu', year: 2024, name: 'Boston University', date: 'Jun 2024 – Present', role: 'Master of Science, Software Development', desc: 'Boston, MA (online). GPA: 3.7. Graduate studies in software development.' },
-          { id: 'mrcc', year: 2024, name: 'M&R Consulting – TechForza', date: 'May 2024 – Aug 2025', role: 'Software Engineer & Technical Consultant', desc: 'Irvine, CA (contracted). Developed a real-time mobile map interface in Flutter for technician dispatch, reducing service response time by 30%. Led cross-functional collaboration to optimize workflow logic, cutting processing time by 20%. Designed an address parsing tool using Python, SpaCy, and usaddress. Built backend services in PHP with REST APIs, Firebase, and Oracle.' },
-          { id: 'apple', year: 2024, name: 'Apple', date: 'Dec 2023 – Aug 2024', role: 'Product Specialist', desc: 'Los Angeles, CA. Delivered tailored demonstrations of Apple Vision Pro (5% sales increase in one quarter). Generated 5–10 qualified business leads weekly for Apple Business Services; 10% increase in service participation within six months. Resolved complex product issues with 100% customer satisfaction feedback.' },
-          { id: 'revx', year: 2024, name: 'RevX Wellness', date: 'Jun – Sep 2024', role: 'Software Engineer Intern', desc: 'Newport Beach, CA. Audited and remediated 2000+ inventory SKUs in Shopify using Python (30% improvement in order data accuracy). Designed a real-time inventory analytics dashboard with Looker Studio and Google Cloud Console; decreased inventory discrepancies by 25%.' },
-          { id: 'rippling', year: 2025, name: 'Rippling', date: 'Aug 2025 – Present', role: 'Sales Development Representative', desc: 'New York, NY. Managing high-volume outbound motion (600+ calls/week) to HR, IT, and Finance leaders at mid-market and SMB companies. Consistently generating qualified pipeline through cold calls, emails, and LinkedIn outreach. Developing strong objection handling and discovery around payroll, HR systems, and software consolidation.' },
-          { id: 'whatsnext', year: 'whatsnext', name: "What's next", date: '—', role: 'Building the next chapter', desc: "New projects, growth in product and engineering, and more to come. I'm always open to connecting — say hello." }
+          { id: 'ucsb', year: 2023, name: 'UC Santa Barbara', date: 'Sep 2019 – Jun 2023', role: 'Architecture, graduated 2023', desc: 'I studied architecture at UCSB and got involved in groups like Girls Who Code, Red Cross, and student council, and spent time as a mentor. Along the way I picked up coursework in things that pulled me toward tech — computational linguistics, machine learning, Python, and software development — which really set the stage for what came next.' },
+          { id: 'vitality', year: 2023, name: 'Vitality Robotics', date: 'Jul – Oct 2023', role: 'Software Engineer Intern', desc: 'My first real taste of building software with a team. I worked on a little AI assistant that lived in Slack, helped keep an eye on our systems so we could respond to issues faster, and got to see how shipping code regularly with CI/CD actually works. It was a small team and a lot of learning by doing.' },
+          { id: 'bu', year: 2024, name: 'Boston University', date: 'Jun 2024 – Present', role: 'Master of Science, Software Development', desc: 'I’m working on my master’s in software development while staying in the workforce. It’s been a good way to go deeper on the craft and stay curious about how we build and ship software.' },
+          { id: 'mrcc', year: 2024, name: 'M&R Consulting – TechForza', date: 'May 2024 – Aug 2025', role: 'Software Engineer & Technical Consultant', desc: 'I helped build tools that made field technicians’ lives easier — a map so dispatch could see where everyone was, and backend work so data stayed in sync. I also got to dig into problems like turning messy addresses into clean data. A lot of it was about listening to what people needed and turning that into something usable.' },
+          { id: 'apple', year: 2024, name: 'Apple', date: 'Dec 2023 – Aug 2024', role: 'Product Specialist', desc: 'I was on the floor helping people figure out what fit them — especially with things like Vision Pro — and connecting teams with Apple Business when it made sense. I liked making technical stuff feel approachable and making sure people left with their questions answered.' },
+          { id: 'revx', year: 2024, name: 'RevX Wellness', date: 'Jun – Sep 2024', role: 'Software Engineer Intern', desc: 'I spent time cleaning up and organizing their order and inventory data so the numbers they saw actually matched reality. I also put together a dashboard so the team could keep an eye on fulfillment without digging through spreadsheets.' },
+          { id: 'rippling', year: 2025, name: 'Rippling', date: 'Aug 2025 – Present', role: 'Sales Development Representative', desc: 'I’m talking with HR, IT, and finance leaders at smaller and mid-size companies about how they run payroll, hire, and use software. My job is to listen, figure out where things are painful, and help connect them with solutions that might actually help. It’s a lot of conversations and a lot of learning what different teams need.' },
+          { id: 'whatsnext', year: 'whatsnext', name: "What's next", date: '—', role: 'Building the next chapter', desc: "I’m keeping an eye on what’s next — new projects, more depth in product and engineering, and staying open to what fits. If you’re working on something interesting or just want to say hi, I’d love to hear from you." }
         ]
       };
 
