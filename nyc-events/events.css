@@ -8,3 +8,34 @@
 @media(max-width:1100px){.summary-grid{grid-template-columns:repeat(2,1fr)}.events-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.toolbar{flex-wrap:wrap}.search-box{flex-basis:100%}.toolbar select{flex:1}}
 @media(max-width:760px){.app-shell{display:block}.sidebar{position:fixed;z-index:10;left:0;top:0;width:260px;transform:translateX(-105%);transition:transform .2s}.sidebar.is-open{transform:translateX(0)}.main-content{padding:23px 15px}.menu-button{display:block}.topbar>div:first-of-type{margin-right:auto}.topbar h1{font-size:34px}.top-actions .ghost-button{display:none}.top-actions .primary-button{padding:10px 12px}.summary-grid{margin-top:27px}.events-panel{padding:15px}.panel-actions{display:none}.toolbar select{min-width:calc(50% - 5px)}.filter-button{flex:1}.events-grid{grid-template-columns:1fr}.modal-body{padding:23px 18px}.modal form{grid-template-columns:1fr}.field-wide{grid-column:auto}}
 @media(max-width:430px){.summary-grid{grid-template-columns:1fr 1fr}.summary-card.featured{grid-column:1/-1}.summary-card{padding:14px}.top-actions .primary-button{font-size:0}.top-actions .primary-button::first-letter{font-size:17px}.toolbar select{width:100%;min-width:100%}}
+
+/* Portfolio color refresh — layout and interaction styling intentionally unchanged. */
+:root{--black:#ffe9cf;--panel:#fff8ef;--panel-2:#ffffff;--blush:#270f03;--pink:#69e05f;--wine:#270f03;--line:rgba(39,15,3,.26);--muted:#725c50;--shadow:0 20px 65px rgba(39,15,3,.14)}
+html,body{background:var(--black);color:var(--blush)}
+.sidebar{background:linear-gradient(180deg,#270f03 0%,#351608 58%,#1b0902 100%)}
+.brand-mark{border-color:#ffe9cf;background:#69e05f;color:#270f03}
+.brand small,.nav-label,.portfolio-link{color:#d8bfa7}
+.nav-item{color:#ead2ba}.nav-item span{color:#69e05f}
+.nav-item:hover,.nav-item.is-active,.view-mode-btn--active,.date-quick-btn--active{background:#69e05f;color:#270f03}
+.nav-item:hover span,.nav-item.is-active span,.view-mode-btn--active span,.date-quick-btn--active span{color:#270f03}
+.sidebar-note{border-color:#270f03;background:#ff98b7;box-shadow:4px 4px 0 #ffe9cf}
+.sidebar-note>span,.sidebar-note p,.sidebar-note strong{color:#270f03}
+.primary-button{background:#69e05f;color:#270f03;box-shadow:0 7px 0 #270f03}
+.primary-button:hover{box-shadow:0 9px 0 #270f03}.primary-button:active{box-shadow:0 2px 0 #270f03}
+.ghost-button{background:#fff8ef;color:#270f03}.danger-button{background:#ff98b7;color:#270f03}
+.summary-card{background:#fff8ef}.summary-card.featured{background:#69e05f;border-color:#270f03;color:#270f03}
+.summary-card:nth-child(2){background:#dff4ff}.summary-card:nth-child(3){background:#ffdce7}.summary-card:nth-child(4){background:#fff1a8}
+.summary-icon{background:#ffe9cf;color:#270f03}.summary-icon.pink{background:#ff98b7}.summary-icon.wine{background:#78b7ff}.summary-icon.pale{background:#ffd33d;color:#270f03}
+.featured small,.summary-foot{color:#270f03}
+.events-panel{background:rgba(255,248,239,.94)}
+.search-box,.toolbar select,.more-filters select,.more-filters input,.view-bar select,.more-filters{background:#fff;color:#270f03}
+.search-box input{color:#270f03}.search-box input::placeholder{color:#927568}
+.filter-button,.time-pills .nav-btn--active,.date-pills button:hover,.empty-state button{background:#270f03;color:#ffe9cf}
+.event-card{background:#fff}.event-card:hover{border-color:#270f03;box-shadow:0 16px 38px rgba(39,15,3,.18)}
+.event-card__image-wrap,.event-detail-modal__image-wrap{background:linear-gradient(135deg,#69e05f,#78b7ff)}
+.event-card__image--placeholder{background:radial-gradient(circle at 72% 24%,rgba(255,233,207,.65),transparent 23%),linear-gradient(135deg,#69e05f,#78b7ff)}
+.event-card__title{color:#270f03}.event-card__overlay{background:linear-gradient(180deg,transparent 15%,rgba(39,15,3,.96) 88%)}
+.event-card__overlay-meta span{border-color:rgba(255,233,207,.3);background:rgba(39,15,3,.86);color:#ffe9cf}
+.modal-overlay{background:rgba(39,15,3,.72)}.modal{border-color:#270f03;background:#fff8ef;box-shadow:0 30px 100px rgba(39,15,3,.32)}
+.modal-close{background:#ff98b7;color:#270f03}.event-detail-modal__meta span{background:#dff4ff;color:#270f03}
+.field input,.field select,.field textarea{background:#fff;color:#270f03}.success{color:#247c35}.danger{color:#bc3127}.sidebar-scrim{background:rgba(39,15,3,.65)}

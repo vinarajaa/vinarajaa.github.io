@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#ffe9cf">
+  <title>Yeah, I Made Docs — Vina Raja</title>
+  <meta name="description" content="The field guide, page anatomy, and build history for Vina Raja's portfolio and project experiments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Work+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/docs/docs.css">
+</head>
+<body>
+  <header class="docs-nav">
+    <a href="/">← Back to the website</a>
+    <span>THE UNNECESSARILY OFFICIAL MANUAL</span>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <p class="kicker">YES, THERE IS DOCUMENTATION</p>
+        <h1>Yeah, I<br>made docs.</h1>
+        <p class="intro">A field guide to every public corner of this site: what it does, what it is made from, why it exists, and how it got here.</p>
+      </div>
+      <aside class="hero-note"><span>READ ME</span><strong>09</strong><p>active experiences, plus the weird little archive behind them.</p></aside>
+    </section>
+
+    <nav class="jump-nav" aria-label="Documentation sections">
+      <a href="#map">Page map</a><a href="#history">History</a><a href="#systems">Shared systems</a><a href="#archive">Archive</a>
+    </nav>
+
+    <section id="map" class="section-block">
+      <div class="section-heading"><p>01 / THE MAP</p><h2>What goes into every page</h2></div>
+      <div class="page-grid">
+        <article class="page-card green"><div class="card-top"><span>HOME</span><a href="/">Open ↗</a></div><h3>The animated front door</h3><p>The portfolio’s overview: identity, projects, experience, personality, and contact.</p><dl><div><dt>Built with</dt><dd>HTML, the original Webflow structure, GSAP, Lenis, and focused refresh CSS.</dd></div><div><dt>Important files</dt><dd><code>/index.html</code>, <code>/assets/css/style.css</code>, <code>/assets/css/home-refresh.css</code>, and the active scripts in <code>/assets/js/</code>.</dd></div><div><dt>How it works</dt><dd>Scroll-driven sections, a view-switching project grid, an interactive résumé deck, theme toggle, and contact modal.</dd></div></dl></article>
+
+        <article class="page-card blue"><div class="card-top"><span>DATABASE</span><a href="/database/">Open ↗</a></div><h3>Hearth inventory</h3><p>A home-inventory interface for organizing belongings by room and category.</p><dl><div><dt>Built with</dt><dd>Plain HTML, CSS, and JavaScript with an API-first path and a browser-saved demo fallback.</dd></div><div><dt>Important files</dt><dd><code>/database/index.html</code>, <code>database.css</code>, and <code>database.js</code>.</dd></div><div><dt>How it works</dt><dd>Search, filters, room navigation, grid/list views, add and delete flows, computed summary cards, and local persistence.</dd></div></dl></article>
+
+        <article class="page-card pink"><div class="card-top"><span>NYC EVENTS</span><a href="/nyc-events/">Open ↗</a></div><h3>City Signals</h3><p>A city event dashboard for finding plans by date, neighborhood, type, venue, and price.</p><dl><div><dt>Built with</dt><dd>HTML, CSS, JavaScript, event APIs, and scraper utilities for event sources.</dd></div><div><dt>Important files</dt><dd><code>/nyc-events/</code>, <code>/api/events.js</code>, <code>/api/scrape.js</code>, and <code>/scrapers/</code>.</dd></div><div><dt>How it works</dt><dd>Loads event records, normalizes them, filters the feed, opens detail modals, and supports manual or URL-based additions.</dd></div></dl></article>
+
+        <article class="page-card yellow"><div class="card-top"><span>EMBAGENT</span><a href="https://www.embagent.com" target="_blank" rel="noopener">Open ↗</a></div><h3>The chatbot workshop</h3><p>The separate AI-agent experience linked from this portfolio.</p><dl><div><dt>Built with</dt><dd>Next.js and a standalone browser agent-builder experience.</dd></div><div><dt>Lives elsewhere</dt><dd>Its source and deployment are intentionally separate in <code>embadmin/embagentlanding</code>.</dd></div><div><dt>How it works</dt><dd>A landing page introduces the product; the builder collects identity, mission, knowledge, and tone before opening a test chat.</dd></div></dl></article>
+
+        <article class="page-card orange"><div class="card-top"><span>CRASH MONITOR</span><a href="/website-crash-monitoring/">Open ↗</a></div><h3>Website pulse check</h3><p>A focused utility for checking whether a website responds successfully.</p><dl><div><dt>Built with</dt><dd>A compact HTML interface and browser JavaScript.</dd></div><div><dt>Important files</dt><dd><code>/website-crash-monitoring/index.html</code> and <code>monitor.js</code>.</dd></div><div><dt>How it works</dt><dd>Normalizes entries like <code>www.google.com</code>, adds the missing protocol, requests a check, and explains the result.</dd></div></dl></article>
+
+        <article class="page-card purple"><div class="card-top"><span>TECH STACK</span><a href="/techstack/">Open ↗</a></div><h3>The toolkit map</h3><p>An interactive inventory of the technologies used across the projects.</p><dl><div><dt>Built with</dt><dd>The shared Project Lab visual system and lightweight JavaScript.</dd></div><div><dt>Important files</dt><dd><code>/techstack/index.html</code>, <code>/techstack/techstack.js</code>, and <code>/assets/css/project-lab.css</code>.</dd></div><div><dt>How it works</dt><dd>Technology records are rendered into cards and filtered by frontend, backend, data, or cloud and AI layers.</dd></div></dl></article>
+
+        <article class="page-card green"><div class="card-top"><span>JUNKYARD</span><a href="/junkyard/">Open ↗</a></div><h3>The idea workbench</h3><p>A deliberately unfinished place for scraps, questions, experiments, and unexpected combinations.</p><dl><div><dt>Built with</dt><dd>The shared Project Lab styles plus a small local-storage application.</dd></div><div><dt>Important files</dt><dd><code>/junkyard/index.html</code> and <code>/junkyard/junkyard.js</code>.</dd></div><div><dt>How it works</dt><dd>Saves scraps in the browser, counts them, removes them, and remixes two entries into a new prompt.</dd></div></dl></article>
+
+        <article class="page-card blue"><div class="card-top"><span>TIMELINE</span><a href="/timeline/">Open ↗</a></div><h3>The experience timeline</h3><p>A visual, interactive version of the résumé and career path.</p><dl><div><dt>Built with</dt><dd>A self-contained HTML page using the portfolio type, color, and motion vocabulary.</dd></div><div><dt>Important file</dt><dd><code>/timeline/index.html</code>.</dd></div><div><dt>How it works</dt><dd>Career entries are arranged chronologically with interactive detail and a direct route back home.</dd></div></dl></article>
+
+        <article class="page-card pink"><div class="card-top"><span>THESE DOCS</span><a href="#history">Keep reading ↓</a></div><h3>The site explaining itself</h3><p>This page is the maintainers’ map and the curious visitor’s backstage pass.</p><dl><div><dt>Built with</dt><dd>Semantic HTML and a dedicated playful documentation stylesheet.</dd></div><div><dt>Important files</dt><dd><code>/docs/index.html</code> and <code>/docs/docs.css</code>.</dd></div><div><dt>How it works</dt><dd>Documents active routes, shared systems, deployment boundaries, and verified repository milestones.</dd></div></dl></article>
+      </div>
+    </section>
+
+    <section id="history" class="section-block history-section">
+      <div class="section-heading"><p>02 / THE LORE</p><h2>How the site evolved</h2></div>
+      <ol class="timeline">
+        <li><time>May 2025</time><div><h3>The animated portfolio takes shape</h3><p>The homepage grows through many small visual, motion, résumé, project-image, contact, and responsive-layout commits. The current page still carries that experimental Webflow-and-GSAP DNA.</p></div></li>
+        <li><time>May 12, 2025</time><div><h3>The database idea appears</h3><p>The first home-database project is introduced locally and linked into the portfolio.</p></div></li>
+        <li><time>February 6, 2026</time><div><h3>The site becomes a project neighborhood</h3><p>Database, NYC Events, Apps, Junkyard, Tech Stack, Timeline, and Crash Monitoring routes are established together. NYC Events then goes through an especially energetic run of filtering, scraper, date, area, and UI refinements.</p></div></li>
+        <li><time>March 2026</time><div><h3>The résumé becomes interactive</h3><p>The Timeline page receives multiple rounds of interaction and aesthetic work, followed by homepage menu changes.</p></div></li>
+        <li><time>August 30, 2026</time><div><h3>The big usability refresh</h3><p>The homepage and interactive project pages are reorganized into cleaner, more usable interfaces while preserving their individual personalities.</p></div></li>
+        <li><time>August 31, 2026</time><div><h3>One visual family—and documentation</h3><p>Database and NYC Events adopt the portfolio palette, homepage spacing and navigation are corrected, Playground is tucked away, broken legacy runtime code is removed, and this living guide arrives.</p></div></li>
+      </ol>
+    </section>
+
+    <section id="systems" class="section-block">
+      <div class="section-heading"><p>03 / SHARED INGREDIENTS</p><h2>The rules holding it together</h2></div>
+      <div class="system-grid">
+        <article><span>COLOR</span><h3>Cream + chocolate + chaos</h3><p><code>#ffe9cf</code> and <code>#270f03</code> form the base. Bright green, pink, blue, yellow, orange, and purple make each tool feel playful without losing the family resemblance.</p></article>
+        <article><span>TYPE</span><h3>Big voice, useful details</h3><p>Anton or expressive display faces do the shouting. Work Sans, IBM Plex Mono, and other compact utility faces keep interfaces readable.</p></article>
+        <article><span>MOTION</span><h3>Motion with a job</h3><p>The homepage uses GSAP and Lenis for expressive storytelling. Tool pages stay lighter, using small transitions and respecting reduced-motion preferences.</p></article>
+        <article><span>DATA</span><h3>Useful without a backend</h3><p>Interactive projects prefer real APIs when available, then provide local demo data or browser storage so the experience remains understandable and testable.</p></article>
+        <article><span>DEPLOYMENT</span><h3>Two GitHub homes</h3><p>The portfolio deploys through <code>vinarajaa/vinarajaa.github.io</code>. Embagent remains separate under <code>embadmin/embagentlanding</code>.</p></article>
+        <article><span>MAINTENANCE</span><h3>Keep the whimsy, remove the friction</h3><p>Cleanup should preserve icons, color, animation, and voice while removing broken bundles, inaccessible controls, stale links, accidental duplication, and layout hacks.</p></article>
+      </div>
+    </section>
+
+    <section id="archive" class="section-block archive-section">
+      <div class="section-heading"><p>04 / THE ATTIC</p><h2>Hidden and legacy pages</h2></div>
+      <div class="archive-copy"><p><strong>Apps Playground</strong> is still available in the source at <code>/apps/</code>, but it is intentionally hidden from the homepage while it waits for its next direction.</p><p><strong>Older template pages</strong>—including <code>about.html</code>, <code>contact.html</code>, <code>work.html</code>, <code>index2.html</code>, and several files under <code>/pages/</code>—are historical artifacts. They are not treated as the current public navigation and remain useful as references for earlier experiments.</p><p><strong>Scraper debug pages</strong> under <code>/scrapers/</code> support development and troubleshooting; they are tools, not visitor destinations.</p></div>
+    </section>
+
+    <footer><span>Last documented: August 31, 2026</span><a href="/">Okay, back to the fun stuff →</a></footer>
+  </main>
+</body>
+</html>

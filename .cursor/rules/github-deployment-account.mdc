@@ -1,0 +1,11 @@
+---
+description: Keep the personal website deployment on the correct GitHub account
+alwaysApply: true
+---
+
+# Personal Website GitHub Deployment
+
+- This website is owned and deployed through the personal `vinarajaa` GitHub account.
+- Its canonical repository is `https://github.com/vinarajaa/vinarajaa.github.io.git`.
+- Never redirect this project to the `embadmin` account.
+- Before pushing or changing deployment settings, verify the remote belongs to `vinarajaa`.
