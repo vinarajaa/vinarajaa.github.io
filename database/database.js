@@ -1,469 +1,65 @@
 const API_BASE = "https://house-inventory-c5c7cyfpfqe9e6gk.westus-01.azurewebsites.net";
-let roomMap = {};
-let categoryMap = {};
-let demoMode = false;
-
-// Demo data when API is down (404 / unreachable) so the UI still works
-var DEMO_ROOMS = [{ room_id: 1, name: "Living Room" }, { room_id: 2, name: "Kitchen" }, { room_id: 3, name: "Bedroom" }];
-var DEMO_CATEGORIES = [{ category_id: 1, name: "Furniture" }, { category_id: 2, name: "Electronics" }, { category_id: 3, name: "Kitchen" }];
-var DEMO_ITEMS = [
-  { item_id: 1, name: "Sofa", quantity: 1, room_id: 1, category_id: 1, purchase_date: "2024-01-15" },
-  { item_id: 2, name: "Coffee table", quantity: 1, room_id: 1, category_id: 1, purchase_date: "2024-02-20" },
-  { item_id: 3, name: "Blender", quantity: 1, room_id: 2, category_id: 3, purchase_date: "2024-03-10" },
-  { item_id: 4, name: "Lamp", quantity: 2, room_id: 3, category_id: 2, purchase_date: "2024-04-05" }
+const STORAGE_KEY = "hearth-inventory-demo-v2";
+const ADD_ROOM_VALUE = "__add_room__";
+const ADD_CATEGORY_VALUE = "__add_category__";
+const fallbackRooms = [{room_id:1,name:"Living room"},{room_id:2,name:"Kitchen"},{room_id:3,name:"Bedroom"},{room_id:4,name:"Office"}];
+const fallbackCategories = [{category_id:1,name:"Furniture"},{category_id:2,name:"Electronics"},{category_id:3,name:"Kitchenware"},{category_id:4,name:"Decor"},{category_id:5,name:"Books"}];
+const fallbackItems = [
+  {item_id:1,name:"Linen sofa",quantity:1,room_id:1,category_id:1,purchase_date:"2025-09-18",description:"Warm ivory, three seat"},
+  {item_id:2,name:"Oak coffee table",quantity:1,room_id:1,category_id:1,purchase_date:"2025-10-04",description:"Round, natural finish"},
+  {item_id:3,name:"Pour-over kettle",quantity:1,room_id:2,category_id:3,purchase_date:"2026-01-12",description:"Matte black"},
+  {item_id:4,name:"Bedside lamp",quantity:2,room_id:3,category_id:4,purchase_date:"2025-11-21",description:"Rice paper shade"},
+  {item_id:5,name:"Studio monitor",quantity:2,room_id:4,category_id:2,purchase_date:"2026-02-03",description:"Desktop speakers"},
+  {item_id:6,name:"Design library",quantity:14,room_id:4,category_id:5,purchase_date:"2026-03-02",description:"Reference shelf"}
 ];
+let rooms=[],categories=[],allItems=[],demoMode=false,selectedDeleteId=null;
+const el=id=>document.getElementById(id);
+const roomName=id=>rooms.find(room=>String(room.room_id)===String(id))?.name||"Unassigned";
+const categoryName=id=>categories.find(category=>String(category.category_id)===String(id))?.name||"Uncategorized";
+const escapeHtml=(value="")=>String(value).replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]));
 
-var ADD_ROOM_VALUE = "__add_room__";
-var ADD_CATEGORY_VALUE = "__add_category__";
+function loadLocalData(){try{const saved=JSON.parse(localStorage.getItem(STORAGE_KEY));if(saved?.items?.length)return saved}catch(_){}return{rooms:fallbackRooms,categories:fallbackCategories,items:fallbackItems}}
+function saveLocalData(){if(demoMode)localStorage.setItem(STORAGE_KEY,JSON.stringify({rooms,categories,items:allItems}))}
+async function fetchJson(path){const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),3500);try{const response=await fetch(API_BASE+path,{signal:controller.signal});if(!response.ok)throw new Error(String(response.status));return await response.json()}finally{clearTimeout(timer)}}
 
-function get(id) {
-  return document.getElementById(id);
+async function initialize(){bindEvents();try{const[roomData,categoryData,itemData]=await Promise.all([fetchJson("/rooms"),fetchJson("/categories"),fetchJson("/items?limit=1000")]);if(!Array.isArray(roomData)||!Array.isArray(categoryData)||!Array.isArray(itemData))throw new Error("Unexpected response");rooms=roomData;categories=categoryData;allItems=itemData;el("app-status").textContent="Connected to your live inventory."}catch(error){demoMode=true;const local=loadLocalData();rooms=local.rooms;categories=local.categories;allItems=local.items;el("app-status").textContent="Demo workspace · Changes are saved in this browser."}populateControls();applyFilters()}
+
+function bindEvents(){
+  el("searchInput").addEventListener("input",applyFilters);el("roomFilter").addEventListener("change",applyFilters);el("categoryFilter").addEventListener("change",applyFilters);el("clearFilters").addEventListener("click",clearAllFilters);el("addItemFormStyled").addEventListener("submit",handleAddItemSubmit);el("add-form-room").addEventListener("change",handleNewRoom);el("add-form-category").addEventListener("change",handleNewCategory);
+  el("gridViewButton").addEventListener("click",()=>setView("grid"));el("listViewButton").addEventListener("click",()=>setView("list"));el("menuButton").addEventListener("click",toggleSidebar);el("sidebarScrim").addEventListener("click",closeSidebar);
+  document.querySelector("[data-view='all']").addEventListener("click",()=>{el("roomFilter").value="";applyFilters();closeSidebar()});
+  document.addEventListener("keydown",event=>{if(event.key==="Escape"){closeAddModal();closeDeleteModal();closeSidebar()}})
 }
 
-function showModal(id) {
-  const el = get(id);
-  if (el) {
-    el.classList.remove("hidden");
-    el.classList.add("flex");
-    el.style.display = "flex";
-    el.setAttribute("aria-hidden", "false");
-  }
+function populateControls(){
+  el("roomFilter").innerHTML='<option value="">All rooms</option>'+rooms.map(r=>`<option value="${r.room_id}">${escapeHtml(r.name)}</option>`).join("");
+  el("categoryFilter").innerHTML='<option value="">All categories</option>'+categories.map(c=>`<option value="${c.category_id}">${escapeHtml(c.name)}</option>`).join("");
+  el("add-form-room").innerHTML='<option value="">Choose a room</option>'+rooms.map(r=>`<option value="${r.room_id}">${escapeHtml(r.name)}</option>`).join("")+`<option value="${ADD_ROOM_VALUE}">＋ Add a new room</option>`;
+  el("add-form-category").innerHTML='<option value="">Choose a category</option>'+categories.map(c=>`<option value="${c.category_id}">${escapeHtml(c.name)}</option>`).join("")+`<option value="${ADD_CATEGORY_VALUE}">＋ Add a new category</option>`;
+  el("roomNav").innerHTML=rooms.map(room=>`<button class="nav-item" type="button" data-room-id="${room.room_id}"><span aria-hidden="true">○</span>${escapeHtml(room.name)}</button>`).join("");
+  el("roomNav").querySelectorAll("button").forEach(button=>button.addEventListener("click",()=>{el("roomFilter").value=button.dataset.roomId;applyFilters();closeSidebar()}))
 }
 
-function hideModal(id) {
-  const el = get(id);
-  if (el) {
-    el.style.display = "none";
-    el.classList.add("hidden");
-    el.classList.remove("flex");
-    el.setAttribute("aria-hidden", "true");
-  }
+function applyFilters(){const query=el("searchInput").value.trim().toLowerCase(),roomId=el("roomFilter").value,categoryId=el("categoryFilter").value;const filtered=allItems.filter(item=>(!query||[item.name,item.description,roomName(item.room_id),categoryName(item.category_id)].join(" ").toLowerCase().includes(query))&&(!roomId||String(item.room_id)===roomId)&&(!categoryId||String(item.category_id)===categoryId));renderItems(filtered);updateStats(allItems);setActiveRoom(roomId)}
+function renderItems(items){
+  el("resultCount").textContent=`${items.length} ${items.length===1?"belonging":"belongings"} shown`;el("emptyState").hidden=items.length>0;
+  el("itemsGrid").innerHTML=items.map(item=>{const name=escapeHtml(item.name||"Untitled item"),room=escapeHtml(roomName(item.room_id)),category=escapeHtml(categoryName(item.category_id));return`<article class="item-card"><div class="item-top"><span class="item-glyph" aria-hidden="true">${name.charAt(0).toUpperCase()}</span><button class="item-menu" type="button" data-delete-id="${item.item_id}" aria-label="Delete ${name}" title="Delete item">×</button></div><div><h3>${name}</h3><p class="item-location">${room}${item.purchase_date?` · ${formatDate(item.purchase_date)}`:""}</p></div><div class="item-footer"><span class="category-pill">${category}</span><span class="quantity">Qty ${Number(item.quantity)||1}</span></div></article>`}).join("");
+  el("itemsGrid").querySelectorAll("[data-delete-id]").forEach(button=>button.addEventListener("click",()=>openDeleteModal(Number(button.dataset.deleteId))))
 }
+function updateStats(items){el("stat-total").textContent=items.length;el("quantityDetail").textContent=`${items.reduce((sum,item)=>sum+(Number(item.quantity)||1),0)} total units`;el("stat-rooms").textContent=new Set(items.map(item=>item.room_id).filter(Boolean)).size;el("stat-categories").textContent=new Set(items.map(item=>item.category_id).filter(Boolean)).size;const dates=items.map(item=>item.purchase_date).filter(Boolean).sort();el("stat-recent").textContent=dates.length?formatDate(dates[dates.length-1],true):"—"}
+function formatDate(value,short=false){const date=new Date(`${value}T12:00:00`);if(Number.isNaN(date.getTime()))return escapeHtml(value);return date.toLocaleDateString(undefined,short?{month:"short",year:"numeric"}:{month:"short",day:"numeric",year:"numeric"})}
+function setView(mode){el("itemsGrid").classList.toggle("list-view",mode==="list");el("gridViewButton").classList.toggle("is-active",mode==="grid");el("listViewButton").classList.toggle("is-active",mode==="list")}
+function clearAllFilters(){el("searchInput").value="";el("roomFilter").value="";el("categoryFilter").value="";applyFilters()}
+function setActiveRoom(roomId){document.querySelectorAll(".side-nav .nav-item").forEach(button=>button.classList.toggle("is-active",roomId?button.dataset.roomId===roomId:button.dataset.view==="all"))}
 
-function setStatus(text) {
-  const el = get("app-status");
-  if (el) el.textContent = text;
-}
+function showModal(id){const modal=el(id);modal.hidden=false;modal.setAttribute("aria-hidden","false");document.body.style.overflow="hidden"}
+function hideModal(id){const modal=el(id);modal.hidden=true;modal.setAttribute("aria-hidden","true");document.body.style.overflow=""}
+function openAddModal(){showModal("add-modal");setTimeout(()=>el("addItemFormStyled").elements.name.focus(),0)}function closeAddModal(){hideModal("add-modal")}
 
-async function loadRooms() {
-  const roomSelect = get("roomFilter");
-  if (roomSelect) roomSelect.innerHTML = "<option value=\"\">All Rooms</option>";
-  const addRoomSelect = document.querySelector("select[name='room_id']");
-  if (addRoomSelect) {
-    addRoomSelect.innerHTML = "<option value=\"\">Select one</option>";
-  }
-  try {
-    const res = await fetch(API_BASE + "/rooms");
-    if (!res.ok) throw new Error("Rooms " + res.status);
-    const rooms = await res.json();
-    if (!Array.isArray(rooms)) throw new Error("Invalid rooms response");
-    rooms.forEach(function (room) {
-      if (roomSelect) roomSelect.innerHTML += "<option value=\"" + room.room_id + "\">" + room.name + "</option>";
-      if (addRoomSelect) addRoomSelect.innerHTML += "<option value=\"" + room.room_id + "\">" + room.name + "</option>";
-      roomMap[room.room_id] = room.name;
-    });
-    if (addRoomSelect) addRoomSelect.innerHTML += "<option value=\"" + ADD_ROOM_VALUE + "\">➕ Add room...</option>";
-  } catch (err) {
-    console.warn("Load rooms failed:", err);
-    loadDemoRooms();
-  }
-}
-
-function loadDemoRooms() {
-  var roomSelect = get("roomFilter");
-  var addRoomSelect = document.querySelector("select[name='room_id']");
-  if (roomSelect) roomSelect.innerHTML = "<option value=\"\">All Rooms</option>";
-  if (addRoomSelect) {
-    addRoomSelect.innerHTML = "<option value=\"\">Select one</option>";
-    DEMO_ROOMS.forEach(function (r) {
-      addRoomSelect.innerHTML += "<option value=\"" + r.room_id + "\">" + r.name + "</option>";
-    });
-    addRoomSelect.innerHTML += "<option value=\"" + ADD_ROOM_VALUE + "\">➕ Add room...</option>";
-  }
-  DEMO_ROOMS.forEach(function (r) {
-    if (roomSelect) roomSelect.innerHTML += "<option value=\"" + r.room_id + "\">" + r.name + "</option>";
-    roomMap[r.room_id] = r.name;
-  });
-}
-
-function loadDemoCategories() {
-  var catSelect = get("categoryFilter");
-  var addCatSelect = document.querySelector("select[name='category_id']");
-  if (catSelect) catSelect.innerHTML = "<option value=\"\">All Categories</option>";
-  if (addCatSelect) {
-    addCatSelect.innerHTML = "<option value=\"\">Select one</option>";
-    DEMO_CATEGORIES.forEach(function (c) {
-      addCatSelect.innerHTML += "<option value=\"" + c.category_id + "\">" + c.name + "</option>";
-    });
-    addCatSelect.innerHTML += "<option value=\"" + ADD_CATEGORY_VALUE + "\">➕ Add category...</option>";
-  }
-  DEMO_CATEGORIES.forEach(function (c) {
-    if (catSelect) catSelect.innerHTML += "<option value=\"" + c.category_id + "\">" + c.name + "</option>";
-    categoryMap[c.category_id] = c.name;
-  });
-}
-
-async function loadCategories() {
-  const catSelect = get("categoryFilter");
-  if (catSelect) catSelect.innerHTML = "<option value=\"\">All Categories</option>";
-  const addCatSelect = document.querySelector("select[name='category_id']");
-  if (addCatSelect) {
-    addCatSelect.innerHTML = "<option value=\"\">Select one</option>";
-  }
-  try {
-    const res = await fetch(API_BASE + "/categories");
-    if (!res.ok) throw new Error("Categories " + res.status);
-    const categories = await res.json();
-    if (!Array.isArray(categories)) throw new Error("Invalid categories response");
-    categories.forEach(function (cat) {
-      if (catSelect) catSelect.innerHTML += "<option value=\"" + cat.category_id + "\">" + cat.name + "</option>";
-      if (addCatSelect) addCatSelect.innerHTML += "<option value=\"" + cat.category_id + "\">" + cat.name + "</option>";
-      categoryMap[cat.category_id] = cat.name;
-    });
-    if (addCatSelect) addCatSelect.innerHTML += "<option value=\"" + ADD_CATEGORY_VALUE + "\">➕ Add category...</option>";
-  } catch (err) {
-    console.warn("Load categories failed:", err);
-    loadDemoCategories();
-  }
-}
-
-function showApiError(message) {
-  const table = get("itemsTable");
-  if (table) {
-    table.innerHTML = `<tr><td colspan="6" class="p-6 text-center" style="color: #B36A5E;">${message}</td></tr>`;
-  }
-  updateStats([]);
-}
-
-async function loadItems(searchTerm) {
-  if (typeof searchTerm !== "string") searchTerm = "";
-  const roomSelect = get("roomFilter");
-  const catSelect = get("categoryFilter");
-  const roomId = roomSelect ? roomSelect.value : "";
-  const catId = catSelect ? catSelect.value : "";
-
-  let url = `${API_BASE}/items?limit=1000`;
-  if (roomId) url += "&room_id=" + encodeURIComponent(roomId);
-  if (catId) url += "&category_id=" + encodeURIComponent(catId);
-  if (searchTerm) url += "&search=" + encodeURIComponent(searchTerm);
-
-  const table = get("itemsTable");
-  if (!table) return [];
-
-  try {
-    const res = await fetch(url);
-    if (!res.ok) throw new Error("Items " + res.status);
-    const data = await res.json();
-    var items = Array.isArray(data) ? data : [];
-    renderItems(items);
-    return items;
-  } catch (err) {
-    console.warn("Load items failed:", err);
-    demoMode = true;
-    setStatus("Demo mode — backend unreachable (404). Filter, Add, Delete, Search, and New List work locally.");
-    var items = DEMO_ITEMS.slice();
-    if (roomId) items = items.filter(function (i) { return String(i.room_id) === String(roomId); });
-    if (catId) items = items.filter(function (i) { return String(i.category_id) === String(catId); });
-    if (searchTerm) {
-      var q = searchTerm.toLowerCase();
-      items = items.filter(function (i) { return (i.name || "").toLowerCase().indexOf(q) !== -1; });
-    }
-    renderItems(items);
-    return items;
-  }
-}
-
-function renderItems(items) {
-  var table = get("itemsTable");
-  if (!table) return;
-  table.innerHTML = "";
-  var borderCl = "#C89F9C";
-  items.forEach(function (item) {
-    table.innerHTML +=
-      "<tr class=\"border-b transition hover:bg-[#EED7C5]\" style=\"border-color:" + borderCl + ";\">" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\"><input type=\"checkbox\" class=\"select-item\" data-id=\"" + item.item_id + "\" /></td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.name || "") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (item.quantity != null ? item.quantity : "") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (roomMap[item.room_id] || "—") + "</td>" +
-      "<td class=\"p-3 border-r\" style=\"border-color:" + borderCl + ";\">" + (categoryMap[item.category_id] || "—") + "</td>" +
-      "<td class=\"p-3\">" + (item.purchase_date || "—") + "</td>" +
-      "</tr>";
-  });
-  updateStats(items);
-}
-
-function handleAddRoomChange() {
-  var sel = document.querySelector("select[name='room_id']");
-  if (!sel || sel.value !== ADD_ROOM_VALUE) return;
-  var name = (prompt("New room name:") || "").trim();
-  if (!name) { sel.value = ""; return; }
-  if (demoMode) {
-    var newId = DEMO_ROOMS.length ? Math.max.apply(null, DEMO_ROOMS.map(function (r) { return r.room_id; })) + 1 : 1;
-    DEMO_ROOMS.push({ room_id: newId, name: name });
-    roomMap[newId] = name;
-    var roomFilter = get("roomFilter");
-    if (roomFilter) roomFilter.innerHTML += "<option value=\"" + newId + "\">" + name + "</option>";
-    sel.innerHTML = "<option value=\"\">Select one</option>";
-    DEMO_ROOMS.forEach(function (r) {
-      sel.innerHTML += "<option value=\"" + r.room_id + "\">" + r.name + "</option>";
-    });
-    sel.innerHTML += "<option value=\"" + ADD_ROOM_VALUE + "\">➕ Add room...</option>";
-    sel.value = newId;
-    return;
-  }
-  fetch(API_BASE + "/rooms", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name }) })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      var id = data.room_id != null ? data.room_id : data.id;
-      if (id != null) {
-        roomMap[id] = name;
-        var roomFilter = get("roomFilter");
-        if (roomFilter) roomFilter.innerHTML += "<option value=\"" + id + "\">" + name + "</option>";
-        sel.innerHTML = "<option value=\"\">Select one</option>";
-        for (var rid in roomMap) { sel.innerHTML += "<option value=\"" + rid + "\">" + roomMap[rid] + "</option>"; }
-        sel.innerHTML += "<option value=\"" + ADD_ROOM_VALUE + "\">➕ Add room...</option>";
-        sel.value = String(id);
-      } else { sel.value = ""; loadRooms(); }
-    })
-    .catch(function () { sel.value = ""; loadRooms(); });
-}
-
-function handleAddCategoryChange() {
-  var sel = document.querySelector("select[name='category_id']");
-  if (!sel || sel.value !== ADD_CATEGORY_VALUE) return;
-  var name = (prompt("New category name:") || "").trim();
-  if (!name) { sel.value = ""; return; }
-  if (demoMode) {
-    var newId = DEMO_CATEGORIES.length ? Math.max.apply(null, DEMO_CATEGORIES.map(function (c) { return c.category_id; })) + 1 : 1;
-    DEMO_CATEGORIES.push({ category_id: newId, name: name });
-    categoryMap[newId] = name;
-    var catFilter = get("categoryFilter");
-    if (catFilter) catFilter.innerHTML += "<option value=\"" + newId + "\">" + name + "</option>";
-    sel.innerHTML = "<option value=\"\">Select one</option>";
-    DEMO_CATEGORIES.forEach(function (c) {
-      sel.innerHTML += "<option value=\"" + c.category_id + "\">" + c.name + "</option>";
-    });
-    sel.innerHTML += "<option value=\"" + ADD_CATEGORY_VALUE + "\">➕ Add category...</option>";
-    sel.value = newId;
-    return;
-  }
-  fetch(API_BASE + "/categories", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ name: name }) })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-      var id = data.category_id != null ? data.category_id : data.id;
-      if (id != null) {
-        categoryMap[id] = name;
-        var catFilter = get("categoryFilter");
-        if (catFilter) catFilter.innerHTML += "<option value=\"" + id + "\">" + name + "</option>";
-        sel.innerHTML = "<option value=\"\">Select one</option>";
-        for (var cid in categoryMap) { sel.innerHTML += "<option value=\"" + cid + "\">" + categoryMap[cid] + "</option>"; }
-        sel.innerHTML += "<option value=\"" + ADD_CATEGORY_VALUE + "\">➕ Add category...</option>";
-        sel.value = String(id);
-      } else { sel.value = ""; loadCategories(); }
-    })
-    .catch(function () { sel.value = ""; loadCategories(); });
-}
-
-window.addEventListener("DOMContentLoaded", function () {
-  var filterControls = get("filterControls");
-  if (filterControls) filterControls.classList.add("hidden");
-
-  var searchInput = get("searchInput");
-  if (searchInput) {
-    searchInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        handleSearch();
-      }
-    });
-  }
-
-  var addRoomSel = document.querySelector("select[name='room_id']");
-  if (addRoomSel) addRoomSel.addEventListener("change", handleAddRoomChange);
-  var addCatSel = document.querySelector("select[name='category_id']");
-  if (addCatSel) addCatSel.addEventListener("change", handleAddCategoryChange);
-
-  loadRooms().then(function () {
-    return loadCategories();
-  }).then(function () {
-    return loadItems("");
-  }).then(function () {
-    setStatus("Ready. If the table is empty, the backend may be unavailable (404).");
-  }).catch(function (err) {
-    console.warn("Initial load error:", err);
-    setStatus("Ready. Backend unreachable — Filter, Add, Delete, and New List still work.");
-  });
-});
-
-function toggleFilters() {
-  const el = get("filterControls");
-  if (!el) return;
-  if (el.classList.contains("hidden")) {
-    el.classList.remove("hidden");
-    el.classList.add("flex");
-  } else {
-    el.classList.remove("flex");
-    el.classList.add("hidden");
-  }
-}
-
-function openAddModal() {
-  showModal("add-modal");
-}
-
-function closeAddModal() {
-  hideModal("add-modal");
-  const msg = get("thank-you-message");
-  if (msg) msg.style.display = "none";
-}
-
-async function handleAddItemSubmit(event) {
-  event.preventDefault();
-  var form = event.target;
-  var formData = new FormData(form);
-  var roomVal = formData.get("room_id");
-  var catVal = formData.get("category_id");
-  var payload = {
-    name: (formData.get("name") || "").trim(),
-    quantity: parseInt(formData.get("quantity"), 10) || 1,
-    description: formData.get("description") || "",
-    purchase_date: formData.get("purchase_date") || "",
-    room_id: roomVal ? parseInt(roomVal, 10) : null,
-    category_id: catVal ? parseInt(catVal, 10) : null
-  };
-
-  if (demoMode) {
-    var newId = DEMO_ITEMS.length ? Math.max.apply(null, DEMO_ITEMS.map(function (i) { return i.item_id; })) + 1 : 1;
-    DEMO_ITEMS.push({
-      item_id: newId,
-      name: payload.name,
-      quantity: payload.quantity,
-      room_id: payload.room_id || 0,
-      category_id: payload.category_id || 0,
-      purchase_date: payload.purchase_date || ""
-    });
-    form.reset();
-    closeAddModal();
-    var msg = get("thank-you-message");
-    if (msg) msg.style.display = "block";
-    loadItems("");
-    return false;
-  }
-
-  try {
-    var res = await fetch(API_BASE + "/items/", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    });
-    if (res.ok) {
-      form.reset();
-      var msg = get("thank-you-message");
-      if (msg) msg.style.display = "block";
-      await loadItems("");
-    } else {
-      alert("Failed to add item.");
-    }
-  } catch (err) {
-    console.error("Add item failed:", err);
-    alert("Could not add item. Server may be unavailable.");
-  }
-  return false;
-}
-
-function updateStats(items) {
-  if (!items || !Array.isArray(items)) items = [];
-  const total = items.length;
-  const rooms = total ? new Set(items.map(function (i) { return i.room_id; })).size : 0;
-  const categories = total ? new Set(items.map(function (i) { return i.category_id; })).size : 0;
-  var mostRecent = "—";
-  if (total) {
-    try {
-      var maxDate = Math.max.apply(null, items.map(function (i) { return new Date(i.purchase_date).getTime(); }));
-      mostRecent = new Date(maxDate).toLocaleDateString();
-    } catch (e) {}
-  }
-  var el = get("stat-total"); if (el) el.innerText = total;
-  el = get("stat-rooms"); if (el) el.innerText = rooms;
-  el = get("stat-categories"); if (el) el.innerText = categories;
-  el = get("stat-recent"); if (el) el.innerText = mostRecent;
-}
-
-function openNewListModal() {
-  showModal("newListModal");
-}
-
-function closeNewListModal() {
-  hideModal("newListModal");
-}
-
-function createList() {
-  const titleEl = get("newListTitle");
-  const title = titleEl ? titleEl.value.trim() : "";
-  if (!title) return;
-  const container = get("listsContainer");
-  if (!container) return;
-  const div = document.createElement("div");
-  div.className = "p-3 rounded border";
-  div.style.backgroundColor = "#EED7C5";
-  div.style.borderColor = "#C89F9C";
-  div.innerHTML = "<h4 class=\"font-bold\" style=\"color: #B36A5E;\">" + title + "</h4><ul class=\"text-sm text-[#270f03] pl-4 list-disc mt-2\"><li>(List is empty)</li></ul>";
-  container.appendChild(div);
-  closeNewListModal();
-  if (titleEl) titleEl.value = "";
-}
-
-function openDeleteModal() {
-  const checkboxes = document.querySelectorAll(".select-item:checked");
-  const count = checkboxes.length;
-  if (count === 0) {
-    alert("Please select at least one item to delete.");
-    return;
-  }
-  const countEl = get("delete-count");
-  if (countEl) countEl.textContent = count;
-  showModal("delete-modal");
-}
-
-function closeDeleteModal() {
-  hideModal("delete-modal");
-}
-
-async function confirmDelete() {
-  var checked = document.querySelectorAll(".select-item:checked");
-  var idsToDelete = Array.from(checked).map(function (cb) { return parseInt(cb.getAttribute("data-id"), 10); });
-
-  if (demoMode) {
-    DEMO_ITEMS = DEMO_ITEMS.filter(function (i) { return idsToDelete.indexOf(i.item_id) === -1; });
-    loadItems("");
-    var successEl = get("delete-success-message");
-    if (successEl) successEl.classList.remove("hidden");
-    setTimeout(function () {
-      closeDeleteModal();
-      if (successEl) successEl.classList.add("hidden");
-    }, 2000);
-    return;
-  }
-
-  try {
-    for (var i = 0; i < idsToDelete.length; i++) {
-      await fetch(API_BASE + "/items/" + idsToDelete[i], { method: "DELETE" });
-    }
-    await loadItems("");
-    var successEl = get("delete-success-message");
-    if (successEl) successEl.classList.remove("hidden");
-    setTimeout(function () {
-      closeDeleteModal();
-      if (successEl) successEl.classList.add("hidden");
-    }, 2000);
-  } catch (err) {
-    console.error("Delete failed:", err);
-    alert("Something went wrong.");
-  }
-}
-
-function handleSearch() {
-  var searchInput = get("searchInput");
-  var query = searchInput ? searchInput.value.trim() : "";
-  loadItems(query);
-}
+async function handleAddItemSubmit(event){event.preventDefault();const form=event.currentTarget,data=new FormData(form);const payload={name:data.get("name").trim(),quantity:Number(data.get("quantity"))||1,purchase_date:data.get("purchase_date")||"",room_id:data.get("room_id")?Number(data.get("room_id")):null,category_id:data.get("category_id")?Number(data.get("category_id")):null,description:data.get("description").trim()};if(demoMode){payload.item_id=allItems.reduce((max,item)=>Math.max(max,Number(item.item_id)||0),0)+1;allItems.unshift(payload);saveLocalData()}else{try{const response=await fetch(API_BASE+"/items/",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload)});if(!response.ok)throw new Error(String(response.status));const saved=await response.json();allItems.unshift({...payload,...saved})}catch(_){el("app-status").textContent="The item could not be saved. Please try again.";return false}}form.reset();closeAddModal();populateControls();applyFilters();el("app-status").textContent=demoMode?"Item saved in this browser.":"Item added to your inventory.";return false}
+function handleNewRoom(event){handleNewOption(event,"room")}function handleNewCategory(event){handleNewOption(event,"category")}
+function handleNewOption(event,type){const sentinel=type==="room"?ADD_ROOM_VALUE:ADD_CATEGORY_VALUE;if(event.target.value!==sentinel)return;const label=window.prompt(`Name your new ${type}:`)?.trim();if(!label){event.target.value="";return}const collection=type==="room"?rooms:categories,key=type==="room"?"room_id":"category_id",id=collection.reduce((max,item)=>Math.max(max,Number(item[key])||0),0)+1;collection.push({[key]:id,name:label});saveLocalData();populateControls();el(type==="room"?"add-form-room":"add-form-category").value=id}
+function openDeleteModal(id){selectedDeleteId=id;const item=allItems.find(entry=>Number(entry.item_id)===id);el("deleteItemName").textContent=item?.name||"this item";showModal("delete-modal")}function closeDeleteModal(){selectedDeleteId=null;hideModal("delete-modal")}
+async function confirmDelete(){if(selectedDeleteId==null)return;if(!demoMode){try{const response=await fetch(`${API_BASE}/items/${selectedDeleteId}`,{method:"DELETE"});if(!response.ok)throw new Error(String(response.status))}catch(_){el("app-status").textContent="The item could not be deleted. Please try again.";closeDeleteModal();return}}allItems=allItems.filter(item=>Number(item.item_id)!==selectedDeleteId);saveLocalData();closeDeleteModal();applyFilters();el("app-status").textContent=demoMode?"Item removed from this browser.":"Item removed from your inventory."}
+function toggleSidebar(){const open=!document.querySelector(".sidebar").classList.contains("is-open");document.querySelector(".sidebar").classList.toggle("is-open",open);el("sidebarScrim").hidden=!open;el("menuButton").setAttribute("aria-expanded",String(open))}function closeSidebar(){document.querySelector(".sidebar").classList.remove("is-open");el("sidebarScrim").hidden=true;el("menuButton").setAttribute("aria-expanded","false")}
+window.openAddModal=openAddModal;window.closeAddModal=closeAddModal;window.closeDeleteModal=closeDeleteModal;window.confirmDelete=confirmDelete;window.clearAllFilters=clearAllFilters;document.addEventListener("DOMContentLoaded",initialize);

@@ -1,23 +1,33 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Under Construction</title>
-  <link rel="stylesheet" href="/assets/css/style.css" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Website Crash Monitor — Vina Raja</title>
+  <link rel="stylesheet" href="/assets/css/project-lab.css">
 </head>
-<body style="background-color: #fde5c0; margin: 0; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; text-align: center;">
-    <h1 style="
-      font-family: Anton, Arial, sans-serif;
-      font-size: 48px;
-      color: #007bff;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-    ">
-      Under Construction
-    </h1>
-  
-    <img src="/assets/images/under-construction.png" alt="Under Construction"
-         style="max-width: 90%; height: auto;" />
-  </body>
+<body>
+  <main class="lab">
+    <nav class="lab-nav"><a href="/">← Vina Raja</a><span class="lab-tag">PROJECT 04 · LIVE DEMO</span></nav>
+    <section class="lab-hero">
+      <div><div class="lab-kicker">Reliability tool</div><h1>Crash<br>Monitor</h1><p>A focused uptime-checking prototype. Add an endpoint, run a health check, and see response status and latency without leaving the dashboard.</p></div>
+      <div class="lab-stat"><span>Current status</span><strong id="statusWord">Ready</strong><span id="statusDetail">Waiting for a check</span></div>
+    </section>
+    <section class="lab-panel">
+      <h2>Run a check</h2>
+      <form id="monitorForm" class="lab-row">
+        <input id="monitorUrl" type="text" inputmode="url" value="www.vinaraja.com" placeholder="www.example.com" aria-label="Website URL" autocapitalize="none" autocomplete="url" spellcheck="false" required>
+        <button>Check website</button><button type="button" class="alt" id="simulateBtn">Simulate outage</button>
+      </form>
+      <div id="monitorResult" class="lab-result" aria-live="polite">Enter a public website and run a check.</div>
+    </section>
+    <section class="lab-grid">
+      <article class="lab-card"><div class="lab-meta">Checks</div><h3 id="checks">0</h3><p>Health checks this session.</p></article>
+      <article class="lab-card"><div class="lab-meta">Last latency</div><h3 id="latency">—</h3><p>Measured round-trip time.</p></article>
+      <article class="lab-card"><div class="lab-meta">Alert rule</div><h3>2 failures</h3><p>Escalate only after consecutive failures.</p></article>
+    </section>
+    <footer class="lab-footer">Built as an interactive front-end reliability concept.</footer>
+  </main>
+  <script src="/website-crash-monitoring/monitor.js"></script>
+</body>
 </html>

@@ -1,159 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>House Inventory</title>
-  <script src="/database/database.js" defer></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/assets/css/style.css">
-  <style>
-    /* House Inventory – palette: #EEE2DF cream, #EED7C5 peach, #C89F9C rose, #C97C5D terracotta, #B36A5E brick */
-    :root.db-page {
-      --db-cream: #EEE2DF;
-      --db-peach: #EED7C5;
-      --db-rose: #C89F9C;
-      --db-terracotta: #C97C5D;
-      --db-brick: #B36A5E;
-      --db-text: #270f03;
-    }
-    .db-action-btn:hover { opacity: 0.92; transform: translateY(-1px); }
-    .db-action-btn:active { transform: translateY(0); }
-    #searchInput::placeholder { color: var(--db-rose); opacity: 0.85; }
-    .db-modal input,
-    .db-modal textarea,
-    .db-modal select {
-      background-color: #FAF6F4;
-      color: #1a0a02;
-      border-color: #C89F9C;
-    }
-    .db-modal input::placeholder,
-    .db-modal textarea::placeholder { color: #C89F9C; opacity: 0.9; }
-    .db-modal input::-webkit-datetime-edit { color: #C89F9C; }
-    .db-modal input:focus::-webkit-datetime-edit { color: #1a0a02; }
-    /* Keep modals inside viewport and scrollable */
-    .db-modal-overlay { overflow-y: auto; padding: 1.5rem; align-items: flex-start; padding-top: 2rem; padding-bottom: 2rem; }
-    .db-modal-content { max-height: min(calc(100vh - 4rem), 560px); overflow-y: auto; }
-  </style>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="theme-color" content="#183c35">
+  <title>Hearth — Home inventory</title>
+  <meta name="description" content="A thoughtful home inventory for keeping track of what you own and where it lives.">
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/database/database.css"><script src="/database/database.js" defer></script>
 </head>
-<body class="db-page" style="background-color: #EEE2DF; color: #270f03; font-family: 'Worksans', Arial, sans-serif;">
-  <div class="px-6 md:px-12 max-w-screen-2xl mx-auto">
-    <!-- Header -->
-    <header class="text-center py-10 border-b" style="border-color: #C89F9C;">
-      <h1 class="text-4xl font-bold tracking-tight" style="color: #B36A5E;">House Inventory</h1>
-      <p class="mt-2 text-sm" style="color: #C89F9C;">Track items by room and category</p>
-    </header>
-
-    <!-- Filter & Actions Row -->
-    <div class="flex flex-wrap justify-start items-center gap-3 my-6 py-4 px-4 rounded-2xl" style="background-color: #EED7C5; border: 1px solid #C89F9C;">
-      <button type="button" onclick="toggleFilters()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Filter</button>
-      <div id="filterControls" class="hidden flex-wrap items-center gap-3">
-        <select id="roomFilter" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <select id="categoryFilter" class="p-2 rounded-lg text-[#270f03]" style="border: 1px solid #C89F9C; background-color: #EEE2DF;"></select>
-        <button type="button" onclick="loadItems()" class="rounded-xl px-4 py-2 font-semibold text-white transition" style="background-color: #C97C5D;">Apply</button>
-      </div>
-      <button type="button" onclick="openAddModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Add item</button>
-      <button type="button" onclick="openDeleteModal()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #B36A5E;">Delete</button>
-      <div class="flex items-center gap-2">
-        <input
-          type="text"
-          id="searchInput"
-          placeholder="Search by name..."
-          class="px-4 py-2.5 w-56 rounded-xl text-base"
-          style="border: 1px solid #C89F9C; background-color: #EEE2DF; color: #270f03;"
-        />
-        <button type="button" onclick="handleSearch()" class="db-action-btn rounded-xl px-4 py-2.5 font-semibold text-white transition" style="background-color: #C97C5D;">Search</button>
-      </div>
-    </div>
-
-    <!-- Table Card -->
-    <div class="rounded-2xl overflow-hidden border" style="background-color: #EEE2DF; border-color: #C89F9C; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.2);">
-      <div class="overflow-auto" style="max-height: 500px;">
-        <table class="w-full text-left text-sm" style="background-color: #EEE2DF;">
-          <thead class="sticky top-0 z-10 text-white font-semibold border-b" style="background-color: #B36A5E; border-color: #C89F9C;">
-            <tr class="uppercase text-xs tracking-wide">
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Select</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Name</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Quantity</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Room</th>
-              <th class="p-3 border-r" style="border-color: rgba(255,255,255,0.2);">Category</th>
-              <th class="p-3">Purchase Date</th>
-            </tr>
-          </thead>
-          <tbody id="itemsTable" class="text-[#270f03] font-normal"></tbody>
-        </table>
-      </div>
-    </div>
-
-    <!-- Dashboard Cards Section -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10">
-      <div class="rounded-2xl p-6 border" style="background-color: #EED7C5; border-color: #C89F9C; color: #270f03; box-shadow: 0 6px 24px rgba(200, 159, 156, 0.15);">
-        <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">📊 Stats</h2>
-        <ul class="space-y-2 text-base" id="statsList">
-          <li>Total Items: <span id="stat-total" class="font-semibold">0</span></li>
-          <li>Unique Rooms: <span id="stat-rooms" class="font-semibold">0</span></li>
-          <li>Categories: <span id="stat-categories" class="font-semibold">0</span></li>
-          <li>Last Added: <span id="stat-recent" class="font-semibold">—</span></li>
-        </ul>
-      </div>
-
-      <div class="rounded-2xl p-6 border text-white" style="background-color: #C89F9C; border-color: #B36A5E; box-shadow: 0 6px 24px rgba(179, 106, 94, 0.2);">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-xl font-bold">📋 Lists</h2>
-          <button type="button" onclick="openNewListModal()" class="text-sm font-semibold text-white rounded-xl px-3 py-2 transition" style="background-color: #B36A5E;">+ New List</button>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <a class="brand" href="/" aria-label="Back to portfolio"><span class="brand-mark" aria-hidden="true">H</span><span><strong>Hearth</strong><small>Home inventory</small></span></a>
+      <nav class="side-nav" aria-label="Inventory navigation">
+        <button class="nav-item is-active" type="button" data-view="all"><span aria-hidden="true">⌂</span> All belongings</button>
+        <p class="nav-label">Browse by room</p><div id="roomNav" class="room-nav"></div>
+      </nav>
+      <div class="sidebar-note"><span class="note-icon" aria-hidden="true">✦</span><p><strong>Know what you have.</strong><br>Less rebuying, easier moving, calmer spaces.</p></div>
+      <a class="portfolio-link" href="/">← Back to portfolio</a>
+    </aside>
+    <main class="main-content">
+      <header class="topbar">
+        <button class="menu-button" id="menuButton" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
+        <div><p class="eyebrow">Your home, organized</p><h1>Belongings</h1></div>
+        <button class="primary-button" type="button" onclick="openAddModal()"><span aria-hidden="true">＋</span> Add item</button>
+      </header>
+      <section class="summary-grid" aria-label="Inventory summary">
+        <article class="summary-card featured"><span class="summary-icon" aria-hidden="true">⌂</span><div><span id="stat-total" class="summary-value">0</span><span class="summary-label">items catalogued</span></div><span class="summary-detail" id="quantityDetail">0 total units</span></article>
+        <article class="summary-card"><span class="summary-icon soft-green" aria-hidden="true">▦</span><div><span id="stat-rooms" class="summary-value">0</span><span class="summary-label">rooms covered</span></div></article>
+        <article class="summary-card"><span class="summary-icon soft-clay" aria-hidden="true">◇</span><div><span id="stat-categories" class="summary-value">0</span><span class="summary-label">categories</span></div></article>
+        <article class="summary-card recent-card"><span class="summary-icon soft-gold" aria-hidden="true">↗</span><div><span id="stat-recent" class="summary-value summary-date">—</span><span class="summary-label">most recent purchase</span></div></article>
+      </section>
+      <section class="inventory-panel">
+        <div class="panel-heading"><div><h2>Your inventory</h2><p id="resultCount">Loading your belongings…</p></div><div class="view-switcher" aria-label="View options"><button id="gridViewButton" class="is-active" type="button" aria-label="Grid view">▦</button><button id="listViewButton" type="button" aria-label="List view">☷</button></div></div>
+        <div class="toolbar">
+          <label class="search-box"><span aria-hidden="true">⌕</span><span class="sr-only">Search inventory</span><input id="searchInput" type="search" placeholder="Search your belongings"></label>
+          <select id="roomFilter" aria-label="Filter by room"><option value="">All rooms</option></select><select id="categoryFilter" aria-label="Filter by category"><option value="">All categories</option></select><button id="clearFilters" class="text-button" type="button">Clear filters</button>
         </div>
-        <div id="listsContainer" class="space-y-3"></div>
-      </div>
-    </div>
+        <div id="itemsGrid" class="items-grid" aria-live="polite"></div>
+        <div id="emptyState" class="empty-state" hidden><span aria-hidden="true">⌕</span><h3>Nothing found here</h3><p>Try another room or search, or add something new.</p><button class="secondary-button" type="button" onclick="clearAllFilters()">Clear filters</button></div>
+      </section>
+      <p id="app-status" class="status" aria-live="polite">Connecting to your inventory…</p>
+    </main>
   </div>
-
-  <p id="app-status" class="text-center text-sm py-2" style="color: #C89F9C;" aria-live="polite">Loading…</p>
-
-  <!-- Add Item Modal -->
-  <div id="add-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content db-modal p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
-      <button class="modal-close absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeAddModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">Add item</h2>
-      <form id="addItemFormStyled" onsubmit="return handleAddItemSubmit(event)">
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Name <span style="color: #B36A5E;">*</span></label>
-        <input type="text" name="name" placeholder="e.g. Coffee table" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Quantity <span style="color: #B36A5E;">*</span></label>
-        <input type="number" name="quantity" placeholder="1" min="1" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" required>
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Purchase Date</label>
-        <input type="date" name="purchase_date" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input" placeholder="">
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Room</label>
-        <select name="room_id" id="add-form-room" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input"><option value="">Select one</option></select>
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Category</label>
-        <select name="category_id" id="add-form-category" class="w-full mb-3 p-2.5 rounded-xl border db-modal-input"><option value="">Select one</option></select>
-        <label class="block mb-1 text-sm font-medium" style="color: #B36A5E;">Description</label>
-        <textarea name="description" placeholder="Notes (optional)" class="w-full mb-4 p-2.5 rounded-xl border db-modal-input"></textarea>
-        <button type="submit" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #C97C5D;">Add item</button>
+  <div id="sidebarScrim" class="sidebar-scrim" hidden></div>
+  <div id="add-modal" class="modal-overlay" hidden aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="addTitle"><button class="modal-close" type="button" onclick="closeAddModal()" aria-label="Close">×</button><p class="eyebrow">A place for everything</p><h2 id="addTitle">Add a belonging</h2><p class="modal-intro">Capture the basics now. You can always add more detail later.</p>
+      <form id="addItemFormStyled">
+        <label class="field field-wide"><span>Item name *</span><input name="name" required placeholder="e.g. Linen tablecloth" autocomplete="off"></label>
+        <label class="field"><span>Quantity *</span><input name="quantity" type="number" min="1" value="1" required></label><label class="field"><span>Purchase date</span><input name="purchase_date" type="date"></label>
+        <label class="field"><span>Room</span><select name="room_id" id="add-form-room"><option value="">Choose a room</option></select></label><label class="field"><span>Category</span><select name="category_id" id="add-form-category"><option value="">Choose a category</option></select></label>
+        <label class="field field-wide"><span>Notes</span><textarea name="description" rows="3" placeholder="Color, condition, where you bought it…"></textarea></label>
+        <div class="form-actions field-wide"><button class="secondary-button" type="button" onclick="closeAddModal()">Cancel</button><button class="primary-button" type="submit">Save item</button></div>
       </form>
-      <div id="thank-you-message" class="hidden mt-4 text-sm" style="color: #B36A5E;">✅ Item added successfully.</div>
-    </div>
+    </section>
   </div>
-
-  <!-- New List Modal -->
-  <div id="newListModal" class="db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50 db-modal" style="display: none;" aria-hidden="true">
-    <div class="db-modal-content p-6 rounded-2xl shadow-xl border max-w-md w-full relative my-auto" style="background-color: #EEE2DF; color: #270f03; border-color: #C89F9C;">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeNewListModal()">×</button>
-      <h3 class="text-xl font-bold mb-4" style="color: #B36A5E;">New list</h3>
-      <input id="newListTitle" type="text" placeholder="List name…" class="w-full p-2.5 rounded-xl border db-modal-input mb-4" />
-      <button type="button" onclick="createList()" class="w-full py-2.5 text-white font-semibold rounded-xl transition" style="background-color: #C97C5D;">Create</button>
-    </div>
-  </div>
-
-  <!-- Delete Confirmation Modal -->
-  <div id="delete-modal" class="modal db-modal-overlay fixed inset-0 bg-black/40 backdrop-blur-sm flex justify-center z-50 db-modal" style="display: none;" aria-hidden="true">
-    <div class="modal-content db-modal-content p-6 rounded-2xl shadow-xl max-w-md w-full relative border my-auto" style="background-color: #EED7C5; color: #270f03; border-color: #C89F9C;">
-      <button class="absolute top-3 right-4 text-2xl leading-none" style="color: #B36A5E;" onclick="closeDeleteModal()">×</button>
-      <h2 class="text-xl font-bold mb-4" style="color: #B36A5E;">Confirm deletion</h2>
-      <p class="mb-6 text-center">Delete <span id="delete-count">0</span> selected item(s)?</p>
-      <div class="flex gap-3">
-        <button type="button" onclick="closeDeleteModal()" class="flex-1 py-2.5 rounded-xl font-semibold transition text-[#270f03]" style="background-color: #C89F9C;">Cancel</button>
-        <button type="button" onclick="confirmDelete()" class="flex-1 py-2.5 rounded-xl font-semibold text-white transition" style="background-color: #B36A5E;">Delete</button>
-      </div>
-      <div id="delete-success-message" class="text-center mt-4 hidden text-sm" style="color: #B36A5E;">✅ Deleted.</div>
-    </div>
-  </div>
+  <div id="delete-modal" class="modal-overlay" hidden aria-hidden="true"><section class="modal modal-small" role="dialog" aria-modal="true" aria-labelledby="deleteTitle"><button class="modal-close" type="button" onclick="closeDeleteModal()" aria-label="Close">×</button><p class="eyebrow danger">Remove item</p><h2 id="deleteTitle">Delete this belonging?</h2><p class="modal-intro">This will remove <strong id="deleteItemName">the item</strong> from your inventory.</p><div class="form-actions"><button class="secondary-button" type="button" onclick="closeDeleteModal()">Keep it</button><button class="danger-button" type="button" onclick="confirmDelete()">Delete item</button></div></section></div>
 </body>
 </html>

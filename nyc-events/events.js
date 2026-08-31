@@ -8,10 +8,17 @@ const GITHUB_WORKFLOW_FILE = "scrape-nyc-events.yml";
 let eventsData = [];
 var filteredEventsList = [];
 let demoMode = false;
-var DEMO_EVENTS = [
-  { id: "demo-1", title: "Sample Show", date: "2025-02-15", time: "20:00", neighborhood: "Brooklyn", price: "$25", link: "https://dice.fm/example1", platform: "Dice", created_at: "2025-02-01T12:00:00Z" },
-  { id: "demo-2", title: "Free Comedy Night", date: "2025-02-20", time: "19:30", neighborhood: "Manhattan", price: "Free", link: "https://dice.fm/example2", platform: "Dice", created_at: "2025-02-01T12:00:00Z" }
-];
+var DEMO_EVENTS = (function () {
+  function offset(days) {
+    var d = new Date(); d.setDate(d.getDate() + days);
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  return [
+    { id: "demo-1", title: "Brooklyn Rooftop Sessions", date: offset(0), time: "20:00", neighborhood: "Brooklyn", price: "$25", link: "https://dice.fm/", platform: "Dice", venue: "Elsewhere", created_at: new Date().toISOString() },
+    { id: "demo-2", title: "Free Comedy Night", date: offset(1), time: "19:30", neighborhood: "Manhattan", price: "Free", link: "https://www.eventbrite.com/", platform: "Eventbrite", venue: "The Stand", created_at: new Date().toISOString() },
+    { id: "demo-3", title: "Queens Night Market", date: offset(3), time: "17:00", neighborhood: "Queens", price: "Free", link: "https://queensnightmarket.com/", platform: "Community", venue: "Flushing Meadows", created_at: new Date().toISOString() }
+  ];
+})();
 
 function get(id) { return document.getElementById(id); }
 
@@ -64,6 +71,10 @@ async function fetchEvents() {
     if (!res.ok) throw new Error("Events " + res.status);
     const data = await res.json();
     eventsData = Array.isArray(data) ? data : [];
+    if (eventsData.length === 0) {
+      demoMode = true;
+      eventsData = DEMO_EVENTS.map(function (e) { return { ...e }; });
+    }
   } catch (err) {
     console.warn("Fetch events failed:", err);
     demoMode = true;
@@ -309,7 +320,30 @@ function populateFilterDropdowns() {
 function applyEventFilters() {
   var list = applyClientFilters();
   renderEventsTable(list);
+  updateEventStats(list);
+  var countEl = get("events-result-count");
+  if (countEl) countEl.textContent = list.length + (list.length === 1 ? " event on your radar" : " events on your radar");
   setStatus(demoMode ? "Demo mode – " + list.length + " event(s). Set EVENTS_API_URL to use the Vercel backend." : list.length + " event(s).");
+}
+
+function updateEventStats(list) {
+  list = Array.isArray(list) ? list : [];
+  var freeCount = list.filter(function (event) { return String(event.price || "").toLowerCase().indexOf("free") >= 0; }).length;
+  var areas = new Set(list.map(function (event) { return event.neighborhood; }).filter(Boolean)).size;
+  var dated = list.filter(function (event) { return event.date; }).slice().sort(function (a, b) { return String(a.date).localeCompare(String(b.date)); });
+  var totalEl = get("stat-events"); if (totalEl) totalEl.textContent = list.length;
+  var freeEl = get("stat-free"); if (freeEl) freeEl.textContent = freeCount;
+  var areaEl = get("stat-areas"); if (areaEl) areaEl.textContent = areas;
+  var soonEl = get("stat-soon"); if (soonEl) soonEl.textContent = dated.length ? MONTHS[new Date(dated[0].date + "T12:00:00").getMonth()] + " " + new Date(dated[0].date + "T12:00:00").getDate() : "—";
+}
+
+function clearEventFilters() {
+  ["filterSearch", "filterDateFrom", "filterDateTo", "filterNeighborhood", "filterVenue", "filterPlatform", "filterPrice", "filterEventType", "filterTimeOfDay"].forEach(function (id) {
+    var input = get(id); if (input) input.value = "";
+  });
+  document.querySelectorAll(".date-quick-btn, .time-filter-btn").forEach(function (button) { button.classList.remove("date-quick-btn--active", "nav-btn--active"); });
+  var anyTime = document.querySelector('.time-filter-btn[data-time=""]'); if (anyTime) anyTime.classList.add("nav-btn--active");
+  applyEventFilters();
 }
 
 function setTimeFilter(value) {
@@ -655,11 +689,15 @@ function setViewMode(view) {
   if (view === "date") {
     setDateFilter("today");
   } else if (view === "area") {
+    if (get("filterDateFrom")) get("filterDateFrom").value = "";
+    if (get("filterDateTo")) get("filterDateTo").value = "";
     var viewArea = get("viewAreaSelect");
     var filterNh = get("filterNeighborhood");
     if (viewArea && filterNh) viewArea.value = filterNh.value;
     applyEventFilters();
   } else {
+    if (get("filterDateFrom")) get("filterDateFrom").value = "";
+    if (get("filterDateTo")) get("filterDateTo").value = "";
     applyEventFilters();
   }
 }
@@ -690,5 +728,22 @@ document.addEventListener("DOMContentLoaded", function () {
       applyEventFilters();
     });
   }
+  ["filterNeighborhood", "filterEventType", "filterPrice", "filterVenue", "filterPlatform", "filterDateFrom", "filterDateTo"].forEach(function (id) {
+    var control = get(id); if (control) control.addEventListener("change", applyEventFilters);
+  });
+  var moreButton = get("moreFiltersButton");
+  if (moreButton) moreButton.addEventListener("click", function () {
+    var panel = get("moreFilters"); if (!panel) return;
+    panel.hidden = !panel.hidden;
+    moreButton.textContent = panel.hidden ? "More filters" : "Fewer filters";
+  });
+  var menuButton = get("menuButton");
+  var scrim = get("sidebarScrim");
+  function closeSidebar() { document.querySelector(".sidebar")?.classList.remove("is-open"); if (scrim) scrim.hidden = true; if (menuButton) menuButton.setAttribute("aria-expanded", "false"); }
+  if (menuButton) menuButton.addEventListener("click", function () { var sidebar = document.querySelector(".sidebar"); var open = !sidebar.classList.contains("is-open"); sidebar.classList.toggle("is-open", open); if (scrim) scrim.hidden = !open; menuButton.setAttribute("aria-expanded", String(open)); });
+  if (scrim) scrim.addEventListener("click", closeSidebar);
+  document.querySelectorAll(".side-nav button").forEach(function (button) { button.addEventListener("click", closeSidebar); });
   setViewMode("date");
 });
+
+window.clearEventFilters = clearEventFilters;
