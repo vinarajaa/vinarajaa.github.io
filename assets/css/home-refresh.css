@@ -37,7 +37,19 @@ body {
   font-weight: 700;
   text-decoration: none;
   transform: rotate(-1.5deg);
-  transition: transform .2s ease, box-shadow .2s ease;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(1rem) rotate(-1.5deg);
+  transition: transform .25s ease, box-shadow .2s ease, opacity .2s ease, visibility 0s linear .25s;
+}
+
+.docs-fab.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: rotate(-1.5deg);
+  transition-delay: 0s;
 }
 
 .docs-fab span {
@@ -49,7 +61,7 @@ body {
   border-radius: 50%;
 }
 
-.docs-fab:hover {
+.docs-fab.is-visible:hover {
   transform: translate(-2px, -2px) rotate(1deg);
   box-shadow: 6px 6px 0 var(--primary);
 }
@@ -133,6 +145,7 @@ body {
 }
 
 .sec.hero > .comp.toggle-w {
+  position: relative;
   margin: 0;
 }
 
@@ -142,27 +155,31 @@ body {
 
 .hero-enter-toggle { cursor: pointer; }
 
-.hero-enter-hint {
+.hero-enter-label {
   position: absolute;
-  top: calc(100% + .7rem);
-  left: 50%;
-  width: max-content;
-  color: var(--secondary);
-  font-family: Worksans, Arial, sans-serif;
-  font-size: .64rem;
-  font-weight: 800;
+  top: 50%;
+  left: calc(50% + clamp(4rem, 7vw, 5.2rem));
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: clamp(.68rem, 1vw, .8rem);
+  font-weight: 850;
   letter-spacing: .12em;
-  pointer-events: none;
-  transform: translateX(-50%);
-  transition: opacity .2s ease, transform .2s ease;
+  line-height: 1;
+  white-space: nowrap;
+  transform: translateY(-50%);
 }
 
-.hero-enter-toggle:hover .hero-enter-hint,
-.hero-enter-toggle:focus-within .hero-enter-hint {
-  transform: translate(-50%, 3px);
+.hero-enter-label > span {
+  display: inline-block;
+  font-size: 1.05rem;
+  animation: hero-enter-nudge 1.5s ease-in-out infinite;
 }
 
-.hero-enter-toggle:has(input:checked) .hero-enter-hint { opacity: 0; }
+@keyframes hero-enter-nudge {
+  0%, 100% { transform: translateX(1px); }
+  50% { transform: translateX(-3px); }
+}
 
 .sec.hero svg.scribbles-svg[data-hero="scribble"] {
   left: 50%;
@@ -180,6 +197,42 @@ html[data-theme="dark"] .sec.hero svg.scribbles-svg[data-hero="scribble"] {
 
 .sec.hero [data-hero="par"] {
   margin: 0;
+}
+
+.sec.hero .hero-intro-card {
+  position: relative;
+  width: min(100%, 43rem);
+  padding: clamp(1rem, 2.25vw, 1.45rem) clamp(1.15rem, 3vw, 2rem);
+  border: 2px solid var(--primary);
+  border-radius: 1rem;
+  margin-top: 1rem;
+  background-color: #ca9dfe !important;
+  color: #270f03;
+  box-shadow: 6px 7px 0 var(--primary);
+  font-size: clamp(.92rem, 1.45vw, 1.08rem);
+  line-height: 1.5;
+  text-align: center;
+  transform: rotate(-.6deg);
+}
+
+.sec.hero .hero-intro-card::before {
+  content: "A NOTE FROM VINA";
+  position: absolute;
+  top: -.72rem;
+  left: 50%;
+  padding: .28rem .65rem;
+  border: 1.5px solid var(--primary);
+  background: #ffe9cf;
+  color: #270f03;
+  font-size: .58rem;
+  font-weight: 850;
+  letter-spacing: .1em;
+  white-space: nowrap;
+  transform: translateX(-50%) rotate(1.5deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-enter-label > span { animation: none; }
 }
 
 .theme-control {
@@ -400,6 +453,24 @@ section#flip.sec {
   max-width: 39ch;
   font-size: clamp(.92rem, 1.35vw, 1.08rem);
   line-height: 1.5;
+}
+
+.about-card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .4rem;
+  margin-top: .25rem;
+}
+
+.about-card-tags span {
+  padding: .32rem .5rem;
+  border: 1.25px solid currentColor;
+  border-radius: 999px;
+  font-size: clamp(.56rem, .85vw, .66rem);
+  font-weight: 750;
+  line-height: 1;
+  letter-spacing: .055em;
+  text-transform: uppercase;
 }
 
 #slider .slide-img {
